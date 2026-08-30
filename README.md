@@ -15,4 +15,15 @@ python -m http.server 8000
 
 ## Deployment
 
-Published with GitHub Pages from the `main` branch (root). Any push to `main` redeploys.
+Deploys are **manual**. Merging to `main` does not publish anything — the live
+site only changes when someone runs the deploy workflow.
+
+To deploy:
+
+- **GitHub UI** — Actions tab -> "Deploy to GitHub Pages" -> *Run workflow*
+- **CLI** — `gh workflow run deploy.yml`
+
+By default it publishes `main`; the workflow takes an optional `ref` input if you
+need to deploy another branch, tag or SHA.
+
+Live site: <https://nimbi-au.github.io/nimbi-website/>
