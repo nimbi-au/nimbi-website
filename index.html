@@ -120,6 +120,21 @@
 
   .divider{height:1px;background:var(--line);max-width:1120px;margin:0 auto}
   .smallprint{font-size:13px;color:#7d8595;margin-top:26px}
+  .navdrop{position:relative}
+  .dropmenu{display:none;position:absolute;top:100%;left:0;background:var(--white);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(27,45,71,.18);min-width:225px;z-index:70;padding:6px}
+  .dropmenu.open{display:block}
+  .dropmenu button{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;font-size:15px;color:var(--navy);padding:10px 12px;border-radius:6px;cursor:pointer}
+  .dropmenu button:hover{background:var(--cream)}
+  .navcta{padding:10px 18px;font-size:15px;margin-left:4px}
+  ul.mini{list-style:none;margin-top:10px}
+  ul.mini li{padding:6px 0 6px 18px;position:relative;font-size:15px}
+  ul.mini li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+  .tagline{font-weight:700;color:var(--navy);margin-bottom:8px}
+  .offcard-muted{background:#F3F0EA;border-color:#E7E2D8}
+  .offcard-muted h3,.offcard-muted .tagline{color:#6d7385}
+  .offcard-muted p{color:#8a8f9b}
+  .soon{font-size:11px;letter-spacing:.12em;font-weight:700;color:#9aa0ad;margin-bottom:8px;text-transform:uppercase}
+  table.diy tbody tr.plain:nth-child(odd) td{background:var(--cream)}
 </style>
 </head>
 <body>
@@ -128,13 +143,17 @@
   <div class="navwrap">
     <div class="logo" onclick="go('home')" role="button" aria-label="Nimbi home"><svg width="118" height="36" viewBox="0 0 300 92" aria-hidden="true"><defs><linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#312B7E"/></linearGradient><linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FB0B7"/><stop offset="1" stop-color="#312B7E"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgA)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgB)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#312B7E">nimbi</text></svg></div>
     <button class="navlink" data-nav="home" onclick="go('home')">Home</button>
-    <button class="navlink" data-nav="about" onclick="go('about')">About</button>
-    <button class="navlink" data-nav="serve" onclick="go('serve')">Who we serve</button>
-    <button class="navlink" data-nav="ds" onclick="go('ds')">Designated services</button>
-    <button class="navlink" data-nav="kyo" onclick="go('kyo')">Know your obligations</button>
-    <button class="navlink" data-nav="checklist" onclick="go('checklist')">Readiness check</button>
-    <button class="navlink" data-nav="diy" onclick="go('diy')">DIY vs Nimbi</button>
-    <button class="navlink" data-nav="help" onclick="go('help')">How Nimbi helps</button>
+    <div class="navdrop">
+      <button class="navlink" data-nav="oblig" onclick="toggleDrop(event)">Your obligations &#9662;</button>
+      <div class="dropmenu" id="dropmenu">
+        <button onclick="go('serve')">Who we serve</button>
+        <button onclick="go('ds')">Designated services</button>
+        <button onclick="go('checklist')">Readiness check</button>
+      </div>
+    </div>
+    <button class="navlink" data-nav="diy" onclick="go('diy')">Why Nimbi</button>
+    <button class="navlink" data-nav="about" onclick="go('about')">About Nimbi</button>
+    <button class="btn gold navcta" onclick="go('about','contact-about')">Contact</button>
   </div>
 </nav>
 
@@ -144,7 +163,7 @@
     <div class="wrap">
       <div class="eyebrow">AML/CTF compliance for newly regulated entities</div>
       <h1>Your AML/CTF obligations are now in force.<br>We're here to help you meet them.</h1>
-      <p class="lead">Nimbi provides AML/CTF support for Australia's Tranche 2 entities - accountants, real estate agents, lawyers, conveyancers and more. We build your program, run your customer due diligence, and give you experienced practitioners to call when something doesn't look right.</p>
+      <p class="lead">Nimbi provides AML/CTF advisory for Australia's Tranche 2 entities - accountants, real estate agents, lawyers, conveyancers and more. We build your program, run your customer due diligence, and give you experienced practitioners to call when you need support.</p>
       <div class="btnrow">
         <button class="btn gold" onclick="go('checklist')">Check your readiness</button>
         <button class="btn ghost" onclick="go('home','contact-home')">Talk to us</button>
@@ -154,11 +173,34 @@
 
   <section class="cream">
     <div class="wrap">
-      <h2>The reforms are already in effect.</h2>
-      <div class="factrow">
-        <div class="fact"><strong>1 July 2026</strong>Designated services provided by Tranche 2 professions became regulated under the AML/CTF Act. <span class="stag">AML/CTF Act (Cth)</span></div>
-        <div class="fact"><strong>29 July 2026</strong>The AUSTRAC enrolment deadline has passed. Firms providing <a href="#" onclick="go('ds');return false" style="color:var(--teal);font-weight:700">designated services</a> without enrolment are already out of step. <span class="stag">s 51E</span></div>
-        <div class="fact"><strong>Civil penalties</strong>Contraventions carry civil penalties running to tens of millions of dollars for bodies corporate, plus professional body consequences.</div>
+      <h2>The reform is here. Let's get it right.</h2>
+      <div class="grid3">
+        <div class="card">
+          <h3>From 1 July 2026</h3>
+          <p>Firms providing <a href="#" onclick="go('ds');return false" style="color:var(--teal);font-weight:700">designated services</a> must have their compliance foundations in place.</p>
+          <ul class="mini">
+            <li>Enrol and set the governance roles.</li>
+            <li>Complete and approve the risk assessment and AML/CTF Program.</li>
+            <li>Start CDD, reporting, record keeping and staff training.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>The cost of waiting</h3>
+          <p>Every month of delay increases the number of clients and files that may need to be remediated.</p>
+          <ul class="mini">
+            <li>New clients may need to be re-onboarded and risk-rated.</li>
+            <li>Evidence and past decisions may need to be reconstructed.</li>
+            <li>Partners face a rushed rollout, compressed training and higher cost.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Civil and criminal penalties</h3>
+          <ul class="mini">
+            <li>Contraventions carry civil penalties of up to 100,000 penalty units.</li>
+            <li>Tipping off is a criminal offence under s 123 of the AML/CTF Act, carrying up to 2 years' imprisonment, 120 penalty units, or both.</li>
+            <li>AUSTRAC's other enforcement tools include enforceable undertakings, infringement notices, remedial directions and written notices.</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -166,33 +208,38 @@
   <section>
     <div class="narrow">
       <h2>Why software alone isn't enough.</h2>
-      <p>There are plenty of tools that will verify an ID in seconds, and we use some of them ourselves. The harder parts of compliance are decisions rather than checks: whether a trust structure needs enhanced due diligence, whether a transaction is unusual enough to report, whether your risk assessment would hold up if AUSTRAC asked about it. Those calls need a person who does this work every day.</p>
-      <p style="margin-top:14px">That's the gap Nimbi fills. Our practitioners handle the judgement calls, supported by good technology, so you can get on with running your business.</p>
-    </div>
-  </section>
-
-  <section class="navybg">
-    <div class="wrap">
-      <h2>How we work.</h2>
-      <div class="grid3">
-        <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15)">
-          <h3 style="color:#fff">1. Understand</h3>
-          <p>Work out whether you provide a designated service, and exactly which obligations attach. Our sector guides and readiness check make it plain.</p>
-        </div>
-        <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15)">
-          <h3 style="color:#fff">2. Build</h3>
-          <p>Nimbi Foundations delivers your risk assessment and AML/CTF program - reviewed for appropriateness if you already have one, built from the ground up if you don't.</p>
-        </div>
-        <div class="card" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15)">
-          <h3 style="color:#fff">3. Run</h3>
-          <p>Our outsourced model carries the day to day: customer due diligence, screening, monitoring and report preparation, with our analysts on the other end of the phone.</p>
-        </div>
-      </div>
-      <div class="btnrow"><button class="btn gold" onclick="go('help')">See how Nimbi helps</button></div>
+      <p>Software can verify an ID, screen a name and generate documents, but it cannot understand how your business operates, challenge assumptions or make defensible risk-based decisions.</p>
+      <p style="margin-top:14px">Nimbi combines the right technology with specialist AML/CTF judgement to build a tailored program, embed practical controls and help your team confidently explain not only what they do, but why.</p>
+      <p style="margin-top:14px"><a href="#" onclick="go('diy');return false" style="color:var(--teal);font-weight:700">See how the approaches compare side by side.</a></p>
     </div>
   </section>
 
   <section class="cream">
+    <div class="wrap">
+      <h2>What we offer.</h2>
+      <div class="grid3">
+        <div class="card">
+          <h3>Nimbi Foundations</h3>
+          <p class="tagline">Your program, built right the first time.</p>
+          <p>A tailored AML/CTF program - risk assessment, policies, governance, portfolio risk mapping and training - designed around how your firm actually operates. Already have one? We'll review whether it holds up.</p>
+        </div>
+        <div class="card">
+          <h3>Nimbi Reliance</h3>
+          <p class="tagline">Hand the complex customer due diligence to us and focus on your business.</p>
+          <p>Refer a customer or a matter to Nimbi and our practitioners action it end to end - due diligence, screening and monitoring, alert review and case file preparation - and hand you back a completed, documented outcome ready for your records.</p>
+        </div>
+        <div class="card offcard-muted">
+          <div class="soon">Coming soon</div>
+          <h3>Nimbi Self-Verify</h3>
+          <p class="tagline">Verification under your own brand.</p>
+          <p>A white-labelled verification journey your clients complete in minutes, built on the same screening stack our practitioners use. Launching soon - <a href="#" onclick="go('home','contact-home');return false" style="color:var(--teal);font-weight:700">register your interest</a>.</p>
+        </div>
+      </div>
+      <div class="btnrow"><button class="btn gold" onclick="go('about','services')">Learn more</button></div>
+    </div>
+  </section>
+
+  <section>
     <div class="narrow">
       <h2>Not sure where you stand?</h2>
       <p>Our readiness check takes a few minutes and covers the ten obligations every reporting entity has. Each question shows you the part of the Act it comes from.</p>
@@ -200,7 +247,7 @@
     </div>
   </section>
 
-  <section id="contact-home">
+  <section class="cream" id="contact-home">
     <div class="narrow">
       <h2>Talk to us.</h2>
       <p>Tell us who you are and what you're facing. A Nimbi practitioner will come back to you within one business day.</p>
@@ -231,27 +278,58 @@
     <div class="narrow">
       <div class="eyebrow">About Nimbi</div>
       <h1>Experienced practitioners, focused on newly regulated businesses.</h1>
-      <p class="lead">Nimbi was started for a simple reason: the Tranche 2 reforms brought well over 100,000 Australian businesses into the AML/CTF regime, and most of them don't have - and shouldn't need - an in-house compliance team.</p>
+      <p class="lead">Nimbi was established for a simple reason: to equip Australia's 100,000-plus newly regulated businesses to handle their Tranche 2 obligations effectively - with real support behind them, so they don't need an in-house compliance team.</p>
     </div>
   </section>
+
+  <section class="cream" id="services">
+    <div class="wrap">
+      <h2>Nimbi Foundations</h2>
+      <p style="max-width:70ch">Starting from scratch, or not confident in what you have? We build the full program: ML/TF risk assessment, AML/CTF policies, governance and compliance officer arrangements, customer due diligence procedures and staff training - written for your business, not a generic one. Already have a program? We'll take a look at whether it holds up as part of getting started.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Nimbi Reliance</h2>
+      <p style="max-width:70ch">A program document is only the starting point. The day-to-day work of checking customers, reviewing alerts and preparing case files still has to happen, and in most small firms it isn't anyone's full-time job. Our outsourced model gives you a share of ours.</p>
+      <div class="grid3">
+        <div class="card"><h3>Customer due diligence, run for you</h3><p>We operate your identification and verification workflow, including the hard cases - trusts, companies, beneficial owners and offshore parties - with enhanced due diligence escalated to our practitioners.</p></div>
+        <div class="card"><h3>Screening and monitoring</h3><p>PEP, sanctions and adverse media screening at onboarding and on an ongoing basis, with alerts reviewed by our analysts before they reach you.</p></div>
+        <div class="card"><h3>Reporting support</h3><p>When something needs to go to AUSTRAC, we help you prepare it properly and on time - suspicious matter reports, threshold transaction reports and your annual compliance report.</p></div>
+        <div class="card"><h3>Compliance calendar</h3><p>Reviews, training refreshers, risk assessment triggers and evaluation timing, tracked and prompted so nothing quietly falls due.</p></div>
+        <div class="card"><h3>Your compliance officer, supported</h3><p>Your AMLCO stays yours - the Act requires that - but they'll have experienced practitioners behind them whenever a hard call comes up.</p></div>
+        <div class="card"><h3>Independent evaluation referral</h3><p>We don't evaluate programs we built ourselves. When your evaluation falls due, we'll connect you with a genuinely independent evaluator and help you prepare for it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="narrow" style="text-align:center">
+      <h2>Ready to talk?</h2>
+      <div class="btnrow" style="justify-content:center"><button class="btn gold" onclick="go('about','contact-about')">Talk to us</button></div>
+    </div>
+  </section>
+
   <section class="cream">
     <div class="narrow">
       <h2>Our story</h2>
       <p>Nimbi was founded by senior financial crime practitioners who have spent their careers designing and running AML/CTF programs inside Australia's largest reporting entities. When the Tranche 2 reforms brought accountants, real estate professionals, lawyers and conveyancers into the regime, we saw the same story repeating everywhere: capable firms, real obligations, and nobody to carry them.</p>
       <p style="margin-top:14px">So we built the firm we'd want to call. Practical, plain speaking, anchored to the legislation, and honest about what a small business actually needs - effective compliance solutions.</p>
-      <p style="margin-top:14px">[Founder bios and photographs - to be confirmed at launch]</p>
     </div>
   </section>
+
   <section>
     <div class="wrap">
       <h2>What we stand on</h2>
       <div class="grid3">
-        <div class="card"><h3>Grounded in the legislation</h3><p>Every recommendation we make traces back to the AML/CTF Act, the AML/CTF Rules 2025 or AUSTRAC guidance, and we'll show you where. <span class="stag">Act + Rules 2025</span></p></div>
-        <div class="card"><h3>Independence matters</h3><p>We don't conduct independent evaluations of programs we built ourselves. When yours falls due, we'll refer you to a genuinely independent evaluator and help you get ready for it.</p></div>
+        <div class="card"><h3>Grounded in the legislation</h3><p>Every recommendation traces back to the AML/CTF Act, the AML/CTF Rules 2025 or AUSTRAC guidance, with the exact source cited alongside. <span class="stag">Act + Rules 2025</span></p></div>
+        <div class="card"><h3>Complex made clear</h3><p>We're transparent about what your obligations mean, and what they don't. Our job is translating complex requirements into efficient business processes and effective outcomes your team can actually run.</p></div>
         <div class="card"><h3>Right-sized for your business</h3><p>The Act requires a program appropriate to your nature, size and complexity. We take the same approach to our advice and our fees. <span class="stag">s 26F(4)</span></p></div>
       </div>
     </div>
   </section>
+
   <section class="cream" id="contact-about">
     <div class="narrow">
       <h2>Start a conversation.</h2>
@@ -408,7 +486,7 @@
         <h3 style="margin-top:34px">Risk flags AUSTRAC will expect you to think about</h3>
         <div id="ob-flags"></div>
         <div class="btnrow">
-          <button class="btn gold" onclick="go('help')">How Nimbi can help</button>
+          <button class="btn gold" onclick="go('about','services')">How Nimbi can help</button>
           <button class="btn ghost" onclick="go('checklist')">Check your readiness</button>
         </div>
       </div>
@@ -422,19 +500,19 @@
     <div class="wrap">
       <div class="eyebrow">Obligations checklist</div>
       <h1>AML/CTF readiness check.</h1>
-      <p class="lead">Answer honestly - it's only useful if you do. Each question links to the part of the Act or the AML/CTF Rules 2025 it comes from, and every 'No' is an obligation that already applies to you.</p>
+      <p class="lead">Work through the questions below and answer honestly. The Source column shows where each obligation sits in the AML/CTF Act and the AML/CTF Rules 2025. Every 'No' is a gap against an obligation that already applies to you.</p>
       <div class="tablewrap"><table class="check">
         <thead><tr><th style="width:18%">Area</th><th>Readiness question</th><th style="width:16%">Source</th><th style="width:14%">Your answer</th></tr></thead>
         <tbody id="checkbody"></tbody>
       </table></div>
-      <p class="smallprint">Source: AML/CTF Act 2006 (Cth) as amended by the AML/CTF Amendment Act 2024; AML/CTF Rules 2025; AUSTRAC guidance. Current at August 2026. General information only - not legal advice.</p>
+      <p class="smallprint"><span class="srcline"></span></p>
     </div>
   </section>
   <div class="gapbar" id="gapbar">
     <div class="wrap">
       <div class="gapnum" id="gapnum">0</div>
       <div style="flex:1;min-width:220px"><strong id="gapmsg">gaps identified.</strong><br><span style="font-size:14px">Every 'No' is an obligation that already applies to you. We can help you close the gaps.</span></div>
-      <button class="btn gold" onclick="go('help')">Close my gaps</button>
+      <button class="btn gold" onclick="go('about','services')">Close my gaps</button>
       <button class="gapclose" onclick="dismissGap()" aria-label="Hide this summary">&#215;</button>
     </div>
   </div>
@@ -445,92 +523,85 @@
 <div class="page" id="page-diy">
   <section>
     <div class="wrap">
-      <div class="eyebrow">Starter kit comparison</div>
-      <h1>The starter kit is free. The work is not.</h1>
-      <p class="lead">The AUSTRAC starter kit is a genuine starting point. The difference is who does the judgement, tailoring and implementation. Hover over any row, or tap it on a phone, for the detail behind the comparison.</p>
+      <div class="eyebrow">Why Nimbi</div>
+      <h1>Compare your options.</h1>
+      <p class="lead">Firms weighing up Nimbi usually consider two alternatives: doing it themselves with AUSTRAC's starter kit, or buying self-service AML software. Here's how each stacks up.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>The starter kit is free. The work is not.</h2>
+      <p>The AUSTRAC starter kit is a genuine starting point. The difference is who does the judgement, tailoring and implementation. Hover over any row, or tap it on a phone, for the detail behind the comparison.</p>
       <div class="tablewrap">
         <table class="diy">
           <thead><tr><th class="h1c" style="width:24%">Consideration</th><th class="h2c" style="width:38%">AUSTRAC starter kit (DIY)</th><th class="h3c" style="width:38%">Nimbi Foundations</th></tr></thead>
           <tbody id="diybody"></tbody>
         </table>
       </div>
-      <p style="margin-top:26px;font-weight:700;color:var(--teal)">The starter kit may suit the simplest practice. Foundations is for firms that want the judgement, tailoring and implementation done with them.</p>
+    </div>
+  </section>
+
+  <section class="cream">
+    <div class="wrap">
+      <h2>Software runs checks. Nimbi builds judgement.</h2>
+      <p style="max-width:75ch">Self-service AML software helps a business generate and operate its AML documentation through a guided platform. Nimbi works with the business to understand its risks, design its compliance framework and embed it into day-to-day operations. Both are legitimate approaches - the difference is who carries the judgement.</p>
+      <div class="tablewrap">
+        <table class="diy">
+          <thead><tr><th class="h1c" style="width:24%">Dimension</th><th class="h2c" style="width:38%">Self-service AML software</th><th class="h3c" style="width:38%">Nimbi Foundations</th></tr></thead>
+          <tbody>
+            <tr class="plain"><td class="cons">Risk assessment</td><td>Questionnaire and guided platform workflow</td><td>Consultant-led discovery and analysis</td></tr>
+            <tr class="plain"><td class="cons">Methodology</td><td>A pre-built framework applied to your sector</td><td>Tailored assessment of the firm's actual services, customers, channels, jurisdictions and operating model</td></tr>
+            <tr class="plain"><td class="cons">AML/CTF program</td><td>System-generated from configured responses</td><td>Policies, procedures, controls and governance designed around the business</td></tr>
+            <tr class="plain"><td class="cons">Who challenges your assumptions?</td><td>No one - the output reflects whatever information you enter</td><td>A specialist tests assumptions, identifies gaps and challenges risk ratings before anything is finalised</td></tr>
+            <tr class="plain"><td class="cons">Implementation</td><td>You configure and implement it yourself - templated output built from your own responses, so critical substance can be missed</td><td>Approximately 35 hours committed by Nimbi's AML/CTF specialists across assessment, program, training and implementation. Your time is limited to the fact find, workshops and review</td></tr>
+            <tr class="plain"><td class="cons">Training</td><td>Standardised platform modules and assessments</td><td>Tailored training using the firm's roles, procedures, risks and practical scenarios</td></tr>
+            <tr class="plain"><td class="cons">Operational embedding</td><td>Platform workflows and support</td><td>Templates, quick-reference guides, reporting bundle, governance responsibilities and implementation support</td></tr>
+            <tr class="plain"><td class="cons">Your existing client book</td><td>Risk ratings build client by client as you enter them - the back book you already hold stays unmapped unless you work through it yourself</td><td>Your full client book segmented, screened and risk-rated into tiers, giving each client a review cadence and your firm a defensible ongoing monitoring baseline from day one</td></tr>
+            <tr class="plain"><td class="cons">Ongoing compliance</td><td>Your program lives inside the platform - if the subscription ends, so does the system operating it</td><td>Your program, policies and records are yours, whatever verification technology you use now or later</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p style="font-weight:700;color:var(--teal)">The starter kit may suit the simplest practice, and software may suit the most confident. Foundations is for firms that want the judgement, tailoring and implementation done with them.</p>
       <div class="btnrow">
-        <button class="btn gold" onclick="go('help')">See how Nimbi helps</button>
+        <button class="btn gold" onclick="go('about','services')">See how Nimbi helps</button>
         <button class="btn ghost" onclick="go('home','contact-home')">Talk to us</button>
       </div>
-      <p class="smallprint">General information only - not legal advice. The AUSTRAC starter kit is AUSTRAC's own material; this comparison reflects Nimbi's view of the work involved in applying it well.</p>
+      <p class="smallprint">The AUSTRAC starter kit is AUSTRAC's own material; this comparison reflects Nimbi's view of the work involved in applying it well. <span class="srcline"></span></p>
     </div>
   </section>
 </div>
 <div id="diytip" role="tooltip"></div>
 
-<!-- ================= HOW NIMBI HELPS ================= -->
-<div class="page" id="page-help">
-  <section>
-    <div class="narrow">
-      <div class="eyebrow">How Nimbi can help</div>
-      <h1>Support at whatever stage you're at.</h1>
-      <p class="lead">Whether you need a program built from scratch, a second opinion on one you already have, or someone to run the day-to-day, we can help.</p>
-    </div>
-  </section>
-  <section class="cream">
-    <div class="wrap">
-      <h2>Nimbi Foundations</h2>
-      <p style="max-width:70ch">Foundations is our program work, and it comes in two paths. They're alternatives rather than a package, because reviewing a program needs to stay independent from building one.</p>
-      <div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
-        <div class="card">
-          <h3>Path A - Appropriateness review</h3>
-          <p>Already grabbed a template, a starter kit or a software-generated program? We review whether it actually fits your nature, size and complexity, and tell you plainly whether it's defensible. <span class="stag">s 26F(4)</span></p>
-        </div>
-        <div class="card">
-          <h3>Path B - Full build</h3>
-          <p>Starting from scratch, or not confident in what you have? We build the full program: ML/TF risk assessment, AML/CTF policies, governance and compliance officer arrangements, customer due diligence procedures and staff training - written for your business, not a generic one.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section>
-    <div class="wrap">
-      <h2>The Nimbi outsourced model</h2>
-      <p style="max-width:70ch">A program document is only the starting point. The day-to-day work of checking customers, reviewing alerts and preparing reports still has to happen, and in most small firms it isn't anyone's full-time job. Our outsourced model gives you a share of ours.</p>
-      <div class="grid3">
-        <div class="card"><h3>Customer due diligence, run for you</h3><p>We operate your identification and verification workflow, including the hard cases - trusts, companies, beneficial owners and offshore parties - with enhanced due diligence escalated to our practitioners.</p></div>
-        <div class="card"><h3>Screening and monitoring</h3><p>PEP, sanctions and adverse media screening at onboarding and on an ongoing basis, with alerts reviewed by our analysts before they reach you.</p></div>
-        <div class="card"><h3>Reporting support</h3><p>When something needs to go to AUSTRAC, we help you prepare it properly and on time - suspicious matter reports, threshold transaction reports and your annual compliance report.</p></div>
-        <div class="card"><h3>Compliance calendar</h3><p>Reviews, training refreshers, risk assessment triggers and evaluation timing, tracked and prompted so nothing quietly falls due.</p></div>
-        <div class="card"><h3>Your compliance officer, supported</h3><p>Your AMLCO stays yours - the Act requires that - but they'll have experienced practitioners behind them whenever a hard call comes up.</p></div>
-        <div class="card"><h3>Independent evaluation referral</h3><p>We don't evaluate programs we built ourselves. When your evaluation falls due, we'll connect you with a genuinely independent evaluator and help you prepare for it.</p></div>
-      </div>
-    </div>
-  </section>
-  <section class="navybg">
-    <div class="narrow">
-      <h2>Pricing</h2>
-      <p>Fees are fixed and agreed up front, based on the size and complexity of your business - no hourly billing surprises. Contact us for the current rate card.</p>
-      <div class="btnrow"><button class="btn gold" onclick="go('home','contact-home')">Contact us for pricing</button></div>
-    </div>
-  </section>
-</div>
-
 <footer>
   <div class="wrap">
     <div><svg width="96" height="30" viewBox="0 0 300 92" aria-label="Nimbi"><defs><linearGradient id="lgF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#5FB0B7"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgF)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgF)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#ffffff">nimbi</text></svg><br>AML/CTF compliance for newly regulated entities.</div>
-    <div>General information only - not legal advice. Content is anchored to the AML/CTF Act 2006 (Cth) as amended, the AML/CTF Rules 2025 and AUSTRAC guidance, current at August 2026, and should be reviewed by legal counsel or internal compliance before being relied on.</div>
+    <div><span class="srcline"></span> Content should be reviewed by legal counsel or internal compliance before being relied on.</div>
     <div>&copy; 2026 Nimbi. All rights reserved.</div>
   </div>
 </footer>
 
 <script>
 /* ---------- navigation ---------- */
+const navMap={home:'home',about:'about',serve:'oblig',ds:'oblig',kyo:'oblig',checklist:'oblig',diy:'diy'};
 function go(page, anchor){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.getElementById('page-'+page).classList.add('on');
-  document.querySelectorAll('.navlink').forEach(b=>b.classList.toggle('active', b.dataset.nav===page));
+  document.querySelectorAll('.navlink').forEach(b=>b.classList.toggle('active', b.dataset.nav===navMap[page]));
+  document.getElementById('dropmenu').classList.remove('open');
   if(anchor){ setTimeout(()=>{ const el=document.getElementById(anchor); if(el) el.scrollIntoView(); },30); }
   else window.scrollTo(0,0);
 }
 document.querySelector('[data-nav="home"]').classList.add('active');
+function toggleDrop(e){ e.stopPropagation(); document.getElementById('dropmenu').classList.toggle('open'); }
+document.addEventListener('click', ()=>document.getElementById('dropmenu').classList.remove('open'));
+const SOURCE_LINE = "Source: AML/CTF Act 2006 (Cth) as amended by the AML/CTF Amendment Act 2024; AML/CTF Rules 2025; AUSTRAC guidance. Last reviewed August 2026. General information only - not legal advice.";
+document.querySelectorAll('.srcline').forEach(el=>{ el.textContent = SOURCE_LINE; });
 
 function fakeSubmit(noteId){ document.getElementById(noteId).style.display='block'; }
 
