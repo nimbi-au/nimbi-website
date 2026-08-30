@@ -17,10 +17,11 @@
   .mono{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
 
   /* ---------- nav ---------- */
-  nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line)}
-  .navwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:12px clamp(14px,4vw,24px);flex-wrap:wrap}
-  @media(max-width:560px){.navlink{font-size:13.5px;padding:6px 7px}.logo svg{width:98px;height:30px}}
+  nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line);padding:0 clamp(18px,5vw,40px)}
+  .navwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:12px 0;flex-wrap:wrap}
+  @media(max-width:560px){.navlink{font-size:13.5px;padding:6px 7px}.logo svg{width:104px;height:auto}}
   .logo{font-weight:800;font-size:26px;color:var(--teal);letter-spacing:-0.5px;cursor:pointer;margin-right:auto}
+  .logo svg{display:block}
   .logo span{color:var(--navy)}
   .navlink{background:none;border:none;font:inherit;font-size:15px;color:var(--navy);padding:8px 10px;cursor:pointer;border-radius:6px}
   .navlink:hover{background:var(--cream)}
@@ -31,8 +32,12 @@
   .page{display:none}
   .page.on{display:block}
   section{padding:clamp(44px,7vw,72px) clamp(18px,5vw,40px)}
-  .wrap{max-width:1120px;margin:0 auto}
-  .narrow{max-width:820px;margin:0 auto}
+  /* One page container, so every section shares the same left edge.
+     .narrow keeps the shorter text measure by capping its contents, not the container. */
+  .wrap,.narrow{max-width:1120px;margin:0 auto}
+  .narrow>*{max-width:820px}
+  .narrow.mid{text-align:center}
+  .narrow.mid>*{margin-left:auto;margin-right:auto}
   .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
   h1{font-size:clamp(34px,5vw,54px);line-height:1.08;letter-spacing:-0.02em;color:var(--navy);font-weight:800;margin-bottom:20px}
   h2{font-size:clamp(26px,3.4vw,36px);line-height:1.15;letter-spacing:-0.015em;color:var(--navy);font-weight:800;margin-bottom:16px}
@@ -145,7 +150,7 @@
 
 <nav>
   <div class="navwrap">
-    <div class="logo" onclick="go('home')" role="button" aria-label="Nimbi home"><svg width="118" height="36" viewBox="0 0 300 92" aria-hidden="true"><defs><linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#312B7E"/></linearGradient><linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FB0B7"/><stop offset="1" stop-color="#312B7E"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgA)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgB)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#312B7E">nimbi</text></svg></div>
+    <div class="logo" onclick="go('home')" role="button" aria-label="Nimbi home"><svg width="121" height="54" viewBox="51.5 2 197 88" aria-hidden="true"><defs><linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#312B7E"/></linearGradient><linearGradient id="lgB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FB0B7"/><stop offset="1" stop-color="#312B7E"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgA)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgB)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#312B7E">nimbi</text></svg></div>
     <button class="navlink" data-nav="home" onclick="go('home')">Home</button>
     <div class="navdrop">
       <button class="navlink" data-nav="oblig" onclick="toggleDrop(event)">Your obligations &#9662;</button>
@@ -228,7 +233,7 @@
           <p>A tailored AML/CTF program - risk assessment, policies, governance, portfolio risk mapping and training - designed around how your firm actually operates. Already have one? We'll review whether it holds up.</p>
         </div>
         <div class="card">
-          <h3>Nimbi Reliance</h3>
+          <h3>Nimbi Outsource</h3>
           <p class="tagline">Hand the complex customer due diligence to us and focus on your business.</p>
           <p>Refer a customer or a matter to Nimbi and our practitioners action it end to end - due diligence, screening and monitoring, alert review and case file preparation - and hand you back a completed, documented outcome ready for your records.</p>
         </div>
@@ -296,21 +301,21 @@
 
   <section>
     <div class="wrap">
-      <h2>Nimbi Reliance</h2>
+      <h2>Nimbi Outsource</h2>
       <p style="max-width:70ch">A program document is only the starting point. The day-to-day work of checking customers, reviewing alerts and preparing case files still has to happen, and in most small firms it isn't anyone's full-time job. Our outsourced model gives you a share of ours.</p>
       <div class="grid3">
         <div class="card"><h3>Customer due diligence, run for you</h3><p>We operate your identification and verification workflow, including the hard cases - trusts, companies, beneficial owners and offshore parties - with enhanced due diligence escalated to our practitioners.</p></div>
-        <div class="card"><h3>Screening and monitoring</h3><p>PEP, sanctions and adverse media screening at onboarding and on an ongoing basis, with alerts reviewed by our analysts before they reach you.</p></div>
+        <div class="card"><h3>Screening and monitoring</h3><p>Risk-based application of PEP, sanctions and adverse media screening at onboarding and on an ongoing basis, with alerts reviewed by our analysts before they reach you.</p></div>
         <div class="card"><h3>Reporting support</h3><p>When something needs to go to AUSTRAC, we help you prepare it properly and on time - suspicious matter reports, threshold transaction reports and your annual compliance report.</p></div>
         <div class="card"><h3>Compliance calendar</h3><p>Reviews, training refreshers, risk assessment triggers and evaluation timing, tracked and prompted so nothing quietly falls due.</p></div>
         <div class="card"><h3>Your compliance officer, supported</h3><p>Your AMLCO stays yours - the Act requires that - but they'll have experienced practitioners behind them whenever a hard call comes up.</p></div>
-        <div class="card"><h3>Independent evaluation referral</h3><p>We don't evaluate programs we built ourselves. When your evaluation falls due, we'll connect you with a genuinely independent evaluator and help you prepare for it.</p></div>
+        <div class="card"><h3>Risk appetite, managed</h3><p>Our outsourced model strongly adheres to your own risk appetite - advising you when a customer relationship should be off-boarded, supporting escalated decisions, and taking a seat on your quarterly compliance committee if you want us at the table.</p></div>
       </div>
     </div>
   </section>
 
   <section>
-    <div class="narrow" style="text-align:center">
+    <div class="narrow mid">
       <h2>Ready to talk?</h2>
       <div class="btnrow" style="justify-content:center"><button class="btn gold" onclick="go('about','contact-about')">Talk to us</button></div>
     </div>
@@ -364,11 +369,11 @@
       <div class="grid3">
         <div class="card"><h3>Accountants</h3><p>From sole practitioners to multi-partner firms. Entity formation, client money and business sales are the trigger points, not the tax return.</p></div>
         <div class="card"><h3>Real estate agents</h3><p>Listing agents, buyer's agents and agency groups. Obligations attach the moment you're engaged to act in a sale, purchase or transfer.</p></div>
-        <div class="card"><h3>Property developers</h3><p>Selling the stock you developed is a designated service, whether through an agent or off the plan from your own office.</p></div>
+        <div class="card"><h3>Property developers</h3><p>Selling the stock you developed is a designated service where no independent agent brokers the sale - in-house sales suites and off-the-plan included.</p></div>
         <div class="card"><h3>Lawyers</h3><p>Conveyancing, trust accounts, structuring and company work bring practices into scope. Court work and advocacy generally sit outside it.</p></div>
         <div class="card"><h3>Conveyancers</h3><p>Acting in the sale, purchase or transfer of real property puts conveyancing squarely in the regime, settlement funds included.</p></div>
         <div class="card"><h3>Trust and company service providers</h3><p>Forming and managing companies and trusts, registered office services and nominee arrangements are core designated services.</p></div>
-        <div class="card"><h3>Dealers in precious metals and stones</h3><p>Buying or selling bullion, metals or stones where $10,000 or more changes hands in physical currency brings dealers into scope.</p></div>
+        <div class="card"><h3>Dealers in precious metals and stones</h3><p>Bullion dealing, and buying or selling metals, stones or jewellery where $10,000 or more is paid in cash or crypto, bring dealers into scope.</p></div>
       </div>
       <div class="btnrow">
         <button class="btn gold" onclick="go('kyo')">Find your obligations</button>
@@ -392,34 +397,40 @@
     <div class="narrow">
       <h2>Real estate professionals</h2>
       <ul class="plain">
-        <li>Brokering the sale, purchase or transfer of real estate on behalf of a buyer or seller</li>
+        <li>Brokering the sale, purchase or transfer of real estate for any party to the deal - buyer, seller, transferor or transferee - even where no money changes hands</li>
         <li>Acting for a vendor as listing agent, or for a purchaser as buyer's agent</li>
-        <li>Selling or transferring real estate in the course of carrying on a business, including developers selling their own stock</li>
+        <li>Selling or transferring real estate as a business without an independent agent brokering the deal - developers selling through in-house sales teams or off the plan</li>
+        <li>Brokering business sales where a company or trust changes hands - management rights, motels, franchises</li>
       </ul>
-      <div class="flag">Property management and leasing generally sit outside the net unless a sale or transfer is involved - but check before you rely on it.</div>
+      <div class="flag">Property management and leasing generally sit outside the net unless a sale or transfer is involved.</div>
     </div>
   </section>
   <section class="cream">
     <div class="narrow">
       <h2>Accountants</h2>
       <ul class="plain">
-        <li>Assisting a client to buy or sell real estate or a business</li>
-        <li>Receiving, holding or managing client money, accounts or property</li>
-        <li>Helping to create or restructure companies, trusts or partnerships</li>
-        <li>Acting as, or arranging, a nominee director, secretary or shareholder</li>
+        <li>Assisting a client to buy, sell or transfer real estate, or a company, business or trust</li>
+        <li>Receiving, holding or managing client money, accounts or property as part of a transaction - including through a trust account</li>
+        <li>Creating, restructuring or winding up companies, trusts and partnerships</li>
+        <li>Acting as, or arranging for someone to act as, a director, secretary, partner, trustee or nominee shareholder for a client entity</li>
         <li>Providing a registered office or principal place of business address</li>
+        <li>Selling or transferring shelf companies</li>
+        <li>Helping to organise or carry out equity or debt financing for a company or trust</li>
       </ul>
-      <div class="flag">Preparing a tax return or an audit is not, by itself, a designated service. The trigger is transactional and structuring work.</div>
+      <div class="flag">Preparing tax returns, financial statements, BAS or audits is not, by itself, a designated service. What brings a firm into the regime is moving client money, acting in purchases and sales, and setting up or changing structures.</div>
     </div>
   </section>
   <section>
     <div class="narrow">
       <h2>Lawyers</h2>
       <ul class="plain">
-        <li>Acting in the sale, purchase or transfer of real estate</li>
-        <li>Receiving or holding client funds in the course of a transaction</li>
-        <li>Creating or managing companies, trusts and other legal arrangements</li>
-        <li>Nominee, registered office and shelf company arrangements</li>
+        <li>Assisting clients to plan or carry out the sale, purchase or transfer of real estate</li>
+        <li>Assisting clients to buy, sell or transfer a business, company or trust</li>
+        <li>Receiving, holding or managing client money, securities or other property in the course of a transaction</li>
+        <li>Creating, restructuring or winding up companies, trusts and other legal arrangements</li>
+        <li>Acting as, or arranging for someone to act as, a director, secretary, trustee or partner of a client entity</li>
+        <li>Helping to organise equity or debt financing for a company, trust or other legal arrangement</li>
+        <li>Nominee shareholder, registered office and shelf company arrangements</li>
       </ul>
       <div class="flag">Litigation and advocacy work generally falls outside the regime. The transactional side of practice is where obligations live.</div>
     </div>
@@ -428,8 +439,9 @@
     <div class="narrow">
       <h2>Conveyancers</h2>
       <ul class="plain">
-        <li>Acting for a party in the sale, purchase or transfer of real property</li>
-        <li>Handling settlement and deposit funds in the course of that work</li>
+        <li>Assisting clients to plan or carry out the sale, purchase or transfer of real property</li>
+        <li>Assisting in business sales where a company or trust changes hands</li>
+        <li>Receiving, holding or paying out client money or property - including through a trust account - in the course of a transaction</li>
       </ul>
     </div>
   </section>
@@ -437,8 +449,10 @@
     <div class="narrow">
       <h2>Trust and company service providers</h2>
       <ul class="plain">
-        <li>Forming companies, trusts and partnerships for clients</li>
-        <li>Acting as or arranging directors, secretaries, trustees or nominee shareholders</li>
+        <li>Setting up or restructuring companies, trusts and partnerships for clients</li>
+        <li>Acting as, or arranging for someone to act as, a director, secretary, partner, trustee, nominee shareholder or power of attorney for a client entity</li>
+        <li>Selling or transferring shelf companies</li>
+        <li>Receiving, holding or managing client money, accounts or property in the course of a transaction</li>
         <li>Providing registered office or business address services</li>
       </ul>
     </div>
@@ -447,8 +461,10 @@
     <div class="narrow">
       <h2>Dealers in precious metals and stones</h2>
       <ul class="plain">
-        <li>Buying or selling precious metals, stones or products derived from them where $10,000 or more is paid in physical currency or virtual assets</li>
+        <li>Buying or selling bullion as part of a bullion-dealing business - captured whatever the amount and however the customer pays</li>
+        <li>Buying or selling precious metals, stones, or jewellery, watches and similar items containing them, where $10,000 or more is paid in physical currency, virtual assets or a mix of both - in one transaction or several that appear linked</li>
       </ul>
+      <div class="flag">Bullion sales under $5,000 retail value are exempt from initial customer due diligence <span class="stag">s 39E</span> - but the sale is still a designated service, and full checks apply the moment enhanced due diligence is triggered.</div>
     </div>
   </section>
   <section>
@@ -551,21 +567,11 @@
   <section class="cream">
     <div class="wrap">
       <h2>Software runs checks. Nimbi builds judgement.</h2>
-      <p style="max-width:75ch">Self-service AML software helps a business generate and operate its AML documentation through a guided platform. Nimbi works with the business to understand its risks, design its compliance framework and embed it into day-to-day operations. Both are legitimate approaches - the difference is who carries the judgement.</p>
+      <p style="max-width:75ch">Self-service AML software helps a business generate and operate its AML documentation through a guided platform. Nimbi works with the business to understand its risks, design its compliance framework and embed it into day-to-day operations. Both are legitimate approaches - the difference is who carries the judgement. Hover over any row, or tap it on a phone, for the detail behind the comparison.</p>
       <div class="tablewrap">
         <table class="diy">
           <thead><tr><th class="h1c" style="width:24%">Dimension</th><th class="h2c" style="width:38%">Self-service AML software</th><th class="h3c" style="width:38%">Nimbi Foundations</th></tr></thead>
-          <tbody>
-            <tr class="plain"><td class="cons">Risk assessment</td><td>Questionnaire and guided platform workflow</td><td>Consultant-led discovery and analysis</td></tr>
-            <tr class="plain"><td class="cons">Methodology</td><td>A pre-built framework applied to your sector</td><td>Tailored assessment of the firm's actual services, customers, channels, jurisdictions and operating model</td></tr>
-            <tr class="plain"><td class="cons">AML/CTF program</td><td>System-generated from configured responses</td><td>Policies, procedures, controls and governance designed around the business</td></tr>
-            <tr class="plain"><td class="cons">Who challenges your assumptions?</td><td>No one - the output reflects whatever information you enter</td><td>A specialist tests assumptions, identifies gaps and challenges risk ratings before anything is finalised</td></tr>
-            <tr class="plain"><td class="cons">Implementation</td><td>You configure and implement it yourself - templated output built from your own responses, so critical substance can be missed</td><td>Approximately 35 hours committed by Nimbi's AML/CTF specialists across assessment, program, training and implementation. Your time is limited to the fact find, workshops and review</td></tr>
-            <tr class="plain"><td class="cons">Training</td><td>Standardised platform modules and assessments</td><td>Tailored training using the firm's roles, procedures, risks and practical scenarios</td></tr>
-            <tr class="plain"><td class="cons">Operational embedding</td><td>Platform workflows and support</td><td>Templates, quick-reference guides, reporting bundle, governance responsibilities and implementation support</td></tr>
-            <tr class="plain"><td class="cons">Your existing client book</td><td>Risk ratings build client by client as you enter them - the back book you already hold stays unmapped unless you work through it yourself</td><td>Your full client book segmented, screened and risk-rated into tiers, giving each client a review cadence and your firm a defensible ongoing monitoring baseline from day one</td></tr>
-            <tr class="plain"><td class="cons">Ongoing compliance</td><td>Your program lives inside the platform - if the subscription ends, so does the system operating it</td><td>Your program, policies and records are yours, whatever verification technology you use now or later</td></tr>
-          </tbody>
+          <tbody id="swbody"></tbody>
         </table>
       </div>
     </div>
@@ -586,7 +592,7 @@
 
 <footer>
   <div class="wrap">
-    <div><svg width="96" height="30" viewBox="0 0 300 92" aria-label="Nimbi"><defs><linearGradient id="lgF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#5FB0B7"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgF)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgF)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#ffffff">nimbi</text></svg><br>AML/CTF compliance for newly regulated entities.</div>
+    <div><svg width="114" height="51" viewBox="51.5 2 197 88" aria-label="Nimbi"><defs><linearGradient id="lgF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FC9CD"/><stop offset="1" stop-color="#5FB0B7"/></linearGradient></defs><path d="M56 44 V12 H100" stroke="url(#lgF)" stroke-width="9" fill="none"/><path d="M244 48 V80 H200" stroke="url(#lgF)" stroke-width="9" fill="none"/><text x="150" y="68" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="62" textLength="164" lengthAdjust="spacingAndGlyphs" fill="#ffffff">nimbi</text></svg><br>AML/CTF compliance for newly regulated entities.</div>
     <div><span class="srcline"></span> Content should be reviewed by legal counsel or internal compliance before being relied on.</div>
     <div>&copy; 2026 Nimbi. All rights reserved.</div>
   </div>
@@ -661,31 +667,31 @@ document.addEventListener("change", clearInvalid);
 const sectors = {
   acc: { name:"Accountants", tag:"Practices and sole practitioners",
     intro:"Accountants are captured service by service, not wholesale. If your practice does any transactional or structuring work, the regime reached you on 1 July 2026.",
-    ds:["Assisting clients to buy or sell real estate or a business","Receiving, holding or managing client money, accounts or property","Creating or restructuring companies, trusts and partnerships","Acting as, or arranging, nominee directors, secretaries or shareholders","Providing registered office or business address services"],
+    ds:["Assisting clients to buy, sell or transfer real estate, or a company, business or trust","Receiving, holding or managing client money, accounts or property as part of a transaction","Creating, restructuring or winding up companies, trusts and partnerships","Acting as, or arranging, directors, secretaries, partners, trustees or nominee shareholders","Providing registered office or business address services","Selling or transferring shelf companies","Organising equity or debt financing for a company or trust"],
     flags:["Complex structures - discretionary trusts and layered entities are exactly what the reforms target, and your clients love them.","Source of funds - a client settling a business purchase in ways that don't match their profile is now your problem to notice.","Client money - trust account movements need monitoring, not just reconciliation."]},
   re: { name:"Real estate agents", tag:"Listing agents, buyer's agents, agencies",
     intro:"Obligations attach the moment you're engaged to act in a sale, purchase or transfer. Your vendor is your customer - and the buyer becomes relevant when the transaction forms.",
-    ds:["Brokering the sale, purchase or transfer of real estate","Acting for a vendor as listing agent","Acting for a purchaser as buyer's agent"],
+    ds:["Brokering the sale, purchase or transfer of real estate for any party - even where no money changes hands","Acting for a vendor as listing agent","Acting for a purchaser as buyer's agent","Brokering business sales where a company or trust changes hands"],
     flags:["Cash and unusual funding - property remains Australia's best documented laundering channel.","Foreign buyers and absent principals - non face-to-face deals need stronger verification, not a lighter touch.","Multi-office groups - a reporting group with one shared program is usually smarter than every office building its own."]},
   dev: { name:"Property developers", tag:"Selling developed stock",
-    intro:"Developers selling their own stock provide a designated service, whether sales run through an agent or off the plan from your own sales suite.",
-    ds:["Selling or transferring real estate you developed, in the course of carrying on a business"],
+    intro:"Developers selling their own stock provide a designated service where no independent agent brokers the sale - off-the-plan and in-house sales suites included.",
+    ds:["Selling or transferring real estate you developed, where no independent agent brokers the sale"],
     flags:["Off-the-plan deposits - long settlement windows and staged payments create layering opportunities.","Related party sales - transactions inside a group still need due diligence.","Overseas purchasers - identification and source of funds need real substance."]},
   law: { name:"Lawyers", tag:"Firms and sole practitioners",
     intro:"Legal practice is captured on its transactional side. Court work generally sits outside the regime; property, client money and structuring sit inside it.",
-    ds:["Acting in the sale, purchase or transfer of real estate","Receiving or holding client funds in a transaction","Creating or managing companies, trusts and other arrangements","Nominee, registered office and shelf company services"],
+    ds:["Assisting in the sale, purchase or transfer of real estate","Assisting clients to buy, sell or transfer a business, company or trust","Receiving, holding or managing client money or property in a transaction","Creating, restructuring or winding up companies, trusts and other arrangements","Acting as, or arranging, directors, secretaries, trustees or partners","Organising equity or debt financing for a company or trust","Nominee shareholder, registered office and shelf company services"],
     flags:["Trust accounts - the single biggest exposure in most firms, and the first place AUSTRAC will look.","Professional privilege - privilege is preserved but doesn't erase reporting obligations; the boundary needs careful, documented handling.","Conveyancing volume - high matter throughput needs a CDD process that scales without shortcuts."]},
   con: { name:"Conveyancers", tag:"Licensed conveyancing practices",
     intro:"Acting for a party in the sale, purchase or transfer of real property puts conveyancing squarely in scope, settlement funds included.",
-    ds:["Acting for a party in the sale, purchase or transfer of real property","Handling settlement and deposit funds in that work"],
+    ds:["Assisting clients to plan or carry out the sale, purchase or transfer of real property","Assisting in business sales where a company or trust changes hands","Receiving, holding or paying out client money or property in the course of a transaction"],
     flags:["Speed pressure - settlements move fast; your verification process has to move faster without cutting corners.","Instructing parties - make sure the person instructing you is the person you verified.","Remote clients - digital verification with liveness checking is now the baseline."]},
   tcsp:{ name:"Trust and company service providers", tag:"Formation, nominee and office services",
     intro:"TCSP work is the most internationally scrutinised of the gatekeeper services - opaque structures are the global laundering vehicle of choice, and FATF has said so for years.",
-    ds:["Forming companies, trusts and partnerships","Acting as or arranging directors, trustees or nominee shareholders","Providing registered office or business address services"],
+    ds:["Setting up or restructuring companies, trusts and partnerships","Acting as or arranging directors, secretaries, partners, trustees or nominee shareholders","Selling or transferring shelf companies","Receiving, holding or managing client money or property in a transaction","Providing registered office or business address services"],
     flags:["Beneficial ownership - you must be able to say who really owns and controls every structure you touch.","Nominee arrangements - acting as a shield for an unidentified principal is precisely the scenario the Act targets.","Offshore linkages - structures reaching into secrecy jurisdictions need enhanced due diligence as a default posture."]},
   dpms:{ name:"Dealers in precious metals and stones", tag:"Bullion, jewellery, gems",
-    intro:"Dealers come into scope where $10,000 or more is paid in physical currency or virtual assets. Cash-heavy trade is exactly what the threshold is built to catch.",
-    ds:["Buying or selling precious metals, stones or derived products where $10,000 or more is paid in physical currency or virtual assets"],
+    intro:"Bullion dealing is captured in its own right. Other dealers come into scope where $10,000 or more is paid in physical currency or virtual assets - cash-heavy trade is exactly what the threshold is built to catch.",
+    ds:["Buying or selling bullion as part of a bullion-dealing business - whatever the amount, with initial customer checks exempt below $5,000 retail value","Buying or selling precious metals, stones or jewellery containing them, where $10,000 or more is paid in physical currency, virtual assets or a mix - in one transaction or several that appear linked"],
     flags:["Structuring - a buyer splitting one purchase into several just under the threshold is a classic red flag, and reportable.","Walk-in cash - high value, easy to carry and hard to trace - which is exactly why the threshold exists.","Repeat customers - patterns across visits matter as much as any single sale."]}
 };
 
@@ -776,33 +782,56 @@ const diyRows=[
 {c:"Best suited to", d:"Sole practitioners, e.g. accountants providing tax-only services with a simple, stable book", n:"Any firm with entity work, a trust account or a mixed client base",
  b:"Foundations is tailored to your firm, whatever its size."}
 ];
-const diybody=document.getElementById('diybody');
+const swRows=[
+{c:"Risk assessment", d:"Questionnaire and guided platform workflow", n:"Consultant-led discovery and analysis",
+ b:"A questionnaire can only ask the questions its designers anticipated. Our practitioners ask the follow-ups - how client money actually moves, who touches it, what unusual would look like in your firm - and build the assessment from what we find, not just what a form collects."},
+{c:"Methodology", d:"A pre-built framework applied to your sector", n:"Tailored assessment of the firm's actual services, customers, channels, jurisdictions and operating model",
+ b:"No two firms in the same sector carry the same risk - a suburban conveyancer and one acting for offshore investors have little in common. A sector framework rates the average firm. We assess your actual services, clients, channels and jurisdictions, so the ratings mean something."},
+{c:"AML/CTF program", d:"System-generated from configured responses", n:"Policies, procedures, controls and governance designed around the business",
+ b:"A generated program describes a standard process, not necessarily yours. Any gap between what the documents say and what your firm actually does is exactly what an independent evaluation will find. We design the program around how you genuinely operate, so document and reality match."},
+{c:"Who challenges your assumptions?", d:"No one - the output reflects whatever information you enter", n:"A specialist tests assumptions, identifies gaps and challenges risk ratings before anything is finalised",
+ b:"Software treats your answers as facts: rate a risk too low going in and the platform confidently builds your entire program on the error. A practitioner's job is to catch it first - testing your assumptions is what makes the final program defensible."},
+{c:"Implementation", d:"You configure and implement it yourself - templated output built from your own responses, so critical substance can be missed", n:"Approximately 35 hours committed by Nimbi's AML/CTF specialists across assessment, program, training and implementation. Your time is limited to the fact find, workshops and review",
+ b:"The work exists either way - the question is who carries it. Self-service means partners spending evenings configuring a platform. With Foundations, our specialists carry around 35 hours of assessment, drafting, training and implementation, and your time is limited to fact find, workshops and review."},
+{c:"Training", d:"Standardised platform modules and assessments", n:"Tailored training using the firm's roles, procedures, risks and practical scenarios",
+ b:"Generic modules teach definitions. Effective training teaches your people to recognise the moment a matter on their own desk becomes a red flag - so we train with your services, your client types and your escalation paths. It also makes your training records credible evidence, not a tick-box."},
+{c:"Operational embedding", d:"Platform workflows and support", n:"Templates, quick-reference guides, reporting bundle, governance responsibilities and implementation support",
+ b:"A program only works if the person onboarding a client on a Friday afternoon knows exactly what to do without opening a policy. We build that layer - checklists, quick-reference guides, reporting templates and a governance rhythm - so the program runs in daily practice, not just on paper."},
+{c:"Your existing client book", d:"Risk ratings build client by client as you enter them - the back book you already hold stays unmapped unless you work through it yourself", n:"Your full client book segmented, screened and risk-rated into tiers, giving each client a review cadence and your firm a defensible ongoing monitoring baseline from day one",
+ b:"Ongoing CDD applies to the clients you already hold, not just the next one through the door. Working through a back book client by client is the job nobody gets to. We segment, screen and risk-rate the whole book up front, so your highest-risk existing relationships surface now - not in three years."},
+{c:"Ongoing compliance", d:"Your program lives inside the platform - if the subscription ends, so does the system operating it", n:"Your program, policies and records are yours, whatever verification technology you use now or later",
+ b:"Generally, AML/CTF records must be kept for seven years - most software subscriptions don't last that long. If your program lives inside a platform, ending the subscription ends the system that operates it. Everything Nimbi builds sits in your own files and survives any change of technology."}
+];
 const diytip=document.getElementById('diytip');
 const canHover=window.matchMedia('(hover: hover)').matches;
-diyRows.forEach((r,i)=>{
-  const tr=document.createElement('tr');
-  tr.className='diyrow';
-  tr.innerHTML=`<td class="cons">${r.c}</td><td>${r.d}</td><td>${r.n}</td>`;
-  const det=document.createElement('tr');
-  det.className='diydetail';
-  det.innerHTML=`<td colspan="3">${r.b}</td>`;
-  tr.addEventListener('click',()=>{ det.classList.toggle('on'); diytip.style.display='none'; });
-  if(canHover){
-    tr.addEventListener('mousemove',e=>{
-      if(det.classList.contains('on')) return;
-      diytip.textContent=r.b;
-      diytip.style.display='block';
-      const pad=16, w=diytip.offsetWidth, h=diytip.offsetHeight;
-      let x=e.clientX+pad, y=e.clientY+pad;
-      if(x+w>window.innerWidth-8) x=e.clientX-w-pad;
-      if(y+h>window.innerHeight-8) y=e.clientY-h-pad;
-      diytip.style.left=x+'px'; diytip.style.top=y+'px';
-    });
-    tr.addEventListener('mouseleave',()=>{ diytip.style.display='none'; });
-  }
-  diybody.appendChild(tr);
-  diybody.appendChild(det);
-});
+function buildComparison(rows, tbody){
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.className='diyrow';
+    tr.innerHTML=`<td class="cons">${r.c}</td><td>${r.d}</td><td>${r.n}</td>`;
+    const det=document.createElement('tr');
+    det.className='diydetail';
+    det.innerHTML=`<td colspan="3">${r.b}</td>`;
+    tr.addEventListener('click',()=>{ det.classList.toggle('on'); diytip.style.display='none'; });
+    if(canHover){
+      tr.addEventListener('mousemove',e=>{
+        if(det.classList.contains('on')) return;
+        diytip.textContent=r.b;
+        diytip.style.display='block';
+        const pad=16, w=diytip.offsetWidth, h=diytip.offsetHeight;
+        let x=e.clientX+pad, y=e.clientY+pad;
+        if(x+w>window.innerWidth-8) x=e.clientX-w-pad;
+        if(y+h>window.innerHeight-8) y=e.clientY-h-pad;
+        diytip.style.left=x+'px'; diytip.style.top=y+'px';
+      });
+      tr.addEventListener('mouseleave',()=>{ diytip.style.display='none'; });
+    }
+    tbody.appendChild(tr);
+    tbody.appendChild(det);
+  });
+}
+buildComparison(diyRows, document.getElementById('diybody'));
+buildComparison(swRows, document.getElementById('swbody'));
 </script>
 </body>
 </html>
