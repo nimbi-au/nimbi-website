@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nimbi-contact",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-01",
+  "observability": { "enabled": true },
+
+  // Public config. Secrets (TURNSTILE_SECRET) are set with
+  // `wrangler secret put`, never committed here.
+  "vars": {
+    "TO_ADDRESS": "dean@nimbi.com.au",
+    "FROM_ADDRESS": "website@nimbi.com.au",
+    // Browsers may post from these origins and no others.
+    "ALLOWED_ORIGINS": "https://nimbi.com.au,https://www.nimbi.com.au,https://nimbi-au.github.io"
+  },
+
+  // Cloudflare Email Service. Pinning destination_address means this Worker can
+  // only ever mail that one verified address, whatever the request says.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "dean@nimbi.com.au"
+    }
+  ]
+}

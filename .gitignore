@@ -13,3 +13,7 @@ desktop.ini
 
 # Node (in case tooling is added later)
 node_modules/
+
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars

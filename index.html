@@ -118,6 +118,8 @@
   .cform .req{color:#c0392b;margin-left:2px}
   .cform input.invalid,.cform select.invalid,.cform textarea.invalid{border-color:#c0392b;background:#fdf5f4}
   .formnote{font-size:14px;color:var(--teal);font-weight:700;display:none;margin-top:8px}
+  .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+  .tsbox:not(:empty){margin:4px 0 16px}
   .formnote.err{color:#c0392b}
   .reqnote{font-size:13px;color:#7d8595;margin-top:10px}
   @media(max-width:640px){.cform{grid-template-columns:1fr}}
@@ -268,9 +270,11 @@
         </div>
         <div class="span2"><label for="h-msg">What's on your mind? <span class="req" aria-hidden="true">*</span></label><textarea id="h-msg" required aria-required="true"></textarea></div>
         <div class="span2">
-          <button class="btn gold" onclick="submitEnquiry('h')">Request a call back</button>
+          <div class="hp" aria-hidden="true"><label for="h-hp">Leave this field empty</label><input id="h-hp" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="tsbox" id="h-turnstile"></div>
+          <button class="btn gold" onclick="submitEnquiry('h',this)">Request a call back</button>
           <div class="formnote" id="h-note"></div>
-          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. Sending opens your email app with the details ready to go to dean@nimbi.com.au.</div>
+          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. We use your details only to respond to your enquiry.</div>
         </div>
       </div>
     </div>
@@ -345,9 +349,11 @@
         <div><label for="a-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="a-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
         <div class="span2"><label for="a-msg">How can we help? <span class="req" aria-hidden="true">*</span></label><textarea id="a-msg" required aria-required="true"></textarea></div>
         <div class="span2">
-          <button class="btn gold" onclick="submitEnquiry('a')">Request a call back</button>
+          <div class="hp" aria-hidden="true"><label for="a-hp">Leave this field empty</label><input id="a-hp" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="tsbox" id="a-turnstile"></div>
+          <button class="btn gold" onclick="submitEnquiry('a',this)">Request a call back</button>
           <div class="formnote" id="a-note"></div>
-          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. Sending opens your email app with the details ready to go to dean@nimbi.com.au.</div>
+          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. We use your details only to respond to your enquiry.</div>
         </div>
       </div>
     </div>
@@ -610,20 +616,37 @@ const SOURCE_LINE = "Source: AML/CTF Act 2006 (Cth) as amended by the AML/CTF Am
 document.querySelectorAll('.srcline').forEach(el=>{ el.textContent = SOURCE_LINE; });
 
 /* ---------- contact forms ---------- */
+/* Paste the deployed Worker URL here. While it is empty the forms fall back to
+   opening the visitor's email app, exactly as they did before. */
+const ENQUIRY_ENDPOINT = "";
+/* Paste the Turnstile site key here. While it is empty no widget is rendered and
+   the Worker skips the check, so the form still works. */
+const TURNSTILE_SITEKEY = "";
 const ENQUIRY_EMAIL = "dean@nimbi.com.au";
+/* [element id, key sent to the Worker, label shown in the email] */
 const ENQUIRY_FORMS = {
-  h: { note:"h-note", subject:"Call back request - Nimbi website",
-       fields:[["h-name","Name"],["h-firm","Firm"],["h-sector","Sector"],["h-email","Email"],["h-phone","Phone"],["h-when","When do you need help?"],["h-msg","What's on your mind?"]] },
-  a: { note:"a-note", subject:"Call back request - Nimbi website",
-       fields:[["a-name","Name"],["a-firm","Firm"],["a-email","Email"],["a-phone","Phone"],["a-msg","How can we help?"]] }
+  h: { note:"h-note", box:"h-turnstile", subject:"Call back request - Nimbi website",
+       fields:[["h-name","name","Name"],["h-firm","firm","Firm"],["h-sector","sector","Sector"],["h-email","email","Email"],["h-phone","phone","Phone"],["h-when","when","When do you need help?"],["h-msg","msg","What's on your mind?"]] },
+  a: { note:"a-note", box:"a-turnstile", subject:"Call back request - Nimbi website",
+       fields:[["a-name","name","Name"],["a-firm","firm","Firm"],["a-email","email","Email"],["a-phone","phone","Phone"],["a-msg","msg","How can we help?"]] }
 };
 
-function submitEnquiry(key){
-  const cfg = ENQUIRY_FORMS[key];
-  const note = document.getElementById(cfg.note);
-  let firstBad = null;
-  const lines = [];
+const turnstileWidgets = {};
+function onTurnstileLoad(){
+  if(!TURNSTILE_SITEKEY) return;
+  Object.keys(ENQUIRY_FORMS).forEach(function(key){
+    const box = document.getElementById(ENQUIRY_FORMS[key].box);
+    if(box) turnstileWidgets[key] = turnstile.render(box, { sitekey: TURNSTILE_SITEKEY });
+  });
+}
+window.onTurnstileLoad = onTurnstileLoad;
 
+function readEnquiry(key){
+  const cfg = ENQUIRY_FORMS[key];
+  const hp = document.getElementById(key + "-hp");
+  const data = { form:key, page: location.hash || "#home", website: hp ? hp.value : "" };
+  const lines = [];
+  let firstBad = null;
   cfg.fields.forEach(function(f){
     const el = document.getElementById(f[0]);
     const val = (el.value || "").trim();
@@ -631,24 +654,77 @@ function submitEnquiry(key){
     if(ok && el.type === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     if(ok){ el.classList.remove("invalid"); }
     else { el.classList.add("invalid"); if(!firstBad) firstBad = el; }
-    lines.push(f[1] + ": " + val);
+    data[f[1]] = val;
+    lines.push(f[2] + ": " + val);
   });
+  return { cfg:cfg, data:data, lines:lines, firstBad:firstBad };
+}
 
+function resetTurnstile(key){
+  if(TURNSTILE_SITEKEY && window.turnstile && turnstileWidgets[key] !== undefined) turnstile.reset(turnstileWidgets[key]);
+}
+
+async function submitEnquiry(key, btn){
+  const read = readEnquiry(key);
+  const note = document.getElementById(read.cfg.note);
   note.style.display = "block";
-  if(firstBad){
+
+  if(read.firstBad){
     note.classList.add("err");
-    note.textContent = (firstBad.type === "email" && firstBad.value.trim())
+    note.textContent = (read.firstBad.type === "email" && read.firstBad.value.trim())
       ? "Please enter a valid email address."
       : "Please complete every field before sending - required fields are marked with *.";
-    firstBad.focus();
+    read.firstBad.focus();
     return;
   }
 
+  /* Worker not deployed yet - hand off to the visitor's mail app. */
+  if(!ENQUIRY_ENDPOINT){
+    note.classList.remove("err");
+    note.textContent = "Opening your email app so you can send this to " + ENQUIRY_EMAIL + ".";
+    window.location.href = "mailto:" + ENQUIRY_EMAIL +
+      "?subject=" + encodeURIComponent(read.cfg.subject) +
+      "&body=" + encodeURIComponent(read.lines.join("\n") + "\n");
+    return;
+  }
+
+  if(TURNSTILE_SITEKEY){
+    const token = (window.turnstile && turnstileWidgets[key] !== undefined)
+      ? turnstile.getResponse(turnstileWidgets[key]) : "";
+    if(!token){
+      note.classList.add("err");
+      note.textContent = "Please complete the verification check above the button.";
+      return;
+    }
+    read.data.turnstile = token;
+  }
+
+  const label = btn ? btn.textContent : "";
+  if(btn){ btn.disabled = true; btn.textContent = "Sending..."; }
   note.classList.remove("err");
-  note.textContent = "Opening your email app so you can send this to " + ENQUIRY_EMAIL + ".";
-  window.location.href = "mailto:" + ENQUIRY_EMAIL +
-    "?subject=" + encodeURIComponent(cfg.subject) +
-    "&body=" + encodeURIComponent(lines.join("\n") + "\n");
+  note.textContent = "Sending your enquiry...";
+
+  try{
+    const res = await fetch(ENQUIRY_ENDPOINT, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(read.data)
+    });
+    const out = await res.json().catch(function(){ return {}; });
+    if(!res.ok || !out.ok) throw new Error(out.error || "Send failed.");
+
+    read.cfg.fields.forEach(function(f){ document.getElementById(f[0]).value = ""; });
+    resetTurnstile(key);
+    note.classList.remove("err");
+    note.textContent = "Thank you - your enquiry is with us. A Nimbi practitioner will come back to you within one business day.";
+  }catch(err){
+    note.classList.add("err");
+    note.innerHTML = "We could not send your enquiry. Please try again, or email us directly at " +
+      '<a href="mailto:' + ENQUIRY_EMAIL + '" style="color:inherit;font-weight:700">' + ENQUIRY_EMAIL + "</a>.";
+    resetTurnstile(key);
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = label; }
+  }
 }
 
 function clearInvalid(e){
@@ -804,5 +880,6 @@ diyRows.forEach((r,i)=>{
   diybody.appendChild(det);
 });
 </script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
 </body>
 </html>
