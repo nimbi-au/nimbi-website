@@ -115,7 +115,11 @@
   .cform input,.cform select,.cform textarea{width:100%;font:inherit;font-size:16px;padding:12px;border:1.5px solid var(--line);border-radius:8px;background:var(--white);color:var(--ink)}
   .cform textarea{min-height:110px;resize:vertical}
   .span2{grid-column:1/-1}
+  .cform .req{color:#c0392b;margin-left:2px}
+  .cform input.invalid,.cform select.invalid,.cform textarea.invalid{border-color:#c0392b;background:#fdf5f4}
   .formnote{font-size:14px;color:var(--teal);font-weight:700;display:none;margin-top:8px}
+  .formnote.err{color:#c0392b}
+  .reqnote{font-size:13px;color:#7d8595;margin-top:10px}
   @media(max-width:640px){.cform{grid-template-columns:1fr}}
 
   .divider{height:1px;background:var(--line);max-width:1120px;margin:0 auto}
@@ -252,20 +256,21 @@
       <h2>Talk to us.</h2>
       <p>Tell us who you are and what you're facing. A Nimbi practitioner will come back to you within one business day.</p>
       <div class="cform">
-        <div><label for="h-name">Your name</label><input id="h-name" type="text" autocomplete="name"></div>
-        <div><label for="h-firm">Firm</label><input id="h-firm" type="text" autocomplete="organization"></div>
-        <div><label for="h-sector">Sector</label>
-          <select id="h-sector"><option>Accounting</option><option>Real estate</option><option>Property development</option><option>Legal</option><option>Conveyancing</option><option>Trust and company services</option><option>Precious metals and stones</option><option>Other</option></select>
+        <div><label for="h-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="h-name" type="text" autocomplete="name" required aria-required="true"></div>
+        <div><label for="h-firm">Firm <span class="req" aria-hidden="true">*</span></label><input id="h-firm" type="text" autocomplete="organization" required aria-required="true"></div>
+        <div><label for="h-sector">Sector <span class="req" aria-hidden="true">*</span></label>
+          <select id="h-sector" required aria-required="true"><option value="">Please select</option><option>Accounting</option><option>Real estate</option><option>Property development</option><option>Legal</option><option>Conveyancing</option><option>Trust and company services</option><option>Precious metals and stones</option><option>Other</option></select>
         </div>
-        <div><label for="h-email">Email</label><input id="h-email" type="email" autocomplete="email"></div>
-        <div><label for="h-phone">Phone</label><input id="h-phone" type="tel" autocomplete="tel"></div>
-        <div><label for="h-when">When do you need help?</label>
-          <select id="h-when"><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
+        <div><label for="h-email">Email <span class="req" aria-hidden="true">*</span></label><input id="h-email" type="email" autocomplete="email" required aria-required="true"></div>
+        <div><label for="h-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="h-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
+        <div><label for="h-when">When do you need help? <span class="req" aria-hidden="true">*</span></label>
+          <select id="h-when" required aria-required="true"><option value="">Please select</option><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
         </div>
-        <div class="span2"><label for="h-msg">What's on your mind?</label><textarea id="h-msg"></textarea></div>
+        <div class="span2"><label for="h-msg">What's on your mind? <span class="req" aria-hidden="true">*</span></label><textarea id="h-msg" required aria-required="true"></textarea></div>
         <div class="span2">
-          <button class="btn gold" onclick="fakeSubmit('h-note')">Request a call back</button>
-          <div class="formnote" id="h-note">Thanks - this is a prototype, so nothing was sent. On the live site this reaches a Nimbi practitioner.</div>
+          <button class="btn gold" onclick="submitEnquiry('h')">Request a call back</button>
+          <div class="formnote" id="h-note"></div>
+          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. Sending opens your email app with the details ready to go to dean@nimbi.com.au.</div>
         </div>
       </div>
     </div>
@@ -334,14 +339,15 @@
     <div class="narrow">
       <h2>Start a conversation.</h2>
       <div class="cform">
-        <div><label for="a-name">Your name</label><input id="a-name" type="text"></div>
-        <div><label for="a-firm">Firm</label><input id="a-firm" type="text"></div>
-        <div><label for="a-email">Email</label><input id="a-email" type="email"></div>
-        <div><label for="a-phone">Phone</label><input id="a-phone" type="tel"></div>
-        <div class="span2"><label for="a-msg">How can we help?</label><textarea id="a-msg"></textarea></div>
+        <div><label for="a-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="a-name" type="text" autocomplete="name" required aria-required="true"></div>
+        <div><label for="a-firm">Firm <span class="req" aria-hidden="true">*</span></label><input id="a-firm" type="text" autocomplete="organization" required aria-required="true"></div>
+        <div><label for="a-email">Email <span class="req" aria-hidden="true">*</span></label><input id="a-email" type="email" autocomplete="email" required aria-required="true"></div>
+        <div><label for="a-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="a-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
+        <div class="span2"><label for="a-msg">How can we help? <span class="req" aria-hidden="true">*</span></label><textarea id="a-msg" required aria-required="true"></textarea></div>
         <div class="span2">
-          <button class="btn gold" onclick="fakeSubmit('a-note')">Request a call back</button>
-          <div class="formnote" id="a-note">Thanks - this is a prototype, so nothing was sent. On the live site this reaches a Nimbi practitioner.</div>
+          <button class="btn gold" onclick="submitEnquiry('a')">Request a call back</button>
+          <div class="formnote" id="a-note"></div>
+          <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. Sending opens your email app with the details ready to go to dean@nimbi.com.au.</div>
         </div>
       </div>
     </div>
@@ -603,7 +609,53 @@ document.addEventListener('click', ()=>document.getElementById('dropmenu').class
 const SOURCE_LINE = "Source: AML/CTF Act 2006 (Cth) as amended by the AML/CTF Amendment Act 2024; AML/CTF Rules 2025; AUSTRAC guidance. Last reviewed August 2026. General information only - not legal advice.";
 document.querySelectorAll('.srcline').forEach(el=>{ el.textContent = SOURCE_LINE; });
 
-function fakeSubmit(noteId){ document.getElementById(noteId).style.display='block'; }
+/* ---------- contact forms ---------- */
+const ENQUIRY_EMAIL = "dean@nimbi.com.au";
+const ENQUIRY_FORMS = {
+  h: { note:"h-note", subject:"Call back request - Nimbi website",
+       fields:[["h-name","Name"],["h-firm","Firm"],["h-sector","Sector"],["h-email","Email"],["h-phone","Phone"],["h-when","When do you need help?"],["h-msg","What's on your mind?"]] },
+  a: { note:"a-note", subject:"Call back request - Nimbi website",
+       fields:[["a-name","Name"],["a-firm","Firm"],["a-email","Email"],["a-phone","Phone"],["a-msg","How can we help?"]] }
+};
+
+function submitEnquiry(key){
+  const cfg = ENQUIRY_FORMS[key];
+  const note = document.getElementById(cfg.note);
+  let firstBad = null;
+  const lines = [];
+
+  cfg.fields.forEach(function(f){
+    const el = document.getElementById(f[0]);
+    const val = (el.value || "").trim();
+    let ok = val !== "";
+    if(ok && el.type === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    if(ok){ el.classList.remove("invalid"); }
+    else { el.classList.add("invalid"); if(!firstBad) firstBad = el; }
+    lines.push(f[1] + ": " + val);
+  });
+
+  note.style.display = "block";
+  if(firstBad){
+    note.classList.add("err");
+    note.textContent = (firstBad.type === "email" && firstBad.value.trim())
+      ? "Please enter a valid email address."
+      : "Please complete every field before sending - required fields are marked with *.";
+    firstBad.focus();
+    return;
+  }
+
+  note.classList.remove("err");
+  note.textContent = "Opening your email app so you can send this to " + ENQUIRY_EMAIL + ".";
+  window.location.href = "mailto:" + ENQUIRY_EMAIL +
+    "?subject=" + encodeURIComponent(cfg.subject) +
+    "&body=" + encodeURIComponent(lines.join("\n") + "\n");
+}
+
+function clearInvalid(e){
+  if(e.target && e.target.classList && e.target.classList.contains("invalid")) e.target.classList.remove("invalid");
+}
+document.addEventListener("input", clearInvalid);
+document.addEventListener("change", clearInvalid);
 
 /* ---------- sector data ---------- */
 const sectors = {
