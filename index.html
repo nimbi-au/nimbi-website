@@ -18,7 +18,8 @@
 
   /* ---------- nav ---------- */
   nav{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--line)}
-  .navwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:14px 24px;flex-wrap:wrap}
+  .navwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:12px clamp(14px,4vw,24px);flex-wrap:wrap}
+  @media(max-width:560px){.navlink{font-size:13.5px;padding:6px 7px}.logo svg{width:98px;height:30px}}
   .logo{font-weight:800;font-size:26px;color:var(--teal);letter-spacing:-0.5px;cursor:pointer;margin-right:auto}
   .logo span{color:var(--navy)}
   .navlink{background:none;border:none;font:inherit;font-size:15px;color:var(--navy);padding:8px 10px;cursor:pointer;border-radius:6px}
@@ -29,7 +30,7 @@
   /* ---------- layout ---------- */
   .page{display:none}
   .page.on{display:block}
-  section{padding:64px 24px}
+  section{padding:clamp(44px,7vw,72px) clamp(18px,5vw,40px)}
   .wrap{max-width:1120px;margin:0 auto}
   .narrow{max-width:820px;margin:0 auto}
   .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
@@ -72,6 +73,23 @@
   .gapclose:hover{color:#fff}
   .gappill{display:none;position:fixed;bottom:18px;right:18px;z-index:60;background:var(--gold);color:#fff;border:none;font:inherit;font-weight:700;font-size:15px;padding:12px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(27,45,71,.3);cursor:pointer}
   .gappill.show{display:block}
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:30px}
+  .tablewrap table{margin-top:0}
+  table.check{min-width:720px}
+  .yn{flex-wrap:nowrap}
+  .yn button{white-space:nowrap}
+  table.diy{width:100%;border-collapse:collapse;font-size:15px;background:var(--white);min-width:780px}
+  table.diy th{padding:12px 14px;text-align:left;color:var(--white);font-size:14px}
+  table.diy th.h1c{background:var(--navy)} table.diy th.h2c{background:#6a6f78} table.diy th.h3c{background:var(--teal)}
+  table.diy td{border:1px solid var(--line);padding:12px 14px;vertical-align:top}
+  table.diy td.cons{font-weight:700;color:var(--navy)}
+  tr.diyrow{cursor:pointer}
+  tr.diyrow:nth-child(4n+1) td{background:var(--cream)}
+  tr.diyrow:hover td{background:rgba(26,122,138,.08)}
+  tr.diydetail td{background:#FBF6E9;border-left:3px solid var(--gold);font-size:14px;color:var(--body)}
+  tr.diydetail{display:none}
+  tr.diydetail.on{display:table-row}
+  #diytip{position:fixed;display:none;max-width:340px;background:var(--navy);color:#fff;padding:12px 15px;border-radius:8px;font-size:13.5px;line-height:1.5;z-index:80;box-shadow:0 6px 18px rgba(27,45,71,.35);pointer-events:none}
   .gapbar .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .gapnum{font-size:30px;font-weight:800;color:var(--gold)}
 
@@ -115,6 +133,7 @@
     <button class="navlink" data-nav="ds" onclick="go('ds')">Designated services</button>
     <button class="navlink" data-nav="kyo" onclick="go('kyo')">Know your obligations</button>
     <button class="navlink" data-nav="checklist" onclick="go('checklist')">Readiness check</button>
+    <button class="navlink" data-nav="diy" onclick="go('diy')">DIY vs Nimbi</button>
     <button class="navlink" data-nav="help" onclick="go('help')">How Nimbi helps</button>
   </div>
 </nav>
@@ -404,10 +423,10 @@
       <div class="eyebrow">Obligations checklist</div>
       <h1>AML/CTF readiness check.</h1>
       <p class="lead">Answer honestly - it's only useful if you do. Each question links to the part of the Act or the AML/CTF Rules 2025 it comes from, and every 'No' is an obligation that already applies to you.</p>
-      <table class="check">
+      <div class="tablewrap"><table class="check">
         <thead><tr><th style="width:18%">Area</th><th>Readiness question</th><th style="width:16%">Source</th><th style="width:14%">Your answer</th></tr></thead>
         <tbody id="checkbody"></tbody>
-      </table>
+      </table></div>
       <p class="smallprint">Source: AML/CTF Act 2006 (Cth) as amended by the AML/CTF Amendment Act 2024; AML/CTF Rules 2025; AUSTRAC guidance. Current at August 2026. General information only - not legal advice.</p>
     </div>
   </section>
@@ -421,6 +440,30 @@
   </div>
   <button class="gappill" id="gappill" onclick="restoreGap()" aria-label="Show readiness summary"><span id="pillnum">0</span> gaps</button>
 </div>
+
+<!-- ================= DIY VS NIMBI ================= -->
+<div class="page" id="page-diy">
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Starter kit comparison</div>
+      <h1>The starter kit is free. The work is not.</h1>
+      <p class="lead">The AUSTRAC starter kit is a genuine starting point. The difference is who does the judgement, tailoring and implementation. Hover over any row, or tap it on a phone, for the detail behind the comparison.</p>
+      <div class="tablewrap">
+        <table class="diy">
+          <thead><tr><th class="h1c" style="width:24%">Consideration</th><th class="h2c" style="width:38%">AUSTRAC starter kit (DIY)</th><th class="h3c" style="width:38%">Nimbi Foundations</th></tr></thead>
+          <tbody id="diybody"></tbody>
+        </table>
+      </div>
+      <p style="margin-top:26px;font-weight:700;color:var(--teal)">The starter kit may suit the simplest practice. Foundations is for firms that want the judgement, tailoring and implementation done with them.</p>
+      <div class="btnrow">
+        <button class="btn gold" onclick="go('help')">See how Nimbi helps</button>
+        <button class="btn ghost" onclick="go('home','contact-home')">Talk to us</button>
+      </div>
+      <p class="smallprint">General information only - not legal advice. The AUSTRAC starter kit is AUSTRAC's own material; this comparison reflects Nimbi's view of the work involved in applying it well.</p>
+    </div>
+  </section>
+</div>
+<div id="diytip" role="tooltip"></div>
 
 <!-- ================= HOW NIMBI HELPS ================= -->
 <div class="page" id="page-help">
@@ -586,6 +629,57 @@ function setAns(i,val,btn){
 }
 function dismissGap(){ barDismissed=true; refreshGapUI(); }
 function restoreGap(){ barDismissed=false; refreshGapUI(); }
+
+/* ---------- DIY vs Nimbi comparison ---------- */
+const diyRows=[
+{c:"Real cost", d:"30-60 hours of partner time, unbilled and invisible", n:"Minimal partner time - fact find and workshops",
+ b:"The real cost isn't just the hours. Gaps built on assumptions in your risk assessment, program and operational documents carry straight through to your final output."},
+{c:"Scoping (designated services, trust account, existing clients)", d:"Self-assessed - a scoping error flows through every document built on it", n:"Confirmed and documented at the outset",
+ b:"A scoping mistake at the start - which designated services you provide, whether the trust account is captured, how existing clients are treated - flows through every document built on it. We confirm and document scope before anything is drafted."},
+{c:"Risk assessment", d:"Template headings - the judgement, calibration and rationale are yours to supply", n:"Practitioner-built, calibrated to your actual client book, with a documented rationale trail",
+ b:"Foundations is tailored to your business, rather than templated output that can be ineffective and difficult to defend."},
+{c:"Controls described", d:"Generic - may claim controls your firm does not actually operate", n:"Only controls you genuinely run, so every claim is traceable",
+ b:"Not sure how to define your existing controls? Nimbi maps your controls to each risk type, and helps you design new ones where inherent risk needs more."},
+{c:"The legal test - appropriate to nature, size and complexity", d:"Untested until AUSTRAC engages or the 2029 independent evaluation", n:"Designed against the test from day one",
+ b:"Nimbi helps you assess, design and build risk assessments, policies and procedures that properly meet the legal test."},
+{c:"Hidden traps (tipping-off wording, PEP determination, CDD triggers on existing clients)", d:"Not visible in the template - discovered too late", n:"Engineered and thought-out during drafting",
+ b:"A poorly designed program increases liability for the firm and the AMLCO. Nimbi helps you navigate the tightrope with an operational framework, so you know what to do at each step."},
+{c:"Client portfolio risk mapping", d:"Not possible DIY - requires a weighted risk methodology, screening data access and alert triage expertise", n:"Included: your full client book segmented and risk-rated, sanctions-checked, with an enterprise risk profile heatmap showing where your exposure actually sits",
+ b:"Do you know how many of your customers are low, medium and high risk? Nimbi reviews your whole portfolio and segments it by risk tier, so you can plan exactly which clients need review, and when."},
+{c:"Partner sign-off", d:"You personally certify documents you are not equipped to evaluate - 'check the checker'", n:"You certify practitioner-built documents",
+ b:"Certifying your own work creates a self-review threat. Nimbi prepares your custom documents, and you review a properly built pack."},
+{c:"After go-live", d:"The kit ends at delivery - no updates, no support, no one to call", n:"12-month compliance calendar, training pack, ongoing support hours",
+ b:"After delivery and handover, Nimbi stays available for aftercare support."},
+{c:"Best suited to", d:"Sole practitioners, e.g. accountants providing tax-only services with a simple, stable book", n:"Any firm with entity work, a trust account or a mixed client base",
+ b:"Foundations is tailored to your firm, whatever its size."}
+];
+const diybody=document.getElementById('diybody');
+const diytip=document.getElementById('diytip');
+const canHover=window.matchMedia('(hover: hover)').matches;
+diyRows.forEach((r,i)=>{
+  const tr=document.createElement('tr');
+  tr.className='diyrow';
+  tr.innerHTML=`<td class="cons">${r.c}</td><td>${r.d}</td><td>${r.n}</td>`;
+  const det=document.createElement('tr');
+  det.className='diydetail';
+  det.innerHTML=`<td colspan="3">${r.b}</td>`;
+  tr.addEventListener('click',()=>{ det.classList.toggle('on'); diytip.style.display='none'; });
+  if(canHover){
+    tr.addEventListener('mousemove',e=>{
+      if(det.classList.contains('on')) return;
+      diytip.textContent=r.b;
+      diytip.style.display='block';
+      const pad=16, w=diytip.offsetWidth, h=diytip.offsetHeight;
+      let x=e.clientX+pad, y=e.clientY+pad;
+      if(x+w>window.innerWidth-8) x=e.clientX-w-pad;
+      if(y+h>window.innerHeight-8) y=e.clientY-h-pad;
+      diytip.style.left=x+'px'; diytip.style.top=y+'px';
+    });
+    tr.addEventListener('mouseleave',()=>{ diytip.style.display='none'; });
+  }
+  diybody.appendChild(tr);
+  diybody.appendChild(det);
+});
 </script>
 </body>
 </html>
