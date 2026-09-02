@@ -181,9 +181,35 @@ sentence before doing it. Run the commands yourself.
 
 ---
 
+## Branding
+
+Every logo, icon, colour and font on the site comes from the brand pack in
+[`branding/`](branding/) — see [branding/README.md](branding/README.md) for the
+palette and usage rules. Don't recreate the logo or invent new colours.
+
+| Where | File |
+|---|---|
+| Header logo | `branding/svg/logo/logo-full-colour.svg` |
+| Footer logo (on navy) | `branding/svg/logo/logo-full-mono-white.svg` |
+| Favicon / app icon | `branding/png/icons/favicon.ico`, `branding/svg/icon/icon-full-colour.svg`, `branding/png/icons/icon-full-colour-180.png` |
+| Social preview image | `branding/png/logo-full-white-bg@2000w.png` |
+| Headings typeface | `branding/font/Bitter-ExtraBold.ttf` |
+
+The colours live in one place — the `:root` block near the top of `index.html`:
+
+| Variable | Hex | Used for |
+|---|---|---|
+| `--primary` | #2E2A72 | Headings, footer, dark sections |
+| `--accent` | #3D4DFF | Links, buttons, active nav, eyebrows |
+| `--teal` | #4FBDB1 | Decorative fills only — too light behind text |
+| `--grad` | #4FBDB1 → #3D4DFF | The logo gradient: nav rule, accent bars |
+| `--tint` | #F3F4F6 | Alternating section backgrounds |
+| `--ink` | #222222 | Charcoal |
+
 ## For developers
 
-Single self-contained file: `index.html`, with HTML, CSS and JS inline. No
+Single self-contained file: `index.html`, with HTML, CSS and JS inline (the
+brand assets in `branding/` are the only external files it loads). No
 dependencies, no build.
 
 Local preview:
