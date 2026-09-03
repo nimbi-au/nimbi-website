@@ -31,23 +31,6 @@
       "about": {
         "@id": "https://nimbi.com.au/#organisation"
       }
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://nimbi.com.au/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "About Nimbi",
-          "item": "https://nimbi.com.au/about/"
-        }
-      ]
     }
   ]
 }
@@ -55,7 +38,7 @@
 </head>
 <body>
 
-<nav>
+<nav class="sitenav" aria-label="Main">
   <div class="navwrap">
     <a class="logo" href="/" aria-label="Nimbi home"><img src="/branding/svg/logo/logo-full-colour.svg" alt="Nimbi" width="132" height="52"></a>
     <a class="navlink" href="/">Home</a>
@@ -72,12 +55,6 @@
     <a class="navlink active" href="/about/" aria-current="page">About Nimbi</a>
     <a class="btn accent navcta" href="/about/#contact">Contact</a>
   </div>
-</nav>
-<nav class="crumbs" aria-label="Breadcrumb">
-  <ol>
-    <li><a href="/">Home</a></li>
-    <li><span aria-current="page">About Nimbi</span></li>
-  </ol>
 </nav>
 
 <main>

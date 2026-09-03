@@ -64,30 +64,6 @@ def render_nav(active):
     return "\n".join(out)
 
 
-def render_crumbs(trail):
-    """trail: list of (label, href-or-None); None marks the current page."""
-    if not trail:
-        return ""
-    items = []
-    for label, href in trail:
-        if href:
-            items.append('    <li><a href="%s">%s</a></li>' % (href, esc(label)))
-        else:
-            items.append('    <li><span aria-current="page">%s</span></li>' % esc(label))
-    return ('<nav class="crumbs" aria-label="Breadcrumb">\n  <ol>\n'
-            + "\n".join(items) + "\n  </ol>\n</nav>\n")
-
-
-def breadcrumb_ld(trail, canonical):
-    if not trail:
-        return None
-    elements = []
-    for i, (label, href) in enumerate(trail, start=1):
-        url = ORIGIN + href if href else canonical
-        elements.append({"@type": "ListItem", "position": i, "name": label, "item": url})
-    return {"@type": "BreadcrumbList", "itemListElement": elements}
-
-
 ORGANISATION = {
     "@type": "ProfessionalService",
     "@id": ORIGIN + "/#organisation",
@@ -173,7 +149,7 @@ def brand(title):
 
 
 def render_page(out_path, nav_active, title, description, body,
-                trail=(), scripts="", extra_ld=(), ogtype="website", indexable=True):
+                scripts="", extra_ld=(), ogtype="website", indexable=True):
     if not out_path.endswith("index.html"):
         canonical = ORIGIN + "/" + out_path
     else:
@@ -185,9 +161,6 @@ def render_page(out_path, nav_active, title, description, body,
     headmeta = ('<link rel="canonical" href="%s">' % canonical if indexable
                 else '<meta name="robots" content="noindex, follow">')
     blocks = list(extra_ld)
-    crumb_ld = breadcrumb_ld(list(trail), canonical)
-    if crumb_ld:
-        blocks.append(crumb_ld)
 
     page = fill(LAYOUT, {
         "title": esc(title),
@@ -199,7 +172,6 @@ def render_page(out_path, nav_active, title, description, body,
         "headmeta": headmeta,
         "origin": ORIGIN,
         "nav": render_nav(nav_active),
-        "crumbs": render_crumbs(list(trail)),
         "body": body,
         "jsonld": render_jsonld(blocks),
         "scripts": scripts,
@@ -247,7 +219,6 @@ urls.append(render_page(
     description=("Nimbi is led by senior financial crime practitioners who built and ran AML/CTF "
                  "programs inside Australia's largest reporting entities."),
     body=page_src("about"),
-    trail=[("Home", "/"), ("About Nimbi", None)],
     scripts=FORM_SCRIPTS,
     extra_ld=[{"@type": "AboutPage", "url": ORIGIN + "/about/",
                "about": {"@id": ORIGIN + "/#organisation"}}],
@@ -261,7 +232,6 @@ urls.append(render_page(
     description=("The newly regulated sectors Nimbi works with: accountants, real estate agents, "
                  "developers, lawyers, conveyancers, TCSPs and precious metals dealers."),
     body=page_src("who-we-serve"),
-    trail=[("Home", "/"), ("Who we serve", None)],
 ))
 
 # ---------- designated services ----------
@@ -272,7 +242,6 @@ urls.append(render_page(
     description=("You are a reporting entity only if you provide a designated service. The "
                  "activities that bring each Tranche 2 sector into the AML/CTF regime."),
     body=page_src("designated-services"),
-    trail=[("Home", "/"), ("Designated services", None)],
 ))
 
 # ---------- obligations hub ----------
@@ -283,7 +252,6 @@ urls.append(render_page(
     description=("The ten AML/CTF obligations every reporting entity carries, plus the designated "
                  "services and risk flags specific to your profession. Choose your sector."),
     body=fill(page_src("obligations"), {"sectortiles": sector_tiles()}),
-    trail=[("Home", "/"), ("Your obligations", None)],
     extra_ld=[{
         "@type": "ItemList",
         "name": "AML/CTF obligations by profession",
@@ -312,7 +280,6 @@ for s in SECTORS:
         title=s.get("title", "AML/CTF obligations for %s" % lower),
         description=s["desc"],
         body=body,
-        trail=[("Home", "/"), ("Your obligations", "/obligations/"), (s["name"], None)],
         ogtype="article",
     ))
 
@@ -327,7 +294,6 @@ urls.append(render_page(
         "checkrows": render_checkrows(),
         "sourceline": esc(SOURCE_LINE),
     }),
-    trail=[("Home", "/"), ("Your obligations", "/obligations/"), ("Readiness check", None)],
     scripts='<script src="/assets/readiness.js" defer></script>\n',
     extra_ld=[{
         "@type": "FAQPage",
@@ -354,7 +320,6 @@ urls.append(render_page(
         "swrows": render_comparison(COMPARISON["software"]),
         "sourceline": esc(SOURCE_LINE),
     }),
-    trail=[("Home", "/"), ("Why Nimbi", None)],
     scripts='<script src="/assets/comparison.js" defer></script>\n',
 ))
 
