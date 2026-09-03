@@ -32,7 +32,6 @@ NAV = [
     ("about", "About Nimbi", "/about/"),
 ]
 NAV_CHILDREN = [
-    ("Who we serve", "/who-we-serve/"),
     ("Designated services", "/designated-services/"),
     ("Obligations by profession", "/obligations/"),
     ("Readiness check", "/readiness-check/"),
@@ -53,7 +52,8 @@ def render_nav(active):
         cur = ' aria-current="page"' if key == active else ""
         if key == "obligations":
             out.append('    <div class="navdrop">')
-            out.append('      <a class="%s" href="%s"%s>%s &#9662;</a>' % (cls, href, cur, label))
+            out.append('      <button type="button" class="%s" aria-haspopup="true">'
+                       '%s &#9662;</button>' % (cls, label))
             out.append('      <div class="dropmenu">')
             for clabel, chref in NAV_CHILDREN:
                 out.append('        <a href="%s">%s</a>' % (chref, clabel))
