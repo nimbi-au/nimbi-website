@@ -26,6 +26,7 @@
     --tint:#F3F4F6;      /* brand Light Gray */
     --ink:#222222;       /* brand Charcoal */
     --body:#4A4C55; --line:#E1E3E9; --white:#ffffff;
+    --gold:#BF8E2A;      /* legacy mustard - kept only for the readiness check "No" state */
   }
   /* Brand typeface: Bitter ExtraBold (SIL OFL, branding/font/). Only the 800 weight ships,
      so anything set in var(--display) must also be font-weight:800. */
@@ -92,7 +93,7 @@
   .yn{display:flex;gap:6px}
   .yn button{font:inherit;font-size:13px;font-weight:700;padding:6px 14px;border-radius:6px;border:1.5px solid var(--line);background:var(--white);cursor:pointer;color:var(--body)}
   .yn button.y.sel{background:var(--teal);border-color:var(--teal);color:#0F3F3B}
-  .yn button.n.sel{background:var(--primary);border-color:var(--primary);color:var(--white)}
+  .yn button.n.sel{background:var(--gold);border-color:var(--gold);color:var(--white)}
   .gapbar{position:sticky;bottom:0;background:var(--primary);color:var(--white);padding:16px 24px;display:none}
   .gapbar.show{display:block}
   .gapclose{background:none;border:none;color:#CFD1EA;font-size:28px;line-height:1;cursor:pointer;padding:2px 8px}
