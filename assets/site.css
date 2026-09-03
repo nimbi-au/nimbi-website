@@ -1,3 +1,4 @@
+@charset "utf-8";
 :root{
   /* The site is light-only. "only light" stops Android browsers (Chrome auto-dark,
      Samsung Internet night mode) algorithmically inverting the brand colours. */
@@ -98,8 +99,8 @@ tr.diyrow:hover td{background:rgba(79,189,177,.14)}
 tr.diydetail td{background:#EFF1FF;border-left:3px solid var(--teal);font-size:14px;color:var(--body)}
 table.diy.collapsible tr.diydetail{display:none}
 table.diy.collapsible tr.diydetail.on{display:table-row}
-tr.diyrow[aria-expanded] td.cons::after{content:" BE";color:var(--accent)}
-tr.diyrow[aria-expanded="true"] td.cons::after{content:" B4"}
+tr.diyrow[aria-expanded] td.cons::after{content:" ▾";color:var(--accent)}
+tr.diyrow[aria-expanded="true"] td.cons::after{content:" ▴"}
 #diytip{position:fixed;display:none;max-width:340px;background:var(--primary);color:#fff;padding:12px 15px;border-radius:8px;font-size:13.5px;line-height:1.5;z-index:80;box-shadow:0 6px 18px rgba(46,42,114,.35);pointer-events:none}
 .gapbar .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .gapnum{font-size:30px;font-weight:800;color:var(--teal)}
