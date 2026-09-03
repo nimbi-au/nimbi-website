@@ -66,6 +66,10 @@ p.lead{font-size:20px;max-width:46ch}
 .fact strong{display:block;color:var(--primary);font-size:19px;margin-bottom:4px}
 footer{background:var(--primary);color:#B6B9DA;font-size:13px;padding:36px 24px}
 footer .wrap{display:grid;gap:10px}
+/* The footer nests grids (.wrap > .footcols > column > ul). Grid items default
+   to min-width:auto, so each level floors at its min-content width and the
+   footer pushes the whole document wider than a phone viewport. */
+footer .wrap>*,footer .footcols>*{min-width:0}
 footer .footlogo{display:block;width:126px;height:auto;margin-bottom:10px}
 
 /* ---------- checklist ---------- */
@@ -157,7 +161,7 @@ a.inline:hover{text-decoration:none}
 
 
 /* ---------- footer ---------- */
-footer .footcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:26px;max-width:1120px;margin:0 auto 26px}
+footer .footcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:26px;max-width:1120px;margin:0 auto 26px}
 footer h2{font-family:inherit;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--white);margin-bottom:10px}
 footer ul{list-style:none;display:grid;gap:7px}
 footer a{color:#B6B9DA}
