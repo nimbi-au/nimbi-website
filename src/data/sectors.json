@@ -1,0 +1,131 @@
+[
+  {
+    "slug": "accountants",
+    "name": "Accountants",
+    "tag": "Practices and sole practitioners",
+    "intro": "Accountants are captured service by service, not wholesale. If your practice does any transactional or structuring work, the regime reached you on 1 July 2026.",
+    "ds": [
+      "Assisting clients to buy, sell or transfer real estate, or a company, business or trust",
+      "Receiving, holding or managing client money, accounts or property as part of a transaction",
+      "Creating, restructuring or winding up companies, trusts and partnerships",
+      "Acting as, or arranging, directors, secretaries, partners, trustees or nominee shareholders",
+      "Providing registered office or business address services",
+      "Selling or transferring shelf companies",
+      "Organising equity or debt financing for a company or trust"
+    ],
+    "flags": [
+      "Complex structures - discretionary trusts and layered entities are exactly what the reforms target, and your clients love them.",
+      "Source of funds - a client settling a business purchase in ways that don't match their profile is now your problem to notice.",
+      "Client money - trust account movements need monitoring, not just reconciliation."
+    ],
+    "desc": "Accountants are captured service by service, not wholesale. The designated services, the ten obligations and the risk flags for your practice."
+  },
+  {
+    "slug": "real-estate-agents",
+    "name": "Real estate agents",
+    "tag": "Listing agents, buyer's agents, agencies",
+    "intro": "Obligations attach the moment you're engaged to act in a sale, purchase or transfer. Your vendor is your customer - and the buyer becomes relevant when the transaction forms.",
+    "ds": [
+      "Brokering the sale, purchase or transfer of real estate for any party - even where no money changes hands",
+      "Acting for a vendor as listing agent",
+      "Acting for a purchaser as buyer's agent",
+      "Brokering business sales where a company or trust changes hands"
+    ],
+    "flags": [
+      "Cash and unusual funding - property remains Australia's best documented laundering channel.",
+      "Foreign buyers and absent principals - non face-to-face deals need stronger verification, not a lighter touch.",
+      "Multi-office groups - a reporting group with one shared program is usually smarter than every office building its own."
+    ],
+    "desc": "Obligations attach the moment you act in a sale, purchase or transfer. The designated services, ten obligations and risk flags for agencies."
+  },
+  {
+    "slug": "property-developers",
+    "name": "Property developers",
+    "tag": "Selling developed stock",
+    "intro": "Developers selling their own stock provide a designated service where no independent agent brokers the sale - off-the-plan and in-house sales suites included.",
+    "ds": [
+      "Selling or transferring real estate you developed, where no independent agent brokers the sale"
+    ],
+    "flags": [
+      "Off-the-plan deposits - long settlement windows and staged payments create layering opportunities.",
+      "Related party sales - transactions inside a group still need due diligence.",
+      "Overseas purchasers - identification and source of funds need real substance."
+    ],
+    "desc": "Selling your own stock with no independent agent is a designated service. The obligations and risk flags for off-the-plan and in-house sales."
+  },
+  {
+    "slug": "lawyers",
+    "name": "Lawyers",
+    "tag": "Firms and sole practitioners",
+    "intro": "Legal practice is captured on its transactional side. Court work generally sits outside the regime; property, client money and structuring sit inside it.",
+    "ds": [
+      "Assisting in the sale, purchase or transfer of real estate",
+      "Assisting clients to buy, sell or transfer a business, company or trust",
+      "Receiving, holding or managing client money or property in a transaction",
+      "Creating, restructuring or winding up companies, trusts and other arrangements",
+      "Acting as, or arranging, directors, secretaries, trustees or partners",
+      "Organising equity or debt financing for a company or trust",
+      "Nominee shareholder, registered office and shelf company services"
+    ],
+    "flags": [
+      "Trust accounts - the single biggest exposure in most firms, and the first place AUSTRAC will look.",
+      "Professional privilege - privilege is preserved but doesn't erase reporting obligations; the boundary needs careful, documented handling.",
+      "Conveyancing volume - high matter throughput needs a CDD process that scales without shortcuts."
+    ],
+    "desc": "Legal practice is captured on its transactional side. The designated services, ten obligations and risk flags for firms and sole practitioners."
+  },
+  {
+    "slug": "conveyancers",
+    "name": "Conveyancers",
+    "tag": "Licensed conveyancing practices",
+    "intro": "Acting for a party in the sale, purchase or transfer of real property puts conveyancing squarely in scope, settlement funds included.",
+    "ds": [
+      "Assisting clients to plan or carry out the sale, purchase or transfer of real property",
+      "Assisting in business sales where a company or trust changes hands",
+      "Receiving, holding or paying out client money or property in the course of a transaction"
+    ],
+    "flags": [
+      "Speed pressure - settlements move fast; your verification process has to move faster without cutting corners.",
+      "Instructing parties - make sure the person instructing you is the person you verified.",
+      "Remote clients - digital verification with liveness checking is now the baseline."
+    ],
+    "desc": "Acting in the sale, purchase or transfer of real property puts conveyancing in scope. The designated services, obligations and risk flags."
+  },
+  {
+    "slug": "trust-and-company-service-providers",
+    "name": "Trust and company service providers",
+    "tag": "Formation, nominee and office services",
+    "intro": "TCSP work is the most internationally scrutinised of the gatekeeper services - opaque structures are the global laundering vehicle of choice, and FATF has said so for years.",
+    "ds": [
+      "Setting up or restructuring companies, trusts and partnerships",
+      "Acting as or arranging directors, secretaries, partners, trustees or nominee shareholders",
+      "Selling or transferring shelf companies",
+      "Receiving, holding or managing client money or property in a transaction",
+      "Providing registered office or business address services"
+    ],
+    "flags": [
+      "Beneficial ownership - you must be able to say who really owns and controls every structure you touch.",
+      "Nominee arrangements - acting as a shield for an unidentified principal is precisely the scenario the Act targets.",
+      "Offshore linkages - structures reaching into secrecy jurisdictions need enhanced due diligence as a default posture."
+    ],
+    "desc": "TCSP work is the most scrutinised of the gatekeeper services. The designated services, obligations and risk flags for formation and nominee work.",
+    "title": "AML/CTF obligations for trust and company service providers"
+  },
+  {
+    "slug": "dealers-in-precious-metals-and-stones",
+    "name": "Dealers in precious metals and stones",
+    "tag": "Bullion, jewellery, gems",
+    "intro": "Bullion dealing is captured in its own right. Other dealers come into scope where $10,000 or more is paid in physical currency or virtual assets - cash-heavy trade is exactly what the threshold is built to catch.",
+    "ds": [
+      "Buying or selling bullion as part of a bullion-dealing business - whatever the amount, with initial customer checks exempt below $5,000 retail value",
+      "Buying or selling precious metals, stones or jewellery containing them, where $10,000 or more is paid in physical currency, virtual assets or a mix - in one transaction or several that appear linked"
+    ],
+    "flags": [
+      "Structuring - a buyer splitting one purchase into several just under the threshold is a classic red flag, and reportable.",
+      "Walk-in cash - high value, easy to carry and hard to trace - which is exactly why the threshold exists.",
+      "Repeat customers - patterns across visits matter as much as any single sale."
+    ],
+    "desc": "Bullion is captured in its own right, other dealers at $10,000 paid in cash or virtual assets. The obligations and risk flags for dealers.",
+    "title": "AML/CTF obligations for precious metals and stones dealers"
+  }
+]

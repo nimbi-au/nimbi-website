@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+# Page sources and the generator are not pages.
+Disallow: /src/
+Disallow: /worker/
+
+Sitemap: https://nimbi.com.au/sitemap.xml

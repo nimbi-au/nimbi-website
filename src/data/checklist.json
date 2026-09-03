@@ -1,0 +1,52 @@
+[
+  {
+    "area": "Enrolment",
+    "question": "Have you enrolled on AUSTRAC's Reporting Entity Roll? (The deadline for enrolment was 29 July 2026)",
+    "source": "AML/CTF Act s 51E"
+  },
+  {
+    "area": "Risk Assessment",
+    "question": "Have you conducted a risk assessment covering your services, customers, channels, jurisdictions and employee risk?",
+    "source": "s 26C"
+  },
+  {
+    "area": "AML/CTF Policies",
+    "question": "Do you have written AML/CTF policies appropriate to your nature, size and complexity?",
+    "source": "s 26F"
+  },
+  {
+    "area": "Governance",
+    "question": "Has a senior manager approved your program, with ongoing oversight by your governing body?",
+    "source": "ss 26H, 26P"
+  },
+  {
+    "area": "Compliance Officer",
+    "question": "Have you appointed a fit and proper AML/CTF compliance officer at management level?",
+    "source": "s 26J"
+  },
+  {
+    "area": "Customer Due Diligence",
+    "question": "Do you identify and verify each customer before providing a designated service?",
+    "source": "Pt 2"
+  },
+  {
+    "area": "Ongoing Monitoring",
+    "question": "Do you monitor customers and transactions on an ongoing basis for suspicious activity?",
+    "source": "Pt 2"
+  },
+  {
+    "area": "Reporting",
+    "question": "Can you lodge suspicious matter reports within 3 business days and threshold transaction reports for cash of $10,000 or more within 10 business days?",
+    "source": "ss 41, 43"
+  },
+  {
+    "area": "Records & Training",
+    "question": "Do you keep records for 7 years, with personnel due diligence and AML/CTF training in place?",
+    "source": "Pt 10; s 26F(4)"
+  },
+  {
+    "area": "Independent Evaluation",
+    "question": "Is an independent evaluation of your program scheduled at least every 3 years?",
+    "source": "s 26F(4)(f); R 5-10"
+  }
+]
