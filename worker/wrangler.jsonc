@@ -15,8 +15,8 @@
     // must match the Application Access Policy that scopes this app.
     "SENDER_MAILBOX": "info@nimbi.com.au",
     // Entra app registration. Fill both in after creating the app.
-    "GRAPH_TENANT_ID": "",
-    "GRAPH_CLIENT_ID": "",
+    "GRAPH_TENANT_ID": "f4d2b8a6-c24e-4b66-90c0-caa8564ec319",
+    "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",
     // Browsers may post from these origins and no others.
     "ALLOWED_ORIGINS": "https://nimbi.com.au,https://www.nimbi.com.au,https://nimbi-au.github.io"
   }
