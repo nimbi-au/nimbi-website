@@ -8,6 +8,7 @@ and forgets it. No third-party form service ever holds the enquiry.
 
 ```
 Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  info@nimbi.com.au
+                                                (sends as don@nimbi.com.au)
 ```
 
 Cloudflare Email Service was the original plan. Its free tier only sends to
@@ -81,8 +82,8 @@ against a single mailbox. See below.
 ### Scope the app to one mailbox
 
 `Mail.Send` granted in Entra means send-as **any** mailbox in the tenant,
-including the principals'. Grant it in Exchange Online instead, scoped to the one
-mailbox this Worker needs. This is RBAC for Applications; it replaces the older
+including the principals'. Grant it in Exchange Online instead, scoped to the
+single mailbox this Worker sends as (`SENDER_MAILBOX`). This is RBAC for Applications; it replaces the older
 `New-ApplicationAccessPolicy`, which Microsoft says should not be used for new
 configurations.
 
@@ -96,14 +97,14 @@ New-ServicePrincipal -AppId <application-id> -ObjectId <object-id> `
   -DisplayName "nimbi-contact-worker"
 
 New-ManagementScope -Name "ContactFormMailbox" `
-  -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'info@nimbi.com.au'"
+  -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'don@nimbi.com.au'"
 
 New-ManagementRoleAssignment -App <object-id> `
   -Role "Application Mail.Send" -CustomResourceScope "ContactFormMailbox"
 
-# InScope should be True for info@, False for any other mailbox.
+# InScope should be True for don@, False for any other mailbox.
 Test-ServicePrincipalAuthorization -Identity "nimbi-contact-worker" `
-  -Resource info@nimbi.com.au | Format-Table
+  -Resource don@nimbi.com.au | Format-Table
 
 Disconnect-ExchangeOnline
 ```
@@ -121,9 +122,12 @@ trust it over a live send when the two disagree.
 Skipping all of this leaves a client secret in a Worker that can send as anyone in
 the tenant.
 
-`SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias.
-It defaults to `info@nimbi.com.au`, the same address enquiries are delivered to;
-the visitor's address goes in `replyTo`, so replying from Outlook reaches them.
+`SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias —
+because the RBAC scope filter matches on `PrimarySmtpAddress`. It is
+`don@nimbi.com.au`, while enquiries are delivered to `TO_ADDRESS`
+(`info@nimbi.com.au`). The two need not match: Graph sends *as* one mailbox *to*
+another, and the visitor's own address goes in `replyTo`, so replying from
+Outlook reaches them. `info@` stays the address published on the site.
 
 ## Step 3 — Turnstile
 
