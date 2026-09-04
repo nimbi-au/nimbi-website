@@ -2,137 +2,134 @@
 
 The website is static and hosted on GitHub Pages, so it cannot send email by
 itself. This Cloudflare Worker receives the enquiry, checks it, and sends it to
-`info@nimbi.com.au` through Cloudflare Email Service. Nothing is stored — the
-Worker validates the request, sends the mail, and forgets it. No third-party
-form service ever holds the enquiry.
+`info@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
+365 tenant. Nothing is stored — the Worker validates the request, sends the mail,
+and forgets it. No third-party form service ever holds the enquiry.
 
 ```
-Visitor's browser  →  Worker (Cloudflare)  →  Cloudflare Email Service  →  info@nimbi.com.au
+Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  info@nimbi.com.au
 ```
+
+Cloudflare Email Service was the original plan. Its free tier only sends to
+verified destination addresses, and reaching that path means enabling Email
+Routing on the zone, which puts Cloudflare in charge of the domain's MX records —
+unacceptable when those MX records carry the firm's Microsoft 365 mail. Graph
+avoids the question entirely: no new vendor, no DNS changes, no extra cost.
 
 ## Setup order
 
-The steps depend on each other. Do them in this order.
-
-1. Move DNS to Cloudflare (below) — required, Email Service will not work without it
-2. Onboard the domain to Email Service and verify `info@nimbi.com.au`
+1. Move DNS to Cloudflare — **done 2026-09-04**
+2. Register an Entra app and grant it `Mail.Send`
 3. Create Turnstile keys
 4. Deploy the Worker
-5. Paste the Worker URL and Turnstile site key into `index.html`
+5. Paste the Worker URL and Turnstile site key into `assets/site.js`
 
-Until step 5 the site keeps working exactly as it does today: with
-`ENQUIRY_ENDPOINT` empty, the form falls back to opening the visitor's email app.
-Nothing breaks halfway through.
+Until step 5 the site keeps working as it does today: with `ENQUIRY_ENDPOINT`
+empty, the form falls back to opening the visitor's email app. Nothing breaks
+halfway through.
 
 ---
 
-## Step 1 — Move DNS from GoDaddy to Cloudflare
+## Step 1 — DNS (complete)
 
-**This is the step that can break your email.** `nimbi.com.au` currently runs on
-GoDaddy nameservers (`ns15/ns16.domaincontrol.com`) and your mail is Microsoft
-365. When the nameservers change, every record has to already exist in
-Cloudflare or mail stops flowing.
+`nimbi.com.au` moved from GoDaddy to Cloudflare on 2026-09-04. Nameservers are
+`josh.ns.cloudflare.com` / `rita.ns.cloudflare.com`. The GoDaddy zone was left in
+place as a rollback.
 
-Records live on 2026-08-30, captured before any change:
+The zone as verified after cutover:
 
-| Type  | Name                     | Value                                          |
-|-------|--------------------------|------------------------------------------------|
-| A     | `@`                      | `76.223.105.230`                               |
-| A     | `@`                      | `13.248.243.5`                                 |
-| CNAME | `www`                    | `nimbi.com.au`                                 |
-| MX    | `@`                      | `nimbi-com-au.mail.protection.outlook.com` (priority 0) |
-| TXT   | `@`                      | `v=spf1 include:spf.protection.outlook.com -all` |
-| CNAME | `autodiscover`           | `autodiscover.outlook.com`                     |
-| CNAME | `enterpriseregistration` | `enterpriseregistration.windows.net`           |
-| CNAME | `enterpriseenrollment`   | `enterpriseenrollment-s.manage.microsoft.com`  |
+| Type  | Name                     | Value                                                        |
+|-------|--------------------------|--------------------------------------------------------------|
+| A     | `@`                      | `185.199.108.153`, `.109`, `.110`, `.111` (GitHub Pages)      |
+| CNAME | `www`                    | `nimbi-au.github.io`                                          |
+| MX    | `@`                      | `nimbi-com-au.mail.protection.outlook.com` (priority 0)       |
+| TXT   | `@`                      | `v=spf1 include:spf.protection.outlook.com -all`              |
+| TXT   | `@`                      | `google-site-verification=KKentYZxDEkOYYzZfMLIKmHjUT2hhIcPzcjA6T2t2jA` |
+| TXT   | `_dmarc`                 | `v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=…`              |
+| CNAME | `selector1._domainkey`   | M365 DKIM (added 2026-09-04)                                  |
+| CNAME | `selector2._domainkey`   | M365 DKIM (added 2026-09-04)                                  |
+| CNAME | `autodiscover`           | `autodiscover.outlook.com`                                    |
+| CNAME | `enterpriseregistration` | `enterpriseregistration.windows.net`                          |
+| CNAME | `enterpriseenrollment`   | `enterpriseenrollment-s.manage.microsoft.com`                 |
 
-No DMARC record, no DKIM selectors, no `lyncdiscover`/`sip` records exist today.
+**Every A and CNAME above must stay *DNS only* (grey cloud).** Proxying the apex
+or `www` breaks GitHub Pages certificate renewal; proxying the Microsoft records
+breaks Outlook autodiscover and device enrolment.
 
-**The three that carry your mail are `MX`, the SPF `TXT`, and `autodiscover`.**
-If those are right, mail keeps working.
+Outstanding: the DMARC `rua` still points at `dmarc_rua@onsecureserver.net`,
+GoDaddy's aggregate collector. Those reports no longer reach anyone here. Repoint
+it at a mailbox Nimbi controls.
 
-Procedure:
+## Step 2 — Entra app registration
 
-1. In GoDaddy, export or screenshot the full DNS zone. The table above is a
-   safety net, not a substitute — it only lists records that answer public
-   queries, so check GoDaddy for anything extra.
-2. Add the domain in Cloudflare. Cloudflare scans and imports what it finds.
-3. **Before changing nameservers**, compare Cloudflare's imported list against
-   the table above and your GoDaddy export. Add anything missing by hand.
-4. Set the two `A` records and the `www` `CNAME` to *DNS only* (grey cloud), not
-   proxied. Proxying is for web traffic and can interfere with domain
-   verification.
-5. Only once the list matches, change the nameservers at GoDaddy to the pair
-   Cloudflare gives you.
-6. Propagation is usually 5–15 minutes. Send a test email to a Nimbi address and
-   reply to it from outside before considering this done.
+The Worker authenticates as an application (client credentials) and sends as one
+mailbox.
 
-### If you are also pointing nimbi.com.au at GitHub Pages
+1. [Entra portal](https://entra.microsoft.com) → **Applications → App registrations
+   → New registration**. Name it something like `nimbi-contact-worker`. Single
+   tenant. No redirect URI — this app never signs a user in.
+2. From the **Overview** page, copy the **Application (client) ID** and the
+   **Directory (tenant) ID** into `GRAPH_CLIENT_ID` and `GRAPH_TENANT_ID` in
+   `wrangler.jsonc`. Neither is a credential.
+3. **API permissions → Add a permission → Microsoft Graph → Application
+   permissions → `Mail.Send`.** Then **Grant admin consent** — the permission does
+   nothing until consent is granted.
+4. **Certificates & secrets → New client secret.** Copy the *value* immediately;
+   it is never shown again. Note the expiry and diarise the rotation.
 
-A `CNAME` file containing `nimbi.com.au` now exists in the repo, so the apex is
-being pointed at GitHub Pages. That changes the DNS plan: the two `A` records in
-the table above point at GoDaddy parking, not GitHub, and must be **replaced**
-(not copied across) with GitHub's Pages addresses:
+### Scope the app to one mailbox
 
-| Type  | Name  | Value |
-|-------|-------|-------|
-| A     | `@`   | `185.199.108.153` |
-| A     | `@`   | `185.199.109.153` |
-| A     | `@`   | `185.199.110.153` |
-| A     | `@`   | `185.199.111.153` |
-| CNAME | `www` | `nimbi-au.github.io` |
+`Mail.Send` as an application permission means send-as **any** mailbox in the
+tenant. Restrict it to the one mailbox this Worker needs, in Exchange Online
+PowerShell:
 
-Confirm these against GitHub's current published Pages IPs before entering them,
-and keep them *DNS only* (grey cloud) in Cloudflare so GitHub can issue the TLS
-certificate. This does not affect mail — `MX`, SPF and `autodiscover` are
-untouched by it.
+```powershell
+New-DistributionGroup -Name "GraphMailSenders" -Type Security `
+  -Members info@nimbi.com.au
 
-Worth doing while you are in there: you have **no DKIM and no DMARC**. That hurts
-deliverability and lets others spoof your domain. Add DKIM from the Microsoft 365
-admin centre and a starting DMARC record (`v=DMARC1; p=none; rua=mailto:...`).
-Separate from this task, but this is the natural moment.
+New-ApplicationAccessPolicy -AppId <application-client-id> `
+  -PolicyScopeGroupId GraphMailSenders -AccessRight RestrictAccess `
+  -Description "Restrict nimbi-contact-worker to the info mailbox"
+```
 
-## Step 2 — Email Service
+Verify with `Test-ApplicationAccessPolicy -Identity info@nimbi.com.au -AppId <id>`.
+Skipping this leaves a client secret in a Worker that can send as anyone in the
+tenant, including the principals.
 
-1. Cloudflare dashboard → **Email Service** → onboard `nimbi.com.au`. It adds
-   DKIM/SPF/bounce records on a `cf-bounce` subdomain automatically.
-2. Add `info@nimbi.com.au` as a **verified destination address** and click the
-   confirmation link that arrives.
-
-Verification matters for cost: sends to a verified destination are **free and
-exempt from quota on every plan**, so this form costs nothing and needs no
-Workers Paid plan.
+`SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias.
+It defaults to `info@nimbi.com.au`, the same address enquiries are delivered to;
+the visitor's address goes in `replyTo`, so replying from Outlook reaches them.
 
 ## Step 3 — Turnstile
 
-Cloudflare dashboard → **Turnstile** → add a widget for `nimbi.com.au`. Also add
-`nimbi-au.github.io` if you want the form to work on the Pages preview URL. Keep
-both keys — the **site key** is public and goes in `index.html`, the **secret
-key** goes into the Worker.
+Cloudflare dashboard → **Turnstile** → add a widget for `nimbi.com.au`. Add
+`www.nimbi.com.au` and `nimbi-au.github.io` too, so the hostnames match
+`ALLOWED_ORIGINS`. Keep both keys — the **site key** is public and goes in
+`assets/site.js`, the **secret key** goes into the Worker.
 
 ## Step 4 — Deploy
 
-Either from your machine:
+From your machine:
 
 ```sh
 cd worker
 npm install
 npx wrangler login
-npx wrangler secret put TURNSTILE_SECRET   # paste the Turnstile secret key
+npx wrangler secret put GRAPH_CLIENT_SECRET   # the Entra client secret value
+npx wrangler secret put TURNSTILE_SECRET      # the Turnstile secret key
 npx wrangler deploy
 ```
 
-Or without installing anything, via GitHub Actions: add repository secrets
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`, then run the
-**Deploy contact Worker** workflow from the Actions tab. Note the secret still
-has to be set once with `wrangler secret put` (or in the dashboard under the
-Worker's Settings → Variables).
+Or via GitHub Actions: add repository secrets `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID`, then run the **Deploy contact Worker** workflow from the
+Actions tab. The two Worker secrets above still have to be set once with
+`wrangler secret put`, or in the dashboard under the Worker's Settings → Variables.
 
 Deploying prints a URL like `https://nimbi-contact.<your-subdomain>.workers.dev`.
 
 ## Step 5 — Point the site at the Worker
 
-In `index.html`, near the `/* ---------- contact forms ---------- */` comment:
+In `assets/site.js`, near the top:
 
 ```js
 const ENQUIRY_ENDPOINT = "https://nimbi-contact.<your-subdomain>.workers.dev";
@@ -149,16 +146,23 @@ Then run the **Deploy to GitHub Pages** workflow to publish.
 
 | Var | Meaning |
 |-----|---------|
-| `TO_ADDRESS` | Where enquiries go. Must be a verified destination. |
-| `FROM_ADDRESS` | Sender. Must be on a domain onboarded to Email Service. |
+| `TO_ADDRESS` | Where enquiries are delivered. |
+| `SENDER_MAILBOX` | The mailbox Graph sends as. Must be a real licensed mailbox, and must match the Application Access Policy. |
+| `GRAPH_TENANT_ID` | Directory (tenant) ID from the app registration. |
+| `GRAPH_CLIENT_ID` | Application (client) ID from the app registration. |
 | `ALLOWED_ORIGINS` | Comma-separated origins allowed to post. Anything else is refused. |
 
-`TURNSTILE_SECRET` is a secret, never in this file. **If it is not set, the
-Turnstile check is skipped** — deliberate, so the form works before the keys
-exist, but it means an unset secret silently removes your spam protection.
+Two secrets, never in this file:
 
-The `send_email` binding pins `destination_address`, so this Worker can only ever
-send to that one address regardless of what a request asks for.
+- `GRAPH_CLIENT_SECRET` — **required.** Without it no mail sends at all.
+- `TURNSTILE_SECRET` — **if unset, the Turnstile check is skipped.** Deliberate,
+  so the form works before the keys exist, but an unset secret silently removes
+  spam protection.
+
+The access token is cached in isolate memory and refreshed a minute before
+expiry, so a burst of enquiries costs one token request rather than one each. A
+401 triggers exactly one forced refresh and retry, which distinguishes a rotated
+secret from a genuine authorisation failure.
 
 ## Protections
 
@@ -170,6 +174,7 @@ send to that one address regardless of what a request asks for.
   are only a convenience
 - **Size cap** — requests over 32 KB are refused
 - **Header-injection guard** — newlines are stripped from values used in headers
+- **Application Access Policy** — limits the app to one mailbox (Step 2)
 
 Rate limiting is *not* included. Turnstile handles the realistic case; if you
 later see abuse, add Cloudflare's rate-limiting binding.
@@ -180,7 +185,10 @@ later see abuse, add Cloudflare's rate-limiting binding.
 
 | Symptom | Likely cause |
 |---------|--------------|
-| "We could not send your enquiry" | Check `wrangler tail`. Usually `E_SENDER_NOT_VERIFIED` — `FROM_ADDRESS` is not on the onboarded domain. |
+| "We could not send your enquiry" | Check `wrangler tail`. The logged message carries the Graph status and body. |
+| `token request failed: 401` | Wrong or expired `GRAPH_CLIENT_SECRET`, or wrong `GRAPH_TENANT_ID`/`GRAPH_CLIENT_ID`. |
+| `sendMail failed: 403` | Admin consent not granted for `Mail.Send`, or the Application Access Policy excludes `SENDER_MAILBOX`. |
+| `sendMail failed: 404` | `SENDER_MAILBOX` is not a real mailbox in the tenant (an alias or distribution list will 404). |
 | Browser console CORS error | The site's origin is missing from `ALLOWED_ORIGINS`. |
-| "Please complete the verification check" | Site key missing/wrong in `index.html`, or the widget did not load. |
+| "Please complete the verification check" | Site key missing/wrong in `assets/site.js`, or the widget did not load. |
 | Form opens the email app instead of sending | `ENQUIRY_ENDPOINT` is still empty. |

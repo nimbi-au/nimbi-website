@@ -2,11 +2,13 @@
  * Nimbi contact-form Worker.
  *
  * Receives an enquiry from the static site on GitHub Pages and sends it to the
- * firm via Cloudflare Email Service. Nothing is stored: the request is validated,
- * turned into an email, and forgotten.
+ * firm through the Microsoft Graph API, using the firm's own Microsoft 365
+ * tenant. Nothing is stored: the request is validated, turned into an email,
+ * and forgotten.
  *
- * Bindings and vars are declared in wrangler.jsonc; TURNSTILE_SECRET is a secret
- * (`wrangler secret put TURNSTILE_SECRET`). If that secret is absent the Turnstile
+ * Vars are declared in wrangler.jsonc. Two secrets are set with
+ * `wrangler secret put`: GRAPH_CLIENT_SECRET (required - the Entra app's client
+ * secret) and TURNSTILE_SECRET. If TURNSTILE_SECRET is absent the Turnstile
  * check is skipped, so the form works before the keys are issued.
  */
 
@@ -71,6 +73,65 @@ const escapeHtml = (s) =>
 
 /* Strip CR/LF so a submitted value can never inject an extra mail header. */
 const oneLine = (s) => String(s).replace(/[\r\n]+/g, " ").trim();
+
+/* Client-credentials token for Graph. Cached in isolate memory and refreshed a
+   minute before expiry, so a burst of enquiries costs one token request. */
+let graphToken = { value: null, expiresAt: 0 };
+
+async function getGraphToken(env, force) {
+  if (!force && graphToken.value && Date.now() < graphToken.expiresAt) return graphToken.value;
+
+  const res = await fetch(
+    `https://login.microsoftonline.com/${env.GRAPH_TENANT_ID}/oauth2/v2.0/token`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: env.GRAPH_CLIENT_ID,
+        client_secret: env.GRAPH_CLIENT_SECRET,
+        scope: "https://graph.microsoft.com/.default",
+        grant_type: "client_credentials",
+      }),
+    },
+  );
+  if (!res.ok) {
+    throw new Error(`token request failed: ${res.status} ${(await res.text()).slice(0, 200)}`);
+  }
+  const data = await res.json();
+  graphToken = { value: data.access_token, expiresAt: Date.now() + (data.expires_in - 60) * 1000 };
+  return graphToken.value;
+}
+
+/* One attempt at sendMail. Separate so a stale cached token can be retried. */
+async function postSendMail(env, token, message) {
+  return fetch(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(env.SENDER_MAILBOX)}/sendMail`,
+    {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ message, saveToSentItems: false }),
+    },
+  );
+}
+
+async function sendViaGraph(env, { replyTo, subject, html }) {
+  const message = {
+    subject,
+    body: { contentType: "HTML", content: html },
+    toRecipients: [{ emailAddress: { address: env.TO_ADDRESS } }],
+    replyTo: [{ emailAddress: { address: replyTo } }],
+  };
+
+  let res = await postSendMail(env, await getGraphToken(env), message);
+  /* A cached token can be revoked or rotated out from under us; one forced
+     refresh distinguishes that from a real authorisation failure. */
+  if (res.status === 401) {
+    res = await postSendMail(env, await getGraphToken(env, true), message);
+  }
+  if (res.status !== 202) {
+    throw new Error(`sendMail failed: ${res.status} ${(await res.text()).slice(0, 300)}`);
+  }
+}
 
 async function verifyTurnstile(token, ip, secret) {
   const form = new FormData();
@@ -159,13 +220,6 @@ export default {
       ["Country", request.cf && request.cf.country ? request.cf.country : "unknown"],
     ];
 
-    const text = [
-      ...values.map(([l, v]) => `${l}: ${v}`),
-      "",
-      "---",
-      ...meta.map(([l, v]) => `${l}: ${v}`),
-    ].join("\n");
-
     const row = ([l, v]) =>
       `<tr><td style="padding:6px 14px 6px 0;vertical-align:top;color:#6b7280;white-space:nowrap">${escapeHtml(l)}</td>` +
       `<td style="padding:6px 0;vertical-align:top;color:#111827;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`;
@@ -178,17 +232,14 @@ export default {
       `</div>`;
 
     try {
-      await env.EMAIL.send({
-        to: env.TO_ADDRESS,
-        from: env.FROM_ADDRESS,
+      await sendViaGraph(env, {
         replyTo,
         subject: `${cfg.subject} - ${oneLine(values[0][1]).slice(0, 80)}`,
-        text,
         html,
       });
     } catch (err) {
       /* Logged for `wrangler tail`; the visitor gets a generic message. */
-      console.error("email send failed", err && err.code, err && err.message);
+      console.error("email send failed", err && err.message);
       return json(502, { ok: false, error: "We could not send your enquiry just now." }, corsOrigin);
     }
 

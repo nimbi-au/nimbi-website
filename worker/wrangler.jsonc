@@ -5,21 +5,19 @@
   "compatibility_date": "2026-08-01",
   "observability": { "enabled": true },
 
-  // Public config. Secrets (TURNSTILE_SECRET) are set with
-  // `wrangler secret put`, never committed here.
+  // Public config. The client secret (GRAPH_CLIENT_SECRET) is set with
+  // `wrangler secret put`, never committed here. Tenant and client IDs are
+  // identifiers, not credentials, so they live in the open.
   "vars": {
+    // Where enquiries land.
     "TO_ADDRESS": "info@nimbi.com.au",
-    "FROM_ADDRESS": "website@nimbi.com.au",
+    // The mailbox Graph sends as. Must be a real mailbox in the tenant, and
+    // must match the Application Access Policy that scopes this app.
+    "SENDER_MAILBOX": "info@nimbi.com.au",
+    // Entra app registration. Fill both in after creating the app.
+    "GRAPH_TENANT_ID": "",
+    "GRAPH_CLIENT_ID": "",
     // Browsers may post from these origins and no others.
     "ALLOWED_ORIGINS": "https://nimbi.com.au,https://www.nimbi.com.au,https://nimbi-au.github.io"
-  },
-
-  // Cloudflare Email Service. Pinning destination_address means this Worker can
-  // only ever mail that one verified address, whatever the request says.
-  "send_email": [
-    {
-      "name": "EMAIL",
-      "destination_address": "info@nimbi.com.au"
-    }
-  ]
+  }
 }
