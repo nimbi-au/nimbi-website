@@ -9,6 +9,7 @@ import html
 import json
 import pathlib
 import re
+import shutil
 
 ROOT = pathlib.Path(__file__).parent
 SRC = ROOT / "src"
@@ -350,6 +351,11 @@ for url in urls:
 sitemap.append("</urlset>")
 (ROOT / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
 
+# ---------- root favicon ----------
+# The <link rel="icon"> tags point at branding/, but crawlers and feed readers
+# still probe /favicon.ico, so keep a copy of the icon at the root.
+shutil.copyfile(ROOT / "branding/png/icons/favicon.ico", ROOT / "favicon.ico")
+
 (ROOT / "robots.txt").write_text(
     "User-agent: *\n"
     "Allow: /\n"
@@ -358,6 +364,6 @@ sitemap.append("</urlset>")
     "Disallow: /worker/\n"
     "\nSitemap: %s/sitemap.xml\n" % ORIGIN, encoding="utf-8")
 
-print("built %d pages + 404, sitemap.xml, robots.txt" % len(urls))
+print("built %d pages + 404, sitemap.xml, robots.txt, favicon.ico" % len(urls))
 for u in urls:
     print("  ", u)
