@@ -72,7 +72,7 @@ ORGANISATION = {
     "url": ORIGIN + "/",
     "logo": ORIGIN + "/branding/png/logo-full-white-bg@2000w.png",
     "image": ORIGIN + "/branding/png/logo-full-white-bg@2000w.png",
-    "email": "dean@nimbi.com.au",
+    "email": "info@nimbi.com.au",
     "description": ("AML/CTF advisory for Australia's Tranche 2 reporting entities - accountants, "
                     "real estate agents, lawyers, conveyancers, trust and company service providers "
                     "and dealers in precious metals and stones."),

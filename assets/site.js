@@ -6,7 +6,7 @@ const ENQUIRY_ENDPOINT = "";
 /* Paste the Turnstile site key here. While it is empty no widget is rendered and
    the Worker skips the check, so the form still works. */
 const TURNSTILE_SITEKEY = "";
-const ENQUIRY_EMAIL = "dean@nimbi.com.au";
+const ENQUIRY_EMAIL = "info@nimbi.com.au";
 /* [element id, key sent to the Worker, label shown in the email] */
 const ENQUIRY_FORMS = {
   h: { note:"h-note", box:"h-turnstile", subject:"Call back request - Nimbi website",

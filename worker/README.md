@@ -2,12 +2,12 @@
 
 The website is static and hosted on GitHub Pages, so it cannot send email by
 itself. This Cloudflare Worker receives the enquiry, checks it, and sends it to
-`dean@nimbi.com.au` through Cloudflare Email Service. Nothing is stored — the
+`info@nimbi.com.au` through Cloudflare Email Service. Nothing is stored — the
 Worker validates the request, sends the mail, and forgets it. No third-party
 form service ever holds the enquiry.
 
 ```
-Visitor's browser  →  Worker (Cloudflare)  →  Cloudflare Email Service  →  dean@nimbi.com.au
+Visitor's browser  →  Worker (Cloudflare)  →  Cloudflare Email Service  →  info@nimbi.com.au
 ```
 
 ## Setup order
@@ -15,7 +15,7 @@ Visitor's browser  →  Worker (Cloudflare)  →  Cloudflare Email Service  → 
 The steps depend on each other. Do them in this order.
 
 1. Move DNS to Cloudflare (below) — required, Email Service will not work without it
-2. Onboard the domain to Email Service and verify `dean@nimbi.com.au`
+2. Onboard the domain to Email Service and verify `info@nimbi.com.au`
 3. Create Turnstile keys
 4. Deploy the Worker
 5. Paste the Worker URL and Turnstile site key into `index.html`
@@ -96,7 +96,7 @@ Separate from this task, but this is the natural moment.
 
 1. Cloudflare dashboard → **Email Service** → onboard `nimbi.com.au`. It adds
    DKIM/SPF/bounce records on a `cf-bounce` subdomain automatically.
-2. Add `dean@nimbi.com.au` as a **verified destination address** and click the
+2. Add `info@nimbi.com.au` as a **verified destination address** and click the
    confirmation link that arrives.
 
 Verification matters for cost: sends to a verified destination are **free and
