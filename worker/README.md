@@ -19,7 +19,7 @@ avoids the question entirely: no new vendor, no DNS changes, no extra cost.
 ## Setup order
 
 1. Move DNS to Cloudflare — **done 2026-09-04**
-2. Register an Entra app and grant it `Mail.Send`
+2. Register an Entra app, then grant it scoped `Mail.Send` in Exchange Online
 3. Create Turnstile keys
 4. Deploy the Worker
 5. Paste the Worker URL and Turnstile site key into `assets/site.js`
@@ -71,30 +71,55 @@ mailbox.
 2. From the **Overview** page, copy the **Application (client) ID** and the
    **Directory (tenant) ID** into `GRAPH_CLIENT_ID` and `GRAPH_TENANT_ID` in
    `wrangler.jsonc`. Neither is a credential.
-3. **API permissions → Add a permission → Microsoft Graph → Application
-   permissions → `Mail.Send`.** Then **Grant admin consent** — the permission does
-   nothing until consent is granted.
-4. **Certificates & secrets → New client secret.** Copy the *value* immediately;
+3. **Certificates & secrets → New client secret.** Copy the *value* immediately;
    it is never shown again. Note the expiry and diarise the rotation.
+
+Do **not** grant `Mail.Send` under **API permissions** in Entra. That grant is
+tenant-wide and cannot be scoped — the permission is granted in Exchange instead,
+against a single mailbox. See below.
 
 ### Scope the app to one mailbox
 
-`Mail.Send` as an application permission means send-as **any** mailbox in the
-tenant. Restrict it to the one mailbox this Worker needs, in Exchange Online
-PowerShell:
+`Mail.Send` granted in Entra means send-as **any** mailbox in the tenant,
+including the principals'. Grant it in Exchange Online instead, scoped to the one
+mailbox this Worker needs. This is RBAC for Applications; it replaces the older
+`New-ApplicationAccessPolicy`, which Microsoft says should not be used for new
+configurations.
 
 ```powershell
-New-DistributionGroup -Name "GraphMailSenders" -Type Security `
-  -Members info@nimbi.com.au
+Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser
+Connect-ExchangeOnline -UserPrincipalName you@nimbi.com.au
 
-New-ApplicationAccessPolicy -AppId <application-client-id> `
-  -PolicyScopeGroupId GraphMailSenders -AccessRight RestrictAccess `
-  -Description "Restrict nimbi-contact-worker to the info mailbox"
+# Both IDs come from Enterprise applications, NOT App registrations —
+# that page shows different values.
+New-ServicePrincipal -AppId <application-id> -ObjectId <object-id> `
+  -DisplayName "nimbi-contact-worker"
+
+New-ManagementScope -Name "ContactFormMailbox" `
+  -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'info@nimbi.com.au'"
+
+New-ManagementRoleAssignment -App <object-id> `
+  -Role "Application Mail.Send" -CustomResourceScope "ContactFormMailbox"
+
+# InScope should be True for info@, False for any other mailbox.
+Test-ServicePrincipalAuthorization -Identity "nimbi-contact-worker" `
+  -Resource info@nimbi.com.au | Format-Table
+
+Disconnect-ExchangeOnline
 ```
 
-Verify with `Test-ApplicationAccessPolicy -Identity info@nimbi.com.au -AppId <id>`.
-Skipping this leaves a client secret in a Worker that can send as anyone in the
-tenant, including the principals.
+**If `Mail.Send` was ever consented in Entra, remove it.** Exchange RBAC and Entra
+consent are independent authorities and the effective permission is their
+*union*, not their intersection — an unscoped Entra grant alongside a scoped RBAC
+grant leaves the app unscoped. Confirm the RBAC assignment tests `InScope: True`
+before removing the Entra consent, so the app is never left with neither.
+
+Permission changes are cached for 30 minutes to 2 hours depending on how recently
+the app called Graph. `Test-ServicePrincipalAuthorization` bypasses that cache, so
+trust it over a live send when the two disagree.
+
+Skipping all of this leaves a client secret in a Worker that can send as anyone in
+the tenant.
 
 `SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias.
 It defaults to `info@nimbi.com.au`, the same address enquiries are delivered to;
@@ -147,7 +172,7 @@ Then run the **Deploy to GitHub Pages** workflow to publish.
 | Var | Meaning |
 |-----|---------|
 | `TO_ADDRESS` | Where enquiries are delivered. |
-| `SENDER_MAILBOX` | The mailbox Graph sends as. Must be a real licensed mailbox, and must match the Application Access Policy. |
+| `SENDER_MAILBOX` | The mailbox Graph sends as. Must be a real licensed mailbox, and must be inside the Exchange RBAC management scope. |
 | `GRAPH_TENANT_ID` | Directory (tenant) ID from the app registration. |
 | `GRAPH_CLIENT_ID` | Application (client) ID from the app registration. |
 | `ALLOWED_ORIGINS` | Comma-separated origins allowed to post. Anything else is refused. |
@@ -174,7 +199,7 @@ secret from a genuine authorisation failure.
   are only a convenience
 - **Size cap** — requests over 32 KB are refused
 - **Header-injection guard** — newlines are stripped from values used in headers
-- **Application Access Policy** — limits the app to one mailbox (Step 2)
+- **Exchange RBAC scope** — limits the app to one mailbox (Step 2)
 
 Rate limiting is *not* included. Turnstile handles the realistic case; if you
 later see abuse, add Cloudflare's rate-limiting binding.
@@ -187,7 +212,7 @@ later see abuse, add Cloudflare's rate-limiting binding.
 |---------|--------------|
 | "We could not send your enquiry" | Check `wrangler tail`. The logged message carries the Graph status and body. |
 | `token request failed: 401` | Wrong or expired `GRAPH_CLIENT_SECRET`, or wrong `GRAPH_TENANT_ID`/`GRAPH_CLIENT_ID`. |
-| `sendMail failed: 403` | Admin consent not granted for `Mail.Send`, or the Application Access Policy excludes `SENDER_MAILBOX`. |
+| `sendMail failed: 403` | The Exchange RBAC role assignment is missing or its scope excludes `SENDER_MAILBOX`. Check `Test-ServicePrincipalAuthorization`. |
 | `sendMail failed: 404` | `SENDER_MAILBOX` is not a real mailbox in the tenant (an alias or distribution list will 404). |
 | Browser console CORS error | The site's origin is missing from `ALLOWED_ORIGINS`. |
 | "Please complete the verification check" | Site key missing/wrong in `assets/site.js`, or the widget did not load. |
