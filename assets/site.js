@@ -1,8 +1,8 @@
 /* Contact forms. Loaded only on the pages that carry one (home and about). */
 
-/* Paste the deployed Worker URL here. While it is empty the forms fall back to
+/* The deployed contact Worker. While this is empty the forms fall back to
    opening the visitor's email app, exactly as they did before. */
-const ENQUIRY_ENDPOINT = "";
+const ENQUIRY_ENDPOINT = "https://nimbi-contact.nimbi-website.workers.dev";
 /* Public Turnstile site key. Safe to publish - the matching secret key lives only
    in the Worker. While this is empty no widget renders and the Worker skips the
    check, so the form still works. */
