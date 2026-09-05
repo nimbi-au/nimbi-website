@@ -17,3 +17,9 @@ node_modules/
 # Cloudflare Wrangler
 .wrangler/
 .dev.vars
+.dev.vars.*
+
+# Secrets. Never committed - Worker secrets live in `wrangler secret put`.
+.env
+.env.*
+!.env.example
