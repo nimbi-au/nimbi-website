@@ -1,4 +1,4 @@
-/* Contact forms. Loaded only on the pages that carry one (home and about). */
+/* Contact form. Loaded only on the page that carries one (/contact/). */
 
 /* The deployed contact Worker. While this is empty the forms fall back to
    opening the visitor's email app, exactly as they did before. */
@@ -9,13 +9,11 @@ const ENQUIRY_ENDPOINT = "https://nimbi-contact.nimbi-website.workers.dev";
 const TURNSTILE_SITEKEY = "0x4AAAAAAEoZ_xYFhf2xFw1I";
 const ENQUIRY_EMAIL = "info@nimbi.com.au";
 /* `action` names the surface the token was solved on. The Worker re-checks it
-   against its own table, so a token minted on one form cannot be replayed
-   against the other. [element id, key sent to the Worker, label in the email] */
+   against its own table, so a token minted elsewhere cannot be replayed here.
+   [element id, key sent to the Worker, label in the email] */
 const ENQUIRY_FORMS = {
-  h: { note:"h-note", box:"h-turnstile", action:"contact_home", subject:"Call back request - Nimbi website",
-       fields:[["h-name","name","Name"],["h-firm","firm","Firm"],["h-sector","sector","Sector"],["h-email","email","Email"],["h-phone","phone","Phone"],["h-when","when","When do you need help?"],["h-msg","msg","What's on your mind?"]] },
-  a: { note:"a-note", box:"a-turnstile", action:"contact_about", subject:"Call back request - Nimbi website",
-       fields:[["a-name","name","Name"],["a-firm","firm","Firm"],["a-email","email","Email"],["a-phone","phone","Phone"],["a-msg","msg","How can we help?"]] }
+  c: { note:"c-note", box:"c-turnstile", action:"contact_page", subject:"Call back request - Nimbi website",
+       fields:[["c-name","name","Name"],["c-firm","firm","Firm"],["c-sector","sector","Sector"],["c-email","email","Email"],["c-phone","phone","Phone"],["c-when","when","When do you need help?"],["c-msg","msg","What's on your mind?"]] }
 };
 
 const turnstileWidgets = {};

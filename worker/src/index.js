@@ -15,6 +15,22 @@
 /* Field definitions per form. These are authoritative — the browser copy is a
    convenience for the visitor, not something we trust. */
 const FORMS = {
+  c: {
+    action: "contact_page",
+    subject: "Call back request - Nimbi website",
+    fields: [
+      ["name", "Name", 120],
+      ["firm", "Firm", 160],
+      ["sector", "Sector", 80],
+      ["email", "Email", 200],
+      ["phone", "Phone", 40],
+      ["when", "When do you need help?", 80],
+      ["msg", "What's on your mind?", 5000],
+    ],
+  },
+  /* The home and about pages embedded their own forms before /contact/ existed.
+     Kept so a page cached in someone's browser still submits successfully; safe
+     to drop once the new pages have been live for a while. */
   h: {
     action: "contact_home",
     subject: "Call back request - Nimbi website (home)",

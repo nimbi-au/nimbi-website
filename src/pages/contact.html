@@ -1,0 +1,58 @@
+<section>
+  <div class="narrow">
+    <div class="eyebrow">Contact Nimbi</div>
+    <h1>Talk to a practitioner about where you stand.</h1>
+    <p class="lead">Book a call at a time that suits you, or send us a message and we'll come back to you within one business day.</p>
+  </div>
+</section>
+
+<section class="tint" id="book">
+  <div class="wrap">
+    <h2>Book a 30-minute call.</h2>
+    <p style="max-width:70ch">Pick a time from the calendar below and you'll get a confirmation straight away. It's a straight conversation with a senior AML/CTF practitioner - no sales script, no obligation.</p>
+    <ul class="mini" style="max-width:70ch">
+      <li>Where your firm sits against the Tranche 2 obligations.</li>
+      <li>What has to be in place before 1 July 2026, and in what order.</li>
+      <li>Which parts you can run yourselves and which are worth handing over.</li>
+    </ul>
+    <div class="calbox">
+      <div class="calendly-inline-widget" data-url="{{calendlyurl}}" data-resize="true" style="min-width:320px;height:100%"></div>
+    </div>
+    <p class="smallprint">Calendar not loading? <a class="inline" href="{{calendlyurl}}" target="_blank" rel="noopener">Open the booking page in a new tab</a>, or use the form below.</p>
+  </div>
+</section>
+
+<section id="message">
+  <div class="narrow">
+    <h2>Or send us a message.</h2>
+    <p>Tell us who you are and what you're facing. A Nimbi practitioner will come back to you within one business day.</p>
+    <div class="cform">
+      <div><label for="c-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="c-name" type="text" autocomplete="name" required aria-required="true"></div>
+      <div><label for="c-firm">Firm <span class="req" aria-hidden="true">*</span></label><input id="c-firm" type="text" autocomplete="organization" required aria-required="true"></div>
+      <div><label for="c-sector">Sector <span class="req" aria-hidden="true">*</span></label>
+        <select id="c-sector" required aria-required="true"><option value="">Please select</option><option>Accounting</option><option>Real estate</option><option>Property development</option><option>Legal</option><option>Conveyancing</option><option>Trust and company services</option><option>Precious metals and stones</option><option>Other</option></select>
+      </div>
+      <div><label for="c-email">Email <span class="req" aria-hidden="true">*</span></label><input id="c-email" type="email" autocomplete="email" required aria-required="true"></div>
+      <div><label for="c-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="c-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
+      <div><label for="c-when">When do you need help? <span class="req" aria-hidden="true">*</span></label>
+        <select id="c-when" required aria-required="true"><option value="">Please select</option><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
+      </div>
+      <div class="span2"><label for="c-msg">What's on your mind? <span class="req" aria-hidden="true">*</span></label><textarea id="c-msg" required aria-required="true"></textarea></div>
+      <div class="span2">
+        <div class="hp" aria-hidden="true"><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" tabindex="-1" autocomplete="off"></div>
+        <div class="tsbox" id="c-turnstile"></div>
+        <button class="btn accent" onclick="submitEnquiry('c',this)">Request a call back</button>
+        <div class="formnote" id="c-note"></div>
+        <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. We use your details only to respond to your enquiry.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="narrow">
+    <h2>Not sure what to ask yet?</h2>
+    <p>The readiness check walks through the ten obligations every reporting entity carries, each one cited to the part of the Act it comes from. It takes a few minutes and gives you something concrete to bring to the call.</p>
+    <div class="btnrow"><a class="btn accent" href="/readiness-check/">Run the readiness check</a></div>
+  </div>
+</section>

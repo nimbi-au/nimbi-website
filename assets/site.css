@@ -155,6 +155,13 @@ ul.mini li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heig
 .soon{font-size:11px;letter-spacing:.12em;font-weight:700;color:#9A9CA6;margin-bottom:8px;text-transform:uppercase}
 table.diy tbody tr.plain:nth-child(odd) td{background:var(--tint)}
 
+/* ---------- booking embed ---------- */
+/* Calendly injects an iframe into .calendly-inline-widget and sizes it to the
+   height it is given, so the height lives on the container, not the iframe. */
+.calbox{margin-top:30px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--white);height:700px}
+@media(max-width:640px){.calbox{height:940px}}
+.calbox .calendly-inline-widget{height:100%}
+
 /* ---------- links ---------- */
 a.inline{color:var(--accent);font-weight:700}
 a.inline:hover{text-decoration:none}

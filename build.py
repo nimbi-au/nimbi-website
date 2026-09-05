@@ -41,6 +41,12 @@ NAV_CHILDREN = [
 TURNSTILE = ('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js'
              '?render=explicit&onload=onTurnstileLoad" async defer></script>\n')
 
+# The scheduling link behind the contact page's inline booking widget. Change it
+# here and both the embed and its fallback link follow.
+CALENDLY_URL = "https://calendly.com/don-nimbi/30min"
+CALENDLY = ('<script src="https://assets.calendly.com/assets/external/widget.js" '
+            "async defer></script>\n")
+
 
 def esc(s):
     return html.escape(s, quote=True)
@@ -203,7 +209,6 @@ urls.append(render_page(
     description=("AML/CTF advisory for Australia's Tranche 2 entities. We build your program, run "
                  "your customer due diligence and give you practitioners to call."),
     body=fill(page_src("home"), {"sectortiles": sector_tiles()}),
-    scripts=FORM_SCRIPTS,
     extra_ld=[
         ORGANISATION,
         {"@type": "WebSite", "@id": ORIGIN + "/#website", "url": ORIGIN + "/",
@@ -220,8 +225,20 @@ urls.append(render_page(
     description=("Nimbi is led by senior financial crime practitioners who built and ran AML/CTF "
                  "programs inside Australia's largest reporting entities."),
     body=page_src("about"),
-    scripts=FORM_SCRIPTS,
     extra_ld=[{"@type": "AboutPage", "url": ORIGIN + "/about/",
+               "about": {"@id": ORIGIN + "/#organisation"}}],
+))
+
+# ---------- contact ----------
+urls.append(render_page(
+    out_path="contact/index.html",
+    nav_active="contact",
+    title="Contact Nimbi",
+    description=("Book a 30-minute call with a senior AML/CTF practitioner, or send us a message. "
+                 "We come back to every enquiry within one business day."),
+    body=fill(page_src("contact"), {"calendlyurl": esc(CALENDLY_URL)}),
+    scripts=FORM_SCRIPTS + CALENDLY,
+    extra_ld=[{"@type": "ContactPage", "url": ORIGIN + "/contact/",
                "about": {"@id": ORIGIN + "/#organisation"}}],
 ))
 
