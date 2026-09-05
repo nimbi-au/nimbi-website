@@ -10,10 +10,10 @@
   // identifiers, not credentials, so they live in the open.
   "vars": {
     // Where enquiries land.
-    "TO_ADDRESS": "don@nimbi.com.au",
+    "TO_ADDRESS": "dean@nimbi.com.au",
     // The mailbox Graph sends as. Must be a real mailbox in the tenant, and
     // must match the Application Access Policy that scopes this app.
-    "SENDER_MAILBOX": "don@nimbi.com.au",
+    "SENDER_MAILBOX": "dean@nimbi.com.au",
     // Entra app registration. Fill both in after creating the app.
     "GRAPH_TENANT_ID": "f4d2b8a6-c24e-4b66-90c0-caa8564ec319",
     "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",

@@ -2,13 +2,13 @@
 
 The website is static and hosted on GitHub Pages, so it cannot send email by
 itself. This Cloudflare Worker receives the enquiry, checks it, and sends it to
-`don@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
+`dean@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
 365 tenant. Nothing is stored — the Worker validates the request, sends the mail,
 and forgets it. No third-party form service ever holds the enquiry.
 
 ```
-Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  don@nimbi.com.au
-                                                (sends as don@nimbi.com.au)
+Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  dean@nimbi.com.au
+                                                (sends as dean@nimbi.com.au)
 ```
 
 Cloudflare Email Service was the original plan. Its free tier only sends to
@@ -97,14 +97,14 @@ New-ServicePrincipal -AppId <application-id> -ObjectId <object-id> `
   -DisplayName "nimbi-contact-worker"
 
 New-ManagementScope -Name "ContactFormMailbox" `
-  -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'don@nimbi.com.au'"
+  -RecipientRestrictionFilter "PrimarySmtpAddress -eq 'dean@nimbi.com.au'"
 
 New-ManagementRoleAssignment -App <object-id> `
   -Role "Application Mail.Send" -CustomResourceScope "ContactFormMailbox"
 
-# InScope should be True for don@, False for any other mailbox.
+# InScope should be True for dean@, False for any other mailbox.
 Test-ServicePrincipalAuthorization -Identity "nimbi-contact-worker" `
-  -Resource don@nimbi.com.au | Format-Table
+  -Resource dean@nimbi.com.au | Format-Table
 
 Disconnect-ExchangeOnline
 ```
@@ -124,10 +124,11 @@ the tenant.
 
 `SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias —
 because the RBAC scope filter matches on `PrimarySmtpAddress`. It is
-`don@nimbi.com.au`, and `TO_ADDRESS` is the same mailbox — the Worker sends as
-don@ to don@. The visitor's own address goes in `replyTo`, so replying from
-Outlook reaches them rather than looping back. `info@nimbi.com.au` remains the
-address published on the site; only the form's delivery target is don@.
+`dean@nimbi.com.au`, and `TO_ADDRESS` is the same mailbox — the Worker sends as
+dean@ to dean@. The visitor's own address goes in `replyTo`, so replying from
+Outlook reaches them rather than looping back. Note that `info@nimbi.com.au`,
+the address published on the site, is an alias on this same mailbox, so both
+routes land in the same inbox.
 
 ## Step 3 — Turnstile
 
