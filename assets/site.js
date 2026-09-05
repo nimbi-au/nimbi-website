@@ -3,15 +3,18 @@
 /* Paste the deployed Worker URL here. While it is empty the forms fall back to
    opening the visitor's email app, exactly as they did before. */
 const ENQUIRY_ENDPOINT = "";
-/* Paste the Turnstile site key here. While it is empty no widget is rendered and
-   the Worker skips the check, so the form still works. */
-const TURNSTILE_SITEKEY = "";
+/* Public Turnstile site key. Safe to publish - the matching secret key lives only
+   in the Worker. While this is empty no widget renders and the Worker skips the
+   check, so the form still works. */
+const TURNSTILE_SITEKEY = "0x4AAAAAAEoZ_xYFhf2xFw1I";
 const ENQUIRY_EMAIL = "info@nimbi.com.au";
-/* [element id, key sent to the Worker, label shown in the email] */
+/* `action` names the surface the token was solved on. The Worker re-checks it
+   against its own table, so a token minted on one form cannot be replayed
+   against the other. [element id, key sent to the Worker, label in the email] */
 const ENQUIRY_FORMS = {
-  h: { note:"h-note", box:"h-turnstile", subject:"Call back request - Nimbi website",
+  h: { note:"h-note", box:"h-turnstile", action:"contact_home", subject:"Call back request - Nimbi website",
        fields:[["h-name","name","Name"],["h-firm","firm","Firm"],["h-sector","sector","Sector"],["h-email","email","Email"],["h-phone","phone","Phone"],["h-when","when","When do you need help?"],["h-msg","msg","What's on your mind?"]] },
-  a: { note:"a-note", box:"a-turnstile", subject:"Call back request - Nimbi website",
+  a: { note:"a-note", box:"a-turnstile", action:"contact_about", subject:"Call back request - Nimbi website",
        fields:[["a-name","name","Name"],["a-firm","firm","Firm"],["a-email","email","Email"],["a-phone","phone","Phone"],["a-msg","msg","How can we help?"]] }
 };
 
@@ -20,7 +23,10 @@ function onTurnstileLoad(){
   if(!TURNSTILE_SITEKEY) return;
   Object.keys(ENQUIRY_FORMS).forEach(function(key){
     const box = document.getElementById(ENQUIRY_FORMS[key].box);
-    if(box) turnstileWidgets[key] = turnstile.render(box, { sitekey: TURNSTILE_SITEKEY });
+    if(box) turnstileWidgets[key] = turnstile.render(box, {
+      sitekey: TURNSTILE_SITEKEY,
+      action: ENQUIRY_FORMS[key].action
+    });
   });
 }
 window.onTurnstileLoad = onTurnstileLoad;

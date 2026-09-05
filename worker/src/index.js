@@ -16,6 +16,7 @@
    convenience for the visitor, not something we trust. */
 const FORMS = {
   h: {
+    action: "contact_home",
     subject: "Call back request - Nimbi website (home)",
     fields: [
       ["name", "Name", 120],
@@ -28,6 +29,7 @@ const FORMS = {
     ],
   },
   a: {
+    action: "contact_about",
     subject: "Call back request - Nimbi website (about)",
     fields: [
       ["name", "Name", 120],
@@ -133,7 +135,11 @@ async function sendViaGraph(env, { replyTo, subject, html }) {
   }
 }
 
-async function verifyTurnstile(token, ip, secret) {
+/* Canonical siteverify. A token is only good if Cloudflare accepts it *and* it
+   was solved for this surface on one of our own hostnames — `success` alone
+   would accept a token minted on the other form, or on a copy of the page
+   hosted elsewhere with the same (public) site key. */
+async function verifyTurnstile(token, ip, secret, expectedAction, hostnames) {
   const form = new FormData();
   form.append("secret", secret);
   form.append("response", token);
@@ -143,7 +149,19 @@ async function verifyTurnstile(token, ip, secret) {
     body: form,
   });
   const data = await res.json().catch(() => ({ success: false }));
-  return data.success === true;
+
+  if (data.success !== true) return false;
+  if (data.action !== expectedAction) {
+    console.error("turnstile action mismatch", data.action, "expected", expectedAction);
+    return false;
+  }
+  /* An empty allowlist means the check is not configured; fail closed rather
+     than silently accepting any origin. */
+  if (!hostnames.length || !hostnames.includes(data.hostname)) {
+    console.error("turnstile hostname rejected", data.hostname);
+    return false;
+  }
+  return true;
 }
 
 export default {
@@ -192,7 +210,11 @@ export default {
         return json(400, { ok: false, error: "Please complete the verification check." }, corsOrigin);
       }
       const ip = request.headers.get("CF-Connecting-IP");
-      if (!(await verifyTurnstile(token, ip, env.TURNSTILE_SECRET))) {
+      const hostnames = (env.TURNSTILE_HOSTNAMES || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (!(await verifyTurnstile(token, ip, env.TURNSTILE_SECRET, cfg.action, hostnames))) {
         return json(403, { ok: false, error: "Verification failed. Please try again." }, corsOrigin);
       }
     }
