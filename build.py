@@ -43,7 +43,7 @@ TURNSTILE = ('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js
 
 # The scheduling link behind the contact page's inline booking widget. Change it
 # here and both the embed and its fallback link follow.
-CALENDLY_URL = "https://calendly.com/don-nimbi/30min"
+CALENDLY_URL = "https://calendly.com/hom-nimbi/30min"
 CALENDLY = ('<script src="https://assets.calendly.com/assets/external/widget.js" '
             "async defer></script>\n")
 
