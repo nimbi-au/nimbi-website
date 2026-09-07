@@ -42,8 +42,11 @@ TURNSTILE = ('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js
              '?render=explicit&onload=onTurnstileLoad" async defer></script>\n')
 
 # The scheduling link behind the contact page's inline booking widget. Change it
-# here and both the embed and its fallback link follow.
+# here and both the embed and its fallback link follow. The embed carries
+# hide_gdpr_banner so Calendly's own cookie prompt stays out of the page; the
+# fallback link opens Calendly proper, where that is Calendly's call to make.
 CALENDLY_URL = "https://calendly.com/hom-nimbi/30min"
+CALENDLY_EMBED_URL = CALENDLY_URL + "?hide_gdpr_banner=1"
 CALENDLY = ('<script src="https://assets.calendly.com/assets/external/widget.js" '
             "async defer></script>\n")
 
@@ -236,7 +239,8 @@ urls.append(render_page(
     title="Contact Nimbi",
     description=("Book a 30-minute call with a senior AML/CTF practitioner, or send us a message. "
                  "We come back to every enquiry within one business day."),
-    body=fill(page_src("contact"), {"calendlyurl": esc(CALENDLY_URL)}),
+    body=fill(page_src("contact"), {"calendlyurl": esc(CALENDLY_URL),
+                                    "calendlyembed": esc(CALENDLY_EMBED_URL)}),
     scripts=FORM_SCRIPTS + CALENDLY,
     extra_ld=[{"@type": "ContactPage", "url": ORIGIN + "/contact/",
                "about": {"@id": ORIGIN + "/#organisation"}}],
