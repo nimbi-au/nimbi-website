@@ -345,6 +345,18 @@ urls.append(render_page(
     scripts='<script src="/assets/comparison.js" defer></script>\n',
 ))
 
+# ---------- privacy policy ----------
+# Also the APP 5 collection notice for people Nimbi verifies on a client's behalf,
+# so clients can link straight to it from their own onboarding.
+urls.append(render_page(
+    out_path="privacy/index.html",
+    nav_active="",
+    title="Privacy Policy and Collection Notice",
+    description=("How Nimbi collects, uses, discloses and protects personal information, including "
+                 "information handled when we verify identities on behalf of our clients."),
+    body=page_src("privacy"),
+))
+
 # ---------- 404 ----------
 render_page(
     out_path="404.html",
