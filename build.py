@@ -45,7 +45,7 @@ TURNSTILE = ('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js
 # here and both the embed and its fallback link follow. The embed carries
 # hide_gdpr_banner so Calendly's own cookie prompt stays out of the page; the
 # fallback link opens Calendly proper, where that is Calendly's call to make.
-CALENDLY_URL = "https://calendly.com/hom-nimbi/30min"
+CALENDLY_URL = "https://calendly.com/d/dz6h-mfg-twp/initial-consultation"
 CALENDLY_EMBED_URL = CALENDLY_URL + "?hide_gdpr_banner=1"
 CALENDLY = ('<script src="https://assets.calendly.com/assets/external/widget.js" '
             "async defer></script>\n")
