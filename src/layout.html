@@ -2,7 +2,7 @@
 <html lang="en-AU">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <title>{{title}}</title>
 <meta name="description" content="{{description}}">
 {{headmeta}}
@@ -11,68 +11,49 @@
 <link rel="apple-touch-icon" href="/branding/png/icons/icon-full-colour-180.png">
 <meta name="theme-color" content="#2E2A72">
 <meta property="og:type" content="{{ogtype}}">
-<meta property="og:site_name" content="Nimbi">
+<meta property="og:site_name" content="Nimbi AML">
 <meta property="og:locale" content="en_AU">
 <meta property="og:title" content="{{ogtitle}}">
 <meta property="og:description" content="{{ogdescription}}">
 <meta property="og:url" content="{{canonical}}">
 <meta property="og:image" content="{{origin}}/branding/png/logo-full-white-bg@2000w.png">
-<meta property="og:image:alt" content="Nimbi - AML/CTF compliance for newly regulated entities">
+<meta property="og:image:width" content="2000">
+<meta property="og:image:height" content="791">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Nimbi AML - AML/CTF support for accountants, lawyers and conveyancers, and real estate">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="/branding/font/Bitter-ExtraBold.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">
+{{headextra}}<link rel="stylesheet" href="/assets/site.css">
 {{jsonld}}</head>
 <body>
 
-<nav class="sitenav" aria-label="Main">
-  <div class="navwrap">
-    <a class="logo" href="/" aria-label="Nimbi home"><img src="/branding/svg/logo/logo-full-colour.svg" alt="Nimbi" width="132" height="52"></a>
+<a class="skip" href="#main">Skip to content</a>
+<div class="nav"><div class="wrap">
+ <a class="brand" href="/" aria-label="Nimbi home"><img src="/branding/svg/logo/logo-full-colour.svg" alt="Nimbi" width="102" height="40"></a>
+ <nav class="mnav" aria-label="Main">
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-links"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>Menu</button>
+  <div class="links" id="site-links">
 {{nav}}
-    <a class="btn accent navcta" href="/contact/">Contact</a>
   </div>
-</nav>
+ </nav>
+ <span class="spacer"></span>
+ <a class="btn primary nav-cta" href="/contact/"><span class="lbl-long">Book a scoping call</span><span class="lbl-short">Book a call</span></a>
+</div></div>
 
-<main>
+<main id="main">
 {{body}}
 </main>
 
-<footer>
-  <div class="wrap">
-    <div class="footcols">
-      <div>
-        <img class="footlogo" src="/branding/svg/logo/logo-full-mono-white.svg" alt="Nimbi" width="126" height="50">
-        AML/CTF compliance for newly regulated entities.
-      </div>
-      <div>
-        <h2>Your obligations</h2>
-        <ul>
-          <li><a href="/who-we-serve/">Who we serve</a></li>
-          <li><a href="/designated-services/">Designated services</a></li>
-          <li><a href="/obligations/">Obligations by profession</a></li>
-          <li><a href="/readiness-check/">Readiness check</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Nimbi</h2>
-        <ul>
-          <li><a href="/about/">About Nimbi</a></li>
-          <li><a href="/why-nimbi/">Why Nimbi</a></li>
-          <li><a href="/contact/">Contact us</a></li>
-          <li><a href="/privacy/">Privacy Policy</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Contact</h2>
-        <ul>
-          <li><a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="legal">
-      <p>{{sourceline}} Content should be reviewed by legal counsel or internal compliance before being relied on.</p>
-      <p style="margin-top:8px">&copy; 2026 Nimbi. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+<footer><div class="wrap">
+ <div class="foot-grid">
+  <div class="foot-brand"><img src="/branding/svg/logo/logo-full-mono-white.svg" alt="Nimbi" width="87" height="34"><strong>Nimbi Group Pty Ltd</strong>, trading as Nimbi AML<br>ABN 36 701 758 018</div>
+  <div><h2>Who we help</h2><a href="/who-we-help/accountants/">Accountants</a><a href="/who-we-help/lawyers-and-conveyancers/">Lawyers and conveyancers</a><a href="/who-we-help/real-estate/">Real estate</a><a href="/who-we-help/obligations-in-practice/">Your obligations in practice</a></div>
+  <div><h2>Nimbi</h2><a href="/how-nimbi-helps/">How Nimbi helps</a><a href="/readiness-check/">Readiness check</a><a href="/about/">About</a><a href="/pricing/">Pricing</a></div>
+  <div><h2>Contact</h2><a href="/contact/">Book a scoping call</a><a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a><a href="mailto:privacy@nimbi.com.au">privacy@nimbi.com.au</a><a href="/privacy/">Privacy policy</a></div>
+ </div>
+ <div class="foot-legal"><span>General information only, not legal advice. Your practice remains the reporting entity and keeps responsibility for its obligations.</span><span>&copy; 2026 Nimbi Group Pty Ltd, trading as Nimbi AML</span></div>
+</div></footer>
+
+<script src="/assets/nav.js" defer></script>
 {{scripts}}</body>
 </html>

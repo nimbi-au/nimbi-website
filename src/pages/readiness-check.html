@@ -1,27 +1,32 @@
-<section>
-  <div class="wrap">
-    <div class="eyebrow">Obligations checklist</div>
-    <h1>AML/CTF readiness check.</h1>
-    <p class="lead">Work through the questions below and answer honestly. The Source column shows where each obligation sits in the AML/CTF Act and Rules, so you can check any answer against the legislation itself.</p>
-    <div class="tablewrap"><table class="check">
-      <thead><tr><th style="width:18%">Area</th><th>Readiness question</th><th style="width:16%">Source</th><th style="width:14%">Your answer</th></tr></thead>
-      <tbody>
+<section id="readiness"><div class="wrap">
+ <h1>Quick readiness check</h1>
+ <p>Two parts. First, whether the AML/CTF Act may apply to your practice. Second, how ready you are. Your answers stay in this page in your browser; nothing is sent, stored or attached to an enquiry.</p>
+ <h2>Part 1. Does the Act apply?</h2>
+ <p>Choose your sector. Each question is a designated service in the Act, with its main conditions. Answer for work you do in the course of business, whether or not you charge for it.</p>
+ <p><label for="check-sector" class="small">Your sector</label><br>
+  <select id="check-sector" class="sel">{{sectoroptions}}</select></p>
+{{scopesets}}
+ <p class="progress" id="scope-progress" aria-live="polite">Answered 0 of {{scopecount}}.</p>
+ <div class="result" id="scope-result" aria-live="polite">Answer the questions and the result appears here.</div>
+{{scopenotes}}
+ <p class="small">This is a short self-check, not a legal determination. AUSTRAC's designated services guidance for <a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/professional-designated-services">professional services</a> and <a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/real-estate-designated-services">real estate</a> sets out the conditions in detail.</p>
+
+ <h2 style="margin-top:40px">Part 2. How ready are you?</h2>
+ <p>One question per theme. Yes, no, or not sure. The result separates what you have said needs attention from what needs clarifying.</p>
+ <div class="check" id="ready-check">
 {{checkrows}}
-      </tbody>
-    </table></div>
-    <p class="smallprint">{{sourceline}}</p>
-    <div class="btnrow">
-      <a class="btn accent" href="/about/#services">See how Nimbi closes the gaps</a>
-      <a class="btn ghost" href="/obligations/">Obligations for your profession</a>
-    </div>
-  </div>
-</section>
-<div class="gapbar" id="gapbar">
-  <div class="wrap">
-    <div class="gapnum" id="gapnum">0</div>
-    <div style="flex:1;min-width:220px"><strong id="gapmsg">gaps identified.</strong><br><span style="font-size:14px">Every 'No' is an obligation you are yet to meet.</span></div>
-    <a class="btn accent" href="/about/#services">Close my gaps</a>
-    <button class="gapclose" id="gapdismiss" aria-label="Hide this summary">&#215;</button>
-  </div>
+ </div>
+ <p class="progress" id="ready-progress" aria-live="polite">Answered 0 of {{checkcount}}.</p>
+ <div class="result" id="ready-result" aria-live="polite">Answer the questions and your result appears here.</div>
+ <p><button type="button" class="link-btn" id="reset-all">Start again</button></p>
+ <p class="small">The ten themes are an editorial grouping of the Act and the AML/CTF Rules 2025 for usability, not a count of statutory obligations. <a href="/who-we-help/obligations-in-practice/">Your obligations in practice</a> explains each theme, with the notes for your sector.</p>
+</div></section>
+
+<div class="gapbar" id="gapbar" hidden>
+ <div class="wrap">
+  <div class="count" id="gap-count" aria-hidden="true">0</div>
+  <div class="text"><strong id="gap-title">items to review</strong><br><span id="gap-sub"></span></div>
+  <a class="btn primary" id="gap-btn" href="/how-nimbi-helps/">See what could help</a>
+  <button type="button" class="gap-close" id="gap-close" aria-label="Hide the review tracker">&#215;</button>
+ </div>
 </div>
-<button class="gappill" id="gappill" aria-label="Show readiness summary"><span id="pillnum">0</span> gaps</button>

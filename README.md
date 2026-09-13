@@ -1,13 +1,19 @@
 # Nimbi Website
 
-Marketing site for **Nimbi** — AML/CTF compliance for newly regulated entities.
+Marketing site for **Nimbi AML** (Nimbi Group Pty Ltd) — AML/CTF risk assessments,
+programs and implementation (Nimbi Foundations) and self-service CDD, KYC and KYB
+tooling (Nimbi Lens) for accountants, lawyers and conveyancers, and real estate.
 
-Live site: <https://nimbi-au.github.io/nimbi-website/>
+Live site: <https://nimbi.com.au/> (GitHub Pages, also at <https://nimbi-au.github.io/nimbi-website/>)
 
-The site is fourteen pages generated from the sources in [`src/`](src/). You edit a
+The site is twelve pages generated from the sources in [`src/`](src/). You edit a
 file in `src/`, run `python build.py` to regenerate the pages, save your changes, and
 press deploy. Python 3 is the only thing you need installed, and nothing has to be
 downloaded from the internet.
+
+The page structure and wording follow the site draft `nimbi_site_draft_v0.35.html`
+(14 September 2026). The draft was a single review file; here each of its blocks
+is a real page at the route its comment proposed.
 
 **You do not need to know how to code to edit this site.** Everything below can be
 done by asking Claude in plain English. If you are a developer, skip to
@@ -203,11 +209,11 @@ The colours live in one place — the `:root` block at the top of `assets/site.c
 
 | Variable | Hex | Used for |
 |---|---|---|
-| `--primary` | #2E2A72 | Headings, footer, dark sections |
-| `--accent` | #3D4DFF | Links, buttons, active nav, eyebrows |
+| `--primary` | #2E2A72 | Headings, footer, hero, table headers, featured price card |
+| `--accent` | #3D4DFF | Links, buttons, active nav, result boxes |
 | `--teal` | #4FBDB1 | Decorative fills only — too light behind text |
-| `--grad` | #4FBDB1 → #3D4DFF | The logo gradient: nav rule, accent bars |
-| `--tint` | #F3F4F6 | Alternating section backgrounds |
+| `--grad` | #4FBDB1 → #3D4DFF | The logo gradient: the rule under the header |
+| `--tint` | #F3F4F6 | The page background; white sections sit on it |
 | `--ink` | #222222 | Charcoal |
 
 ## For developers
@@ -217,15 +223,42 @@ no dependencies). Generated output is committed, so the deploy workflow just
 uploads the repo root.
 
 ```
-src/layout.html        page shell: <head>, nav, footer
-src/pages/*.html       one fragment per page; _sector.html is the per-sector template
-src/data/*.json        sector, checklist and comparison content
-assets/site.css        all styles
-assets/site.js         contact forms (home + about)
-assets/readiness.js    readiness check interactivity
-assets/comparison.js   comparison table expand/tooltip
-build.py               renders everything, plus sitemap.xml and robots.txt
+src/layout.html                 page shell: <head>, nav, footer
+src/pages/*.html                one fragment per page (the part inside <main>)
+src/pages/_obligations.html     the ten obligation themes, shared by the guides and the standalone page
+src/data/sectors.json           per-sector content: guide URL, Part 1 scope questions, sector notes
+src/data/checklist.json         the ten readiness questions (Part 2)
+assets/site.css                 all styles
+assets/nav.js                   small-screen menu button
+assets/site.js                  contact form (sends through the Cloudflare Worker in worker/)
+assets/readiness.js             readiness check interactivity
+assets/obligations.js           sector selector on the standalone obligations page
+assets/hero.webp                the home page photo
+build.py                        renders everything, plus the redirects, sitemap.xml and robots.txt
 ```
+
+Pages and where their content lives:
+
+| Route | Source |
+|---|---|
+| `/` | `src/pages/home.html` |
+| `/who-we-help/` | `src/pages/who-we-help.html` |
+| `/who-we-help/accountants/` | `src/pages/guide-accountants.html` + `_obligations.html` |
+| `/who-we-help/lawyers-and-conveyancers/` | `src/pages/guide-lawyers.html` + `_obligations.html` |
+| `/who-we-help/real-estate/` | `src/pages/guide-real-estate.html` + `_obligations.html` |
+| `/who-we-help/obligations-in-practice/` | `src/pages/obligations-in-practice.html` + `_obligations.html` |
+| `/readiness-check/` | `src/pages/readiness-check.html` + `data/sectors.json` + `data/checklist.json` |
+| `/how-nimbi-helps/` | `src/pages/how-nimbi-helps.html` |
+| `/pricing/` | `src/pages/pricing.html` |
+| `/about/` | `src/pages/about.html` |
+| `/contact/` | `src/pages/contact.html` (Calendly link in `build.py`) |
+| `/privacy/` | `src/pages/privacy.html` |
+
+Titles and meta descriptions are set in `build.py`, next to each page.
+
+The old URLs from the first version of the site (`/obligations/...`, `/why-nimbi/`,
+`/designated-services/`, `/who-we-serve/`) are kept as small redirect pages so
+links and search results keep working. The list is `REDIRECTS` in `build.py`.
 
 Rebuild after any change under `src/` or you will publish stale pages:
 
@@ -237,9 +270,9 @@ python build.py
 description over 160 characters.
 
 Content that a search engine needs to see is rendered into the HTML at build
-time — the per-sector obligations, the readiness questions and the comparison
-detail rows. JavaScript only enhances what is already there; do not move that
-content back into JS.
+time — the obligation themes, every sector's readiness questions and the
+sector notes. JavaScript only enhances what is already there (showing the chosen
+sector, scoring answers); do not move that content back into JS.
 
 Local preview:
 

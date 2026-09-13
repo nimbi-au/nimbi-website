@@ -1,52 +1,62 @@
 [
   {
-    "area": "Enrolment",
-    "question": "Have you enrolled on AUSTRAC's Reporting Entity Roll? (The deadline for enrolment was 29 July 2026)",
-    "source": "AML/CTF Act s 51E"
+    "n": 1,
+    "area": "setup",
+    "title": "Enrol with AUSTRAC.",
+    "question": "Is the practice enrolled, with the compliance officer notified?"
   },
   {
-    "area": "Risk Assessment",
-    "question": "Have you conducted a risk assessment covering your services, customers, channels, jurisdictions and employee risk?",
-    "source": "s 26C"
+    "n": 2,
+    "area": "framework",
+    "title": "Assess your risk.",
+    "question": "Is there a written, current assessment of the practice's ML/TF risks, with the reasoning recorded?"
   },
   {
-    "area": "AML/CTF Policies",
-    "question": "Do you have written AML/CTF policies appropriate to your nature, size and complexity?",
-    "source": "s 26F"
+    "n": 3,
+    "area": "framework",
+    "title": "Keep a written program.",
+    "question": "Are there written AML/CTF policies and procedures that staff actually follow?"
   },
   {
-    "area": "Governance",
-    "question": "Has a senior manager approved your program, with ongoing oversight by your governing body?",
-    "source": "ss 26H, 26P"
+    "n": 4,
+    "area": "framework",
+    "title": "Approve and oversee it.",
+    "question": "Has a senior manager approved the program, and does a governing body oversee it?"
   },
   {
-    "area": "Compliance Officer",
-    "question": "Have you appointed a fit and proper AML/CTF compliance officer at management level?",
-    "source": "s 26J"
+    "n": 5,
+    "area": "framework",
+    "title": "Compliance officer.",
+    "question": "Is a fit and proper person at management level appointed and doing the role?"
   },
   {
-    "area": "Customer Due Diligence",
-    "question": "Do you identify and verify each customer before providing a designated service?",
-    "source": "Pt 2"
+    "n": 6,
+    "area": "cdd",
+    "title": "Know your customer before you start.",
+    "question": "Before a designated service begins, do you establish who the customer is, who owns or controls an entity, and check for PEPs and sanctions, with the evidence recorded?"
   },
   {
-    "area": "Ongoing Monitoring",
-    "question": "Do you monitor customers and transactions on an ongoing basis for suspicious activity?",
-    "source": "Pt 2"
+    "n": 7,
+    "area": "cdd",
+    "title": "Keep watching.",
+    "question": "Do you update customer information, re-check screening and act on activity that does not fit what you know?"
   },
   {
-    "area": "Reporting",
-    "question": "Can you lodge suspicious matter reports within 3 business days and threshold transaction reports for cash of $10,000 or more within 10 business days?",
-    "source": "ss 41, 43"
+    "n": 8,
+    "area": "firm",
+    "title": "Report when required.",
+    "question": "Could the practice recognise, assess and lodge a suspicious matter report inside the statutory time, and lodge the annual compliance report?"
   },
   {
-    "area": "Records & Training",
-    "question": "Do you keep records for 7 years, with personnel due diligence and AML/CTF training in place?",
-    "source": "Pt 10; s 26F(4)"
+    "n": 9,
+    "area": "firm",
+    "title": "Records, personnel and training.",
+    "question": "Are due diligence and program records kept for the required periods, and are people in AML/CTF roles checked and trained as the program sets out?"
   },
   {
-    "area": "Independent Evaluation",
-    "question": "Is an independent evaluation of your program scheduled at least every 3 years?",
-    "source": "s 26F(4)(f); R 5-10"
+    "n": 10,
+    "area": "prove",
+    "title": "Independent evaluation.",
+    "question": "Is an independent evaluation scheduled within the transitional deadline and at least every three years after?"
   }
 ]

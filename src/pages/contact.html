@@ -1,52 +1,42 @@
-<section id="book">
-  <div class="wrap">
-    <div class="eyebrow">Contact Nimbi</div>
-    <h1 class="ash2">Book a 30-minute call.</h1>
-    <p class="lead">Pick a time below and your confirmation lands straight away. It's a straight conversation with a senior AML/CTF practitioner - no obligation.</p>
-    <ul class="mini" style="max-width:70ch">
-      <li>Where your firm sits against the Tranche 2 obligations.</li>
-      <li>What has to be in place before 1 July 2026, and in what order.</li>
-      <li>Which parts you can run yourselves and which are worth handing over.</li>
-    </ul>
-    <div class="calbox">
-      <div class="calendly-inline-widget" data-url="{{calendlyembed}}" data-resize="true" style="min-width:320px;height:100%"></div>
-    </div>
-    <p class="smallprint">Calendar not loading? <a class="inline" href="{{calendlyurl}}" target="_blank" rel="noopener">Open the booking page in a new tab</a>, or use the form below.</p>
-  </div>
-</section>
+<section id="contact"><div class="wrap">
+ <h1>Start a conversation</h1>
+ <p class="lede">Tell us who you are and what you're facing. A 30-minute scoping call is free and without obligation; we map your services, tell you where you're captured and give you a clear next step, even if that step isn't Nimbi.</p>
+ <p>Email <a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a> or call <a href="tel:+61478115583">+61 478 115 583</a> to arrange a time, pick a slot below, or <a href="#message">send the form</a> further down. Please keep identity documents and client details out of messages.</p>
+ <h2 id="book" style="margin-top:32px">Book a scoping call</h2>
+ <div class="calbox">
+  <div class="calendly-inline-widget" data-url="{{calendlyembed}}" data-resize="true" style="min-width:320px;height:100%"></div>
+ </div>
+ <p class="small" style="margin-top:12px">Calendar not loading? <a href="{{calendlyurl}}" target="_blank" rel="noopener">Open the booking page in a new tab</a>, or use the form below.</p>
+</div></section>
 
-<section class="tint" id="message">
-  <div class="narrow">
-    <h2>Or send us a message.</h2>
-    <p>Tell us who you are and what you're facing. A Nimbi practitioner will come back to you within one business day.</p>
-    <div class="cform">
-      <div><label for="c-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="c-name" type="text" autocomplete="name" required aria-required="true"></div>
-      <div><label for="c-firm">Firm <span class="req" aria-hidden="true">*</span></label><input id="c-firm" type="text" autocomplete="organization" required aria-required="true"></div>
-      <div><label for="c-sector">Sector <span class="req" aria-hidden="true">*</span></label>
-        <select id="c-sector" required aria-required="true"><option value="">Please select</option><option>Accounting</option><option>Real estate</option><option>Property development</option><option>Legal</option><option>Conveyancing</option><option>Trust and company services</option><option>Precious metals and stones</option><option>Other</option></select>
-      </div>
-      <div><label for="c-email">Email <span class="req" aria-hidden="true">*</span></label><input id="c-email" type="email" autocomplete="email" required aria-required="true"></div>
-      <div><label for="c-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="c-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
-      <div><label for="c-when">When do you need help? <span class="req" aria-hidden="true">*</span></label>
-        <select id="c-when" required aria-required="true"><option value="">Please select</option><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
-      </div>
-      <div class="span2"><label for="c-msg">What's on your mind? <span class="req" aria-hidden="true">*</span></label><textarea id="c-msg" required aria-required="true"></textarea></div>
-      <div class="span2">
-        <div class="hp" aria-hidden="true"><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" tabindex="-1" autocomplete="off"></div>
-        <div class="tsbox" id="c-turnstile"></div>
-        <button class="btn accent" onclick="submitEnquiry('c',this)">Request a call back</button>
-        <div class="formnote" id="c-note"></div>
-        <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required. We use your details only to respond to your enquiry.</div>
-        <div class="reqnote">Nimbi Group Pty Ltd uses the details you enter here to respond to your enquiry and, if we work together, to set up the engagement. Your message is emailed to us and isn't stored on this website. We don't sell your information - our <a class="inline" href="/privacy/">Privacy Policy</a> explains how we handle it and how to contact us about it.</div>
-      </div>
-    </div>
+<section class="tint" id="message"><div class="wrap">
+ <h2>Send a message</h2>
+ <p>We come back to every enquiry within one business day.</p>
+ <div class="cform">
+  <div><label for="c-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="c-name" type="text" autocomplete="name" required aria-required="true"></div>
+  <div><label for="c-firm">Practice <span class="req" aria-hidden="true">*</span></label><input id="c-firm" type="text" autocomplete="organization" required aria-required="true"></div>
+  <div><label for="c-email">Work email <span class="req" aria-hidden="true">*</span></label><input id="c-email" type="email" autocomplete="email" required aria-required="true"></div>
+  <div><label for="c-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="c-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
+  <div><label for="c-sector">Sector <span class="req" aria-hidden="true">*</span></label>
+   <select id="c-sector" required aria-required="true"><option value="">Please select</option><option>Accountants</option><option>Lawyers and conveyancers</option><option>Real estate (agents, buyers' agents, developers)</option><option>Not sure yet</option></select>
   </div>
-</section>
+  <div><label for="c-when">When do you need help? <span class="req" aria-hidden="true">*</span></label>
+   <select id="c-when" required aria-required="true"><option value="">Please select</option><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
+  </div>
+  <div class="span2"><label for="c-msg">Message <span class="req" aria-hidden="true">*</span></label><textarea id="c-msg" rows="5" required aria-required="true"></textarea></div>
+  <div class="span2">
+   <div class="hp" aria-hidden="true"><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" tabindex="-1" autocomplete="off"></div>
+   <div class="tsbox" id="c-turnstile"></div>
+   <button class="btn primary" type="button" onclick="submitEnquiry('c',this)">Send message</button>
+   <div class="formnote" id="c-note" role="status" aria-live="polite"></div>
+   <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required.</div>
+   <div class="reqnote">Nimbi Group Pty Ltd uses the details you enter here to respond to your enquiry and, if we work together, to set up the engagement. Your message is emailed to us and isn't stored on this website. We don't sell your information; our <a href="/privacy/">privacy policy</a> explains how we handle it and how to contact us about it.</div>
+  </div>
+ </div>
+</div></section>
 
-<section>
-  <div class="narrow">
-    <h2>Not sure what to ask yet?</h2>
-    <p>The readiness check walks through the ten obligations every reporting entity carries, each one cited to the part of the Act it comes from. It takes a few minutes and gives you something concrete to bring to the call.</p>
-    <div class="btnrow"><a class="btn accent" href="/readiness-check/">Run the readiness check</a></div>
-  </div>
-</section>
+<section><div class="wrap">
+ <h2>Not sure what to ask yet?</h2>
+ <p>The quick readiness check asks whether the Act may apply to your practice, then how ready you are against the ten obligation themes. It takes a few minutes and gives you something concrete to bring to the call.</p>
+ <p><a class="btn primary" href="/readiness-check/">Quick readiness check</a></p>
+</div></section>

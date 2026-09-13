@@ -23,7 +23,9 @@ function onTurnstileLoad(){
     const box = document.getElementById(ENQUIRY_FORMS[key].box);
     if(box) turnstileWidgets[key] = turnstile.render(box, {
       sitekey: TURNSTILE_SITEKEY,
-      action: ENQUIRY_FORMS[key].action
+      action: ENQUIRY_FORMS[key].action,
+      /* The normal widget is 300px wide; the narrowest phones cannot fit it. */
+      size: window.innerWidth < 340 ? "compact" : "normal"
     });
   });
 }
@@ -40,8 +42,8 @@ function readEnquiry(key){
     const val = (el.value || "").trim();
     let ok = val !== "";
     if(ok && el.type === "email") ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    if(ok){ el.classList.remove("invalid"); }
-    else { el.classList.add("invalid"); if(!firstBad) firstBad = el; }
+    if(ok){ el.classList.remove("invalid"); el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); }
+    else { el.classList.add("invalid"); el.setAttribute("aria-invalid", "true"); el.setAttribute("aria-describedby", cfg.note); if(!firstBad) firstBad = el; }
     data[f[1]] = val;
     lines.push(f[2] + ": " + val);
   });
@@ -117,7 +119,11 @@ async function submitEnquiry(key, btn){
 window.submitEnquiry = submitEnquiry;
 
 function clearInvalid(e){
-  if(e.target && e.target.classList && e.target.classList.contains("invalid")) e.target.classList.remove("invalid");
+  if(e.target && e.target.classList && e.target.classList.contains("invalid")){
+    e.target.classList.remove("invalid");
+    e.target.removeAttribute("aria-invalid");
+    e.target.removeAttribute("aria-describedby");
+  }
 }
 document.addEventListener("input", clearInvalid);
 document.addEventListener("change", clearInvalid);

@@ -1,131 +1,52 @@
 [
   {
-    "slug": "accountants",
-    "name": "Accountants",
-    "tag": "Practices and sole practitioners",
-    "intro": "Accountants are captured service by service, not wholesale. If your practice does any transactional or structuring work, the regime reached you on 1 July 2026.",
-    "ds": [
-      "Assisting clients to buy, sell or transfer real estate, or a company, business or trust",
-      "Receiving, holding or managing client money, accounts or property as part of a transaction",
-      "Creating, restructuring or winding up companies, trusts and partnerships",
-      "Acting as, or arranging, directors, secretaries, partners, trustees or nominee shareholders",
-      "Providing registered office or business address services",
-      "Selling or transferring shelf companies",
-      "Organising equity or debt financing for a company or trust"
-    ],
-    "flags": [
-      "Complex structures - discretionary trusts and layered entities are exactly what the reforms target, and your clients love them.",
-      "Source of funds - a client settling a business purchase in ways that don't match their profile is now your problem to notice.",
-      "Client money - trust account movements need monitoring, not just reconciliation."
-    ],
-    "desc": "Accountants are captured service by service, not wholesale. The designated services, the ten obligations and the risk flags for your practice."
+    "key": "accountants",
+    "label": "Accountants",
+    "guide": "/who-we-help/accountants/",
+    "guidename": "accountants guide",
+    "notesfor": "accounting practices",
+    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions.",
+    "scopenote": "Tax returns, financial statements, BAS and bookkeeping are not designated services on their own.",
+    "scope": [
+      ["Do you help clients plan or carry out buying, selling or transferring real estate, other than under a court or tribunal order?", "Table 6 item 1. Advice that only influences a decision is not a designated service; acting in the transaction is."],
+      ["Do you help clients plan or carry out the sale, purchase or transfer of a controlling interest in a company, trust or other legal arrangement, other than under a court or tribunal order?", "Table 6 item 2. Tax advice on a possible sale is not captured until you are instructed to act in a transaction with a buyer in view."],
+      ["Does client money or property pass through your accounts, including a trust account, or do you deal with it on the client's instructions, as part of a transaction?", "Table 6 item 3. Excludes money held only as payment for your services, incidental holdings for non-designated work, and receipts or payments under a court order."],
+      ["Do you help organise or carry out equity or debt financing for a company or legal arrangement?", "Table 6 item 4."],
+      ["Do you help create or restructure companies, trusts, SMSFs or other legal arrangements, including drafting the deed or constitution or registering with ASIC?", "Table 6 item 6. Testamentary trusts are excluded."],
+      ["Do you act as, or arrange for someone to act as, a director, secretary, trustee, partner or nominee shareholder for a client?", "Table 6 items 7 and 8. Court-ordered fiduciary roles and attorneys for natural persons are excluded."],
+      ["Do you provide a registered office or principal place of business address for a client entity, or sell shelf companies?", "Table 6 items 5 and 9."]
+    ]
   },
   {
-    "slug": "real-estate-agents",
-    "name": "Real estate agents",
-    "tag": "Listing agents, buyer's agents, agencies",
-    "intro": "Obligations attach the moment you're engaged to act in a sale, purchase or transfer. Your vendor is your customer - and the buyer becomes relevant when the transaction forms.",
-    "ds": [
-      "Brokering the sale, purchase or transfer of real estate for any party - even where no money changes hands",
-      "Acting for a vendor as listing agent",
-      "Acting for a purchaser as buyer's agent",
-      "Brokering business sales where a company or trust changes hands"
-    ],
-    "flags": [
-      "Cash and unusual funding - property remains Australia's best documented laundering channel.",
-      "Foreign buyers and absent principals - non face-to-face deals need stronger verification, not a lighter touch.",
-      "Multi-office groups - a reporting group with one shared program is usually smarter than every office building its own."
-    ],
-    "desc": "Obligations attach the moment you act in a sale, purchase or transfer. The designated services, ten obligations and risk flags for agencies."
+    "key": "lawyers",
+    "label": "Lawyers and conveyancers",
+    "guide": "/who-we-help/lawyers-and-conveyancers/",
+    "guidename": "lawyers and conveyancers guide",
+    "notesfor": "legal and conveyancing practices",
+    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions. Where information is subject to legal professional privilege, the reporting rules and timing differ: see <a href=\"/who-we-help/lawyers-and-conveyancers/#privilege\">privilege and reporting</a> in the lawyers and conveyancers guide.",
+    "scopenote": "Legal advice, litigation and dispute resolution on their own are generally not designated services.",
+    "scope": [
+      ["Do you act for clients in transactions to buy, sell or transfer real estate, including conveyancing, other than under a court or tribunal order?", "Table 6 item 1. Litigation and advice on completed transactions are not captured."],
+      ["Do you act for clients in the sale, purchase or transfer of a controlling interest in a company, trust or other legal arrangement, other than under a court or tribunal order?", "Table 6 item 2."],
+      ["Do you receive, hold, control or pay out client money or property as part of a transaction, including through your trust account?", "Table 6 item 3. Excludes money held only as payment for your services, incidental holdings where you provide no other designated service, and receipts or payments under a court order."],
+      ["Do you help organise or carry out equity or debt financing for a company or legal arrangement?", "Table 6 item 4."],
+      ["Do you help create or restructure companies, trusts or other legal arrangements?", "Table 6 item 6. Wills and testamentary trusts are excluded."],
+      ["Do you act as, or arrange, a director, secretary, trustee, partner, attorney of an entity or nominee shareholder for a client?", "Table 6 items 7 and 8."],
+      ["Do you provide a registered office or principal place of business address for a client entity, or sell shelf companies?", "Table 6 items 5 and 9."]
+    ]
   },
   {
-    "slug": "property-developers",
-    "name": "Property developers",
-    "tag": "Selling developed stock",
-    "intro": "Developers selling their own stock provide a designated service where no independent agent brokers the sale - off-the-plan and in-house sales suites included.",
-    "ds": [
-      "Selling or transferring real estate you developed, where no independent agent brokers the sale"
-    ],
-    "flags": [
-      "Off-the-plan deposits - long settlement windows and staged payments create layering opportunities.",
-      "Related party sales - transactions inside a group still need due diligence.",
-      "Overseas purchasers - identification and source of funds need real substance."
-    ],
-    "desc": "Selling your own stock with no independent agent is a designated service. The obligations and risk flags for off-the-plan and in-house sales."
-  },
-  {
-    "slug": "lawyers",
-    "name": "Lawyers",
-    "tag": "Firms and sole practitioners",
-    "intro": "Legal practice is captured on its transactional side. Court work generally sits outside the regime; property, client money and structuring sit inside it.",
-    "ds": [
-      "Assisting in the sale, purchase or transfer of real estate",
-      "Assisting clients to buy, sell or transfer a business, company or trust",
-      "Receiving, holding or managing client money or property in a transaction",
-      "Creating, restructuring or winding up companies, trusts and other arrangements",
-      "Acting as, or arranging, directors, secretaries, trustees or partners",
-      "Organising equity or debt financing for a company or trust",
-      "Nominee shareholder, registered office and shelf company services"
-    ],
-    "flags": [
-      "Trust accounts - the single biggest exposure in most firms, and the first place AUSTRAC will look.",
-      "Professional privilege - privilege is preserved but doesn't erase reporting obligations; the boundary needs careful, documented handling.",
-      "Conveyancing volume - high matter throughput needs a CDD process that scales without shortcuts."
-    ],
-    "desc": "Legal practice is captured on its transactional side. The designated services, ten obligations and risk flags for firms and sole practitioners."
-  },
-  {
-    "slug": "conveyancers",
-    "name": "Conveyancers",
-    "tag": "Licensed conveyancing practices",
-    "intro": "Acting for a party in the sale, purchase or transfer of real property puts conveyancing squarely in scope, settlement funds included.",
-    "ds": [
-      "Assisting clients to plan or carry out the sale, purchase or transfer of real property",
-      "Assisting in business sales where a company or trust changes hands",
-      "Receiving, holding or paying out client money or property in the course of a transaction"
-    ],
-    "flags": [
-      "Speed pressure - settlements move fast; your verification process has to move faster without cutting corners.",
-      "Instructing parties - make sure the person instructing you is the person you verified.",
-      "Remote clients - digital verification with liveness checking is now the baseline."
-    ],
-    "desc": "Acting in the sale, purchase or transfer of real property puts conveyancing in scope. The designated services, obligations and risk flags."
-  },
-  {
-    "slug": "trust-and-company-service-providers",
-    "name": "Trust and company service providers",
-    "tag": "Formation, nominee and office services",
-    "intro": "TCSP work is the most internationally scrutinised of the gatekeeper services - opaque structures are the global laundering vehicle of choice, and FATF has said so for years.",
-    "ds": [
-      "Setting up or restructuring companies, trusts and partnerships",
-      "Acting as or arranging directors, secretaries, partners, trustees or nominee shareholders",
-      "Selling or transferring shelf companies",
-      "Receiving, holding or managing client money or property in a transaction",
-      "Providing registered office or business address services"
-    ],
-    "flags": [
-      "Beneficial ownership - you must be able to say who really owns and controls every structure you touch.",
-      "Nominee arrangements - acting as a shield for an unidentified principal is precisely the scenario the Act targets.",
-      "Offshore linkages - structures reaching into secrecy jurisdictions need enhanced due diligence as a default posture."
-    ],
-    "desc": "TCSP work is the most scrutinised of the gatekeeper services. The designated services, obligations and risk flags for formation and nominee work.",
-    "title": "AML/CTF obligations for trust and company service providers"
-  },
-  {
-    "slug": "dealers-in-precious-metals-and-stones",
-    "name": "Dealers in precious metals and stones",
-    "tag": "Bullion, jewellery, gems",
-    "intro": "Bullion dealing is captured in its own right. Other dealers come into scope where $10,000 or more is paid in physical currency or virtual assets - cash-heavy trade is exactly what the threshold is built to catch.",
-    "ds": [
-      "Buying or selling bullion as part of a bullion-dealing business - whatever the amount, with initial customer checks exempt below $5,000 retail value",
-      "Buying or selling precious metals, stones or jewellery containing them, where $10,000 or more is paid in physical currency, virtual assets or a mix - in one transaction or several that appear linked"
-    ],
-    "flags": [
-      "Structuring - a buyer splitting one purchase into several just under the threshold is a classic red flag, and reportable.",
-      "Walk-in cash - high value, easy to carry and hard to trace - which is exactly why the threshold exists.",
-      "Repeat customers - patterns across visits matter as much as any single sale."
-    ],
-    "desc": "Bullion is captured in its own right, other dealers at $10,000 paid in cash or virtual assets. The obligations and risk flags for dealers.",
-    "title": "AML/CTF obligations for precious metals and stones dealers"
+    "key": "realestate",
+    "label": "Real estate",
+    "guide": "/who-we-help/real-estate/",
+    "guidename": "real estate guide",
+    "notesfor": "real estate businesses",
+    "reportnote": "A threshold transaction report applies if your business receives or pays physical currency of $10,000 or more in a designated service, for example a deposit paid in notes; ordinary electronic payments are not threshold transactions.",
+    "scopenote": "Managing rentals, collecting rent and valuations are not designated services on their own.",
+    "scope": [
+      ["Do you act for sellers to sell or transfer real estate, for a commission or other consideration?", "Table 5 item 1, seller's agent. Real estate includes freehold and leases of more than 30 years; leases of 30 years or less are excluded."],
+      ["Do you act for buyers to find, negotiate or buy real estate, for a fee or commission?", "Table 5 item 1, buyer's agent. The service starts when the agreement to find a property is signed."],
+      ["Does your business sell or transfer real estate it develops or owns directly to buyers, without an independent real estate agent brokering the sale, as a business of selling real estate: for example off-the-plan apartments, house-and-land packages or subdivided lots, including through in-house sales staff?", "Table 5 item 2. Answer for the entity that actually sells. If an independent agent brokers the sale, that agent provides the brokerage service (item 1) and item 2 does not apply to your business for that sale. Construction alone, or a one-off sale of your own premises, is not a business of selling real estate. If a related entity does the selling or the arrangement is unclear, answer Not sure."]
+    ]
   }
 ]

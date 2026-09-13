@@ -53,13 +53,17 @@ Give them the direct URL rather than making them navigate:
 | Page | URL |
 | --- | --- |
 | Home | `/` |
-| About | `/about/` |
-| Who we serve | `/who-we-serve/` |
-| Designated services | `/designated-services/` |
-| Obligations hub | `/obligations/` |
-| A sector page | `/obligations/accountants/` (also `real-estate-agents`, `property-developers`, `lawyers`, `conveyancers`, `trust-and-company-service-providers`, `dealers-in-precious-metals-and-stones`) |
+| Who we help (hub) | `/who-we-help/` |
+| Accountants guide | `/who-we-help/accountants/` |
+| Lawyers and conveyancers guide | `/who-we-help/lawyers-and-conveyancers/` |
+| Real estate guide | `/who-we-help/real-estate/` |
+| Your obligations in practice | `/who-we-help/obligations-in-practice/` |
 | Readiness check | `/readiness-check/` |
-| Why Nimbi | `/why-nimbi/` |
+| How Nimbi helps | `/how-nimbi-helps/` |
+| Pricing | `/pricing/` |
+| About | `/about/` |
+| Contact | `/contact/` |
+| Privacy | `/privacy/` |
 
 ## Notes
 
