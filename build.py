@@ -5,7 +5,8 @@ The site is plain static HTML on GitHub Pages, so the generated output is
 committed alongside the sources. Run `python build.py` after editing anything
 under src/ and commit both.
 
-Page structure follows the v0.35 site draft (14 September 2026).
+Page structure follows the site draft: v0.35 (14 September 2026), brought up to
+v0.44 (23 September 2026).
 """
 import html
 import json
@@ -37,9 +38,6 @@ NAV = [
     ("pricing", "Pricing", "/pricing/"),
 ]
 
-TURNSTILE = ('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js'
-             '?render=explicit&onload=onTurnstileLoad" defer></script>\n')
-
 # The scheduling link behind the contact page's inline booking widget. Change it
 # here and both the embed and its fallback link follow. The embed carries
 # hide_gdpr_banner so Calendly's own cookie prompt stays out of the page; the
@@ -62,7 +60,7 @@ REDIRECTS = [
     ("obligations/property-developers/index.html", "/who-we-help/real-estate/"),
     ("obligations/trust-and-company-service-providers/index.html", "/who-we-help/"),
     ("obligations/dealers-in-precious-metals-and-stones/index.html", "/who-we-help/"),
-    ("why-nimbi/index.html", "/pricing/#compare"),
+    ("why-nimbi/index.html", "/how-nimbi-helps/#compare"),
 ]
 
 
@@ -98,7 +96,7 @@ ORGANISATION = {
     "logo": ORIGIN + "/branding/png/logo-full-white-bg@2000w.png",
     "image": ORIGIN + "/branding/png/logo-full-white-bg@2000w.png",
     "email": "info@nimbi.com.au",
-    "telephone": "+61478115583",
+    "telephone": "1300 823 016",
     "identifier": {"@type": "PropertyValue", "propertyID": "ABN", "value": "36 701 758 018"},
     "description": ("AML/CTF risk assessments, programs and implementation (Nimbi Foundations) and "
                     "self-service CDD, KYC and KYB tooling (Nimbi Lens) for Australian accounting, "
@@ -187,13 +185,13 @@ OBLIGATIONS = page_src("_obligations")
 # The standalone page cites its sources under the block. Inside a guide the same
 # citations are merged into the guide's own sources line instead.
 OBLIGATIONS_SOURCES = (
-    '\n <p class="small">Sources: AUSTRAC, '
+    '\n <p class="ng-sources">Sources: AUSTRAC, '
     '<a href="https://www.austrac.gov.au/amlctf-reform/reforms-guidance/amlctf-program-reform/develop-your-amlctf-program-reform/your-amlctf-program-reform">Your AML/CTF program</a>; '
     '<a href="https://www.austrac.gov.au/amlctf-reform/reforms-guidance/amlctf-program-reform/customer-due-diligence-reform/initial-customer-due-diligence-reform/overview-initial-customer-due-diligence-reform">Overview of initial customer due diligence</a>; '
     '<a href="https://www.austrac.gov.au/amlctf-reform/reforms-guidance/amlctf-program-reform/reporting-austrac-reform">Reporting to AUSTRAC</a>; '
     '<a href="https://www.austrac.gov.au/about-us/legislation/updates-legislation/amlctf-transitional-rules-2026">AML/CTF transitional rules 2026</a>; '
     '<a href="https://www.austrac.gov.au/new-austrac/enrol-us/enrol-us-overview">Enrol with us</a>. '
-    'General information, not legal advice.</p>\n')
+    'General information, not legal advice. Reviewed 21 September 2026.</p>\n')
 
 
 def sector_options(selected):
@@ -203,7 +201,7 @@ def sector_options(selected):
 
 
 def render_obligations(sector=None):
-    """The ten themes. Inside a guide page the sector's notes are baked in; on
+    """The five stages. Inside a guide page the sector's notes are baked in; on
     the standalone page a selector switches them and JS swaps the text."""
     if sector is not None:
         s = SECTOR_BY_KEY[sector]
@@ -219,10 +217,10 @@ def render_obligations(sector=None):
         '<span class="ob-note" data-sector="%s"%s>%s</span>'
         % (s["key"], "" if s is first else " hidden", s["reportnote"]) for s in SECTORS)
     return fill(OBLIGATIONS, {
-        "selectorintro": "The notes that differ by sector change with the selector.",
-        "selector": (' <p><label for="ob-sector" class="small">Show the notes for</label><br>\n'
-                     '  <select id="ob-sector" class="sel">%s</select></p>' % sector_options(first["key"])),
-        "reportnote": '<span id="ob-report-note">%s</span>' % notes,
+        "selectorintro": "",
+        "selector": ('<label for="ob-sector">Choose your business type</label>'
+                     '<select id="ob-sector" class="sel">%s</select>' % sector_options(first["key"])),
+        "reportnote": notes,
         "backlink": (' <p><a id="ob-back" href="%s">Back to the %s</a></p>'
                      % (first["guide"], esc(first["guidename"]))),
         "sources": OBLIGATIONS_SOURCES,
@@ -272,7 +270,9 @@ def render_checkrows():
     return "\n".join(out)
 
 
-FORM_SCRIPTS = '<script src="/assets/site.js" defer></script>\n' + TURNSTILE
+# The enquiry forms (proposal on /pricing/, booking on /contact/) share one script,
+# which loads Cloudflare Turnstile itself the first time a visitor focuses a form.
+FORM_SCRIPTS = '<script src="/assets/forms.js" defer></script>\n'
 
 urls = []
 
@@ -316,7 +316,7 @@ GUIDES = [
     dict(sector="accountants", src="guide-accountants",
          out="who-we-help/accountants/index.html",
          title="AML/CTF for accountants",
-         description=("When an accounting practice provides a designated service, the ten obligations "
+         description=("When an accounting practice provides a designated service, your obligations "
                       "in practice, and how Nimbi Foundations and Lens support accountants."),
          printhead=print_head("Nimbi AML guide for accountants", "/who-we-help/accountants/")),
     dict(sector="lawyers", src="guide-lawyers",
@@ -352,7 +352,7 @@ urls.append(render_page(
     out_path="who-we-help/obligations-in-practice/index.html",
     nav_active="obligations",
     title="Your obligations in practice",
-    description=("The ten AML/CTF obligation themes every reporting entity carries, in practical terms, "
+    description=("The AML/CTF obligations every reporting entity carries, in five practical stages, "
                  "with the notes that differ by sector: accountants, lawyers, real estate."),
     body=fill(page_src("obligations-in-practice"), {
         "printhead": esc(print_head("Nimbi AML: your obligations in practice",
@@ -389,16 +389,18 @@ urls.append(render_page(
     description=("Nimbi Foundations prepares your AML/CTF risk assessment and program. Your team uses "
                  "Nimbi Lens for CDD, KYC and KYB checks. Your firm keeps the decisions."),
     body=page_src("how-nimbi-helps"),
+    scripts='<script src="/assets/how.js" defer></script>\n',
 ))
 
 # ---------- pricing ----------
 urls.append(render_page(
     out_path="pricing/index.html",
     nav_active="pricing",
-    title="Pricing: two ways to start",
-    description=("Nimbi Lens at $159 a month plus per-check fees, or Nimbi Foundations as a fixed fee "
-                 "quoted after a scoping call, with 12 months of Lens included."),
+    title="Pricing: Foundations + Lens, or Nimbi Comprehensive",
+    description=("Foundations + Lens at $159 a month plus $19 per KYC and $45 per KYB check, or Nimbi "
+                 "Comprehensive with a dedicated practitioner. Estimate your monthly cost."),
     body=page_src("pricing"),
+    scripts=FORM_SCRIPTS,
 ))
 
 # ---------- about ----------
@@ -417,9 +419,9 @@ urls.append(render_page(
 urls.append(render_page(
     out_path="contact/index.html",
     nav_active="",
-    title="Book a scoping call",
+    title="Book a free 30-minute call",
     description=("A free 30-minute scoping call: we map your services, tell you where you're captured "
-                 "and give you a clear next step. Book a time or send us a message."),
+                 "and give you a clear next step. Book a time or request a call back."),
     body=fill(page_src("contact"), {"calendlyurl": esc(CALENDLY_URL),
                                     "calendlyembed": esc(CALENDLY_EMBED_URL)}),
     scripts=FORM_SCRIPTS + CALENDLY,

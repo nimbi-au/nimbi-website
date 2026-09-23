@@ -28,3 +28,26 @@
     if(e.key === "Escape") closeAll();
   });
 })();
+
+/* Deep links into collapsed content. If the URL hash targets a <details>, or something
+   inside one, open it (and any <details> it is nested in) so a link such as
+   /how-nimbi-helps/#compare-details or a guide's #privilege lands on the expanded
+   section rather than its closed summary. Runs on load and on every hash change. */
+(function(){
+  function openHashTarget(){
+    var id = location.hash.slice(1);
+    if(!id) return;
+    var target = null;
+    try { target = document.getElementById(decodeURIComponent(id)); }
+    catch(e){ target = document.getElementById(id); }
+    if(!target) return;
+    var opened = false;
+    for(var d = target.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")){
+      if(!d.open){ d.open = true; opened = true; }
+    }
+    /* The browser scrolled before the content existed; bring the target into view now. */
+    if(opened) target.scrollIntoView();
+  }
+  window.addEventListener("hashchange", openHashTarget);
+  openHashTarget();
+})();

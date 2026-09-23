@@ -1,38 +1,32 @@
 <section id="contact"><div class="wrap">
- <h1>Start a conversation</h1>
+ <h1>Book a free 30-minute call</h1>
  <p class="lede">Tell us who you are and what you're facing. A 30-minute scoping call is free and without obligation; we map your services, tell you where you're captured and give you a clear next step, even if that step isn't Nimbi.</p>
- <p>Email <a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a> or call <a href="tel:+61478115583">+61 478 115 583</a> to arrange a time, pick a slot below, or <a href="#message">send the form</a> further down. Please keep identity documents and client details out of messages.</p>
- <h2 id="book" style="margin-top:32px">Book a scoping call</h2>
+ <p>Email <a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a> or call <a href="tel:1300823016">1300 823 016</a> to arrange a time, pick a slot below, or <a href="#message">send the form</a> further down. Please keep identity documents and client details out of messages.</p>
+ <h2 id="book" style="margin-top:32px">Pick a time that suits you</h2>
  <div class="calbox">
   <div class="calendly-inline-widget" data-url="{{calendlyembed}}" data-resize="true" style="min-width:320px;height:100%"></div>
  </div>
  <p class="small" style="margin-top:12px">Calendar not loading? <a href="{{calendlyurl}}" target="_blank" rel="noopener">Open the booking page in a new tab</a>, or use the form below.</p>
 </div></section>
 
-<section class="tint" id="message"><div class="wrap">
- <h2>Send a message</h2>
- <p>We come back to every enquiry within one business day.</p>
- <div class="cform">
-  <div><label for="c-name">Your name <span class="req" aria-hidden="true">*</span></label><input id="c-name" type="text" autocomplete="name" required aria-required="true"></div>
-  <div><label for="c-firm">Practice <span class="req" aria-hidden="true">*</span></label><input id="c-firm" type="text" autocomplete="organization" required aria-required="true"></div>
-  <div><label for="c-email">Work email <span class="req" aria-hidden="true">*</span></label><input id="c-email" type="email" autocomplete="email" required aria-required="true"></div>
-  <div><label for="c-phone">Phone <span class="req" aria-hidden="true">*</span></label><input id="c-phone" type="tel" autocomplete="tel" required aria-required="true"></div>
-  <div><label for="c-sector">Sector <span class="req" aria-hidden="true">*</span></label>
-   <select id="c-sector" required aria-required="true"><option value="">Please select</option><option>Accountants</option><option>Lawyers and conveyancers</option><option>Real estate (agents, buyers' agents, developers)</option><option>Not sure yet</option></select>
-  </div>
-  <div><label for="c-when">When do you need help? <span class="req" aria-hidden="true">*</span></label>
-   <select id="c-when" required aria-required="true"><option value="">Please select</option><option>Immediately - we're behind</option><option>This quarter</option><option>Just researching</option></select>
-  </div>
-  <div class="span2"><label for="c-msg">Message <span class="req" aria-hidden="true">*</span></label><textarea id="c-msg" rows="5" required aria-required="true"></textarea></div>
-  <div class="span2">
-   <div class="hp" aria-hidden="true"><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" tabindex="-1" autocomplete="off"></div>
-   <div class="tsbox" id="c-turnstile"></div>
-   <button class="btn primary" type="button" onclick="submitEnquiry('c',this)">Send message</button>
-   <div class="formnote" id="c-note" role="status" aria-live="polite"></div>
-   <div class="reqnote"><span class="req" aria-hidden="true">*</span> All fields are required.</div>
-   <div class="reqnote">Nimbi Group Pty Ltd uses the details you enter here to respond to your enquiry and, if we work together, to set up the engagement. Your message is emailed to us and isn't stored on this website. We don't sell your information; our <a href="/privacy/">privacy policy</a> explains how we handle it and how to contact us about it.</div>
-  </div>
- </div>
+<section class="tint nf-contact" id="message" aria-labelledby="contact-title"><div class="wrap">
+ <div class="nf-contact-grid"><div class="nf-contact-intro"><p class="np-eyebrow">Talk to Nimbi</p><h2 id="contact-title">A clear next step<br>starts here.</h2>
+ <p>Tell us about your business and where you need help. In a free 30-minute scoping call, we’ll discuss your services, where obligations may apply and your next step.</p>
+ <div class="nf-contact-links"><a href="tel:1300823016">1300 823 016</a><a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a></div><p class="nf-help">No obligation to proceed. Prefer email or phone? We can arrange a time with you directly.</p></div>
+ <div class="nf-contact-card"><h3>Request a scoping call</h3><p class="nf-help">Fields marked <span aria-hidden="true">*</span> are required.</p>
+ <form class="nf-form" id="enquiry-form" data-enquiry-kind="booking" method="post">
+ <div class="nf-field-grid"><label class="nf-field" for="contact-firstName"><span>First name <span class="nf-required" aria-hidden="true">*</span></span><input id="contact-firstName" name="firstName" type="text" autocomplete="given-name" required maxlength="120"  pattern=".*\S.*" title="Please enter this detail."></label><label class="nf-field" for="contact-lastName"><span>Last name <span class="nf-required" aria-hidden="true">*</span></span><input id="contact-lastName" name="lastName" type="text" autocomplete="family-name" required maxlength="120"  pattern=".*\S.*" title="Please enter this detail."></label><label class="nf-field" for="contact-firm"><span>Business name <span class="nf-required" aria-hidden="true">*</span></span><input id="contact-firm" name="firm" type="text" autocomplete="organization" required maxlength="120"  pattern=".*\S.*" title="Please enter this detail."></label><label class="nf-field" for="contact-email"><span>Work email <span class="nf-required" aria-hidden="true">*</span></span><input id="contact-email" name="email" type="email" autocomplete="email" required maxlength="254" ></label><label class="nf-field" for="contact-phone"><span>Phone <span class="nf-required" aria-hidden="true">*</span></span><input id="contact-phone" name="phone" type="tel" autocomplete="tel" required maxlength="120" inputmode="tel" pattern="[+0-9\(\) .\-]{8,24}" title="Enter a phone number including area code, using 8 to 24 digits, spaces or phone punctuation."></label><label class="nf-field " for="contact-state"><span>State or territory <span class="nf-required" aria-hidden="true">*</span></span><select id="contact-state" name="state" required><option value="">Please select</option><option>ACT</option><option>NSW</option><option>NT</option><option>QLD</option><option>SA</option><option>TAS</option><option>VIC</option><option>WA</option></select></label><label class="nf-field full" for="contact-sector"><span>Your industry <span class="nf-required" aria-hidden="true">*</span></span><select id="contact-sector" name="sector" required><option value="">Please select</option><option>Accounting</option><option>Legal services</option><option>Conveyancing</option><option>Real estate</option><option>Other</option></select></label></div>
+ <label class="nf-field" for="contact-message"><span>How can we help? <small>(optional)</small></span><textarea id="contact-message" name="message" rows="4" maxlength="3000" aria-describedby="contact-sensitive"></textarea></label>
+ <p class="nf-help" id="contact-sensitive">Please leave out identity documents and information about individual clients. We use your details to respond to your enquiry. <a href="/privacy/">Privacy policy</a></p>
+ <div class="nf-honeypot" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div><div class="nf-bot-check"></div>
+ <div class="nf-submit"><button class="btn primary" type="submit" disabled>Book a free 30-minute call</button></div><p class="nf-help nf-delivery-note">Your request will be sent to the Nimbi team. We’ll contact you using the details above.</p>
+ <p class="nf-live-help" hidden><a class="nf-live-link" href="https://nimbi.com.au/contact/">Open the secure live enquiry form <span aria-hidden="true">&nbsp;→</span></a></p>
+ <p class="nf-status" role="status" aria-live="polite" aria-atomic="true"></p>
+
+ <noscript><p class="nf-help">The estimate and form enhancements need JavaScript. You can email <a href="mailto:info@nimbi.com.au">info@nimbi.com.au</a> or call <a href="tel:1300823016">1300 823 016</a>.</p></noscript>
+ </form>
+ <div class="reqnote">Nimbi Group Pty Ltd uses the details you enter here to respond to your enquiry and, if we work together, to set up the engagement. Your message is emailed to us and isn't stored on this website. We don't sell your information; our <a href="/privacy/">privacy policy</a> explains how we handle it and how to contact us about it.</div>
+ </div></div>
 </div></section>
 
 <section><div class="wrap">

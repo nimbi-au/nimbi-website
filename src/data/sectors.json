@@ -23,7 +23,7 @@
     "guide": "/who-we-help/lawyers-and-conveyancers/",
     "guidename": "lawyers and conveyancers guide",
     "notesfor": "legal and conveyancing practices",
-    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions. Where information is subject to legal professional privilege, the reporting rules and timing differ: see <a href=\"/who-we-help/lawyers-and-conveyancers/#privilege\">privilege and reporting</a> in the lawyers and conveyancers guide.",
+    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions. Where information is subject to legal professional privilege, the reporting rules and timing differ: see <a href=\"/who-we-help/lawyers-and-conveyancers/#privilege\">privilege and reporting</a> in the lawyers and conveyancers guide. Privilege arises only from communications with a lawyer, so a licensed conveyancer is affected only where it holds a lawyer's privileged advice.",
     "scopenote": "Legal advice, litigation and dispute resolution on their own are generally not designated services.",
     "scope": [
       ["Do you act for clients in transactions to buy, sell or transfer real estate, including conveyancing, other than under a court or tribunal order?", "Table 6 item 1. Litigation and advice on completed transactions are not captured."],

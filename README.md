@@ -230,7 +230,8 @@ src/data/sectors.json           per-sector content: guide URL, Part 1 scope ques
 src/data/checklist.json         the ten readiness questions (Part 2)
 assets/site.css                 all styles
 assets/nav.js                   small-screen menu button
-assets/site.js                  contact form (sends through the Cloudflare Worker in worker/)
+assets/forms.js                 the proposal form (/pricing/) and booking form (/contact/); sends through the Cloudflare Worker in worker/
+assets/how.js                   closes the comparison table on small screens (/how-nimbi-helps/)
 assets/readiness.js             readiness check interactivity
 assets/obligations.js           sector selector on the standalone obligations page
 assets/hero.webp                the home page photo
