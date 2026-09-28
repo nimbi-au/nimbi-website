@@ -1,0 +1,12 @@
+#!/bin/sh
+# Blocks a commit that adds anything shaped like a secret. See secret_scan.py.
+# Enabled per clone with: git config core.hooksPath .githooks
+
+# `python3` on Windows can be the Microsoft Store stub, which exists but fails; test each.
+for py in python3 python; do
+  if "$py" -c "" >/dev/null 2>&1; then
+    exec "$py" "$(dirname "$0")/secret_scan.py"
+  fi
+done
+echo "pre-commit: Python 3 not found, so the secret scan could not run." >&2
+exit 1

@@ -167,6 +167,8 @@ sentence before doing it. Run the commands yourself.
 6. **Clone.** `gh repo clone nimbi-au/nimbi-website` (or
    `git clone https://github.com/nimbi-au/nimbi-website.git`). If a copy already
    exists, use it and run `git pull` instead of cloning again.
+   Then turn on the secret-scanning hook, which git does not do by itself:
+   `git -C nimbi-website config core.hooksPath .githooks`.
 7. **Verify.** `git -C nimbi-website status` should be clean and on `main`, and
    `index.html` and `build.py` should be present. Run `python -m http.server 8000`
    and open <http://localhost:8000> in their browser so they can see the site
@@ -187,6 +189,10 @@ sentence before doing it. Run the commands yourself.
   report the result. If anything fails, tell the user in plain words what broke
   and fix it before deploying. The same tests also run on GitHub after each push
   (Actions → **Tests**); check that run too.
+- If a commit is blocked by the secret scan, stop and tell the user. Never use
+  `--no-verify` to get past it, and never add the allow marker to a real secret.
+  This repo is public: a secret that was ever pushed must be rotated, not just
+  deleted.
 - Never deploy unless the user explicitly asks. Pushing to `main` does not publish.
 - Deploy with `gh workflow run deploy.yml --repo nimbi-au/nimbi-website`, then
   report the result from `gh run list --workflow deploy.yml --limit 1`.
@@ -305,6 +311,27 @@ injection, and Graph token refresh and failure handling.
 Both run on GitHub after every push and pull request
 ([test.yml](.github/workflows/test.yml)). They are a report, not a gate:
 a failing run does not block a deploy, so check it before deploying.
+
+### Secret scanning
+
+A pre-commit hook ([.githooks/secret_scan.py](.githooks/secret_scan.py), Python
+stdlib) blocks any commit that adds a file such as `.env`, `.dev.vars` or a
+private key, or a line shaped like a credential: Entra client secrets,
+Turnstile secret keys, GitHub, AWS, Google, Slack, Stripe, Anthropic and OpenAI
+keys, JWTs, passwords in URLs, and secret-named variables given a literal value.
+Public values (the Turnstile site key, the Entra tenant and client IDs,
+`${{ secrets.X }}` references) pass.
+
+Git does not install hooks from a clone, so enable it once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The Tests workflow also scans every tracked file, which catches anything
+committed without the hook. Scan by hand with `--all` (tracked files) or
+`--history` (every line ever committed). For a genuine false positive, put
+`secret-scan: allow` on the line.
 
 Local preview:
 
