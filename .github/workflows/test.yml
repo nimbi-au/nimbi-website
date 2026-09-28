@@ -1,0 +1,35 @@
+name: Tests
+
+# Runs on every push and pull request. Free on standard runners for a public repo.
+# Neither job installs anything: the site checks are Python stdlib and the Worker
+# tests use Node's built-in runner with a fake network.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    name: Site checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: python -m unittest discover -s tests -v
+
+  worker:
+    name: Contact Worker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test
+        working-directory: worker
+        run: npm test

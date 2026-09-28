@@ -183,6 +183,10 @@ sentence before doing it. Run the commands yourself.
 - Commit directly to `main` — no branches or pull requests unless the user asks.
 - Always show the user the change (open the page in a browser) before committing.
 - Push after committing unless told otherwise.
+- **Re-run the tests after every commit to `main`** (see [Tests](#tests)) and
+  report the result. If anything fails, tell the user in plain words what broke
+  and fix it before deploying. The same tests also run on GitHub after each push
+  (Actions → **Tests**); check that run too.
 - Never deploy unless the user explicitly asks. Pushing to `main` does not publish.
 - Deploy with `gh workflow run deploy.yml --repo nimbi-au/nimbi-website`, then
   report the result from `gh run list --workflow deploy.yml --limit 1`.
@@ -236,6 +240,8 @@ assets/readiness.js             readiness check interactivity
 assets/obligations.js           sector selector on the standalone obligations page
 assets/hero.webp                the home page photo
 build.py                        renders everything, plus the redirects, sitemap.xml and robots.txt
+tests/test_site.py              checks on the built site (see Tests below)
+worker/test/                    tests for the contact-form Worker
 ```
 
 Pages and where their content lives:
@@ -274,6 +280,31 @@ Content that a search engine needs to see is rendered into the HTML at build
 time — the obligation themes, every sector's readiness questions and the
 sector notes. JavaScript only enhances what is already there (showing the chosen
 sector, scoring answers); do not move that content back into JS.
+
+### Tests
+
+Two suites, neither of which needs anything installed beyond Python 3 and Node:
+
+```bash
+python -m unittest discover -s tests -v   # the site
+cd worker && npm test                     # the contact-form Worker
+```
+
+The **site checks** ([tests/test_site.py](tests/test_site.py)) rebuild into a
+scratch folder and fail if the committed pages are stale, then check that every
+internal link and `#anchor` (in pages and in `assets/*.js`) lands on something
+real, every page has a title, description, canonical URL and valid JSON-LD, the
+redirects and `sitemap.xml` match the pages, and `src/data/*.json` is complete
+and agrees with the sector lists in the scripts.
+
+The **Worker tests** ([worker/test/](worker/test/)) run the Worker against a
+fake network, so no email is sent: origin and method checks, size and JSON
+limits, the honeypot, Turnstile, field validation, HTML escaping, header
+injection, and Graph token refresh and failure handling.
+
+Both run on GitHub after every push and pull request
+([test.yml](.github/workflows/test.yml)). They are a report, not a gate:
+a failing run does not block a deploy, so check it before deploying.
 
 Local preview:
 

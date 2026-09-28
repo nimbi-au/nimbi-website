@@ -497,6 +497,7 @@ shutil.copyfile(ROOT / "branding/png/icons/favicon.ico", ROOT / "favicon.ico")
     "# Page sources and the generator are not pages.\n"
     "Disallow: /src/\n"
     "Disallow: /worker/\n"
+    "Disallow: /tests/\n"
     "\nSitemap: %s/sitemap.xml\n" % ORIGIN, encoding="utf-8")
 
 print("built %d pages + 404, %d redirects, sitemap.xml, robots.txt, favicon.ico"

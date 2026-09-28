@@ -209,7 +209,8 @@ export default {
       return json(400, { ok: false, error: "Malformed request." }, corsOrigin);
     }
 
-    const cfg = FORMS[body && body.form];
+    /* Own keys only, so "constructor" or "__proto__" is an unknown form, not a crash. */
+    const cfg = body && Object.hasOwn(FORMS, body.form) ? FORMS[body.form] : null;
     if (!cfg) {
       return json(400, { ok: false, error: "Unknown form." }, corsOrigin);
     }
