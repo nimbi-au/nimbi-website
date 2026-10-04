@@ -1,206 +1,267 @@
-/* Quick readiness check. Every question, for every sector, is in the HTML;
-   this shows the chosen sector's Part 1 questions, records answers, writes the
-   results and drives the review tracker at the foot of the screen. Nothing
-   leaves the page. */
-(function(){
-  var cs = document.getElementById("check-sector");
-  var readyBox = document.getElementById("ready-check");
-  if(!cs || !readyBox) return;
-
-  var scopeSets = Array.prototype.slice.call(document.querySelectorAll(".check.scope"));
-  var scopeNotes = Array.prototype.slice.call(document.querySelectorAll(".scope-note"));
-  var scopeRes = document.getElementById("scope-result");
-  var scopeProg = document.getElementById("scope-progress");
-  var readyRes = document.getElementById("ready-result");
-  var readyProg = document.getElementById("ready-progress");
-  var gapbar = document.getElementById("gapbar");
-  var dismissed = false;
-  var scopeState = "unknown";
-
+/* Readiness check on /readiness-check/. Every question for every sector is in
+   the HTML; this script reveals the chosen sector's service questions, walks
+   through the arrangement questions one at a time, and writes the review
+   priorities from the checked answers. The wording it needs comes from the
+   page's #readiness-data JSON. Nothing leaves the page. */
+(function () {
+  'use strict';
   var GUIDES = {
     accountants: "/who-we-help/accountants/",
-    lawyers: "/who-we-help/lawyers-and-conveyancers/",
-    realestate: "/who-we-help/real-estate/"
+    legal: "/who-we-help/lawyers-and-conveyancers/",
+    real_estate: "/who-we-help/real-estate/"
   };
-  function guideFor(){ return GUIDES[cs.value] || GUIDES.accountants; }
-  function activeScope(){
-    for(var i = 0; i < scopeSets.length; i++){ if(scopeSets[i].dataset.sector === cs.value) return scopeSets[i]; }
-    return scopeSets[0];
-  }
-  function rowsIn(box){ return Array.prototype.slice.call(box.querySelectorAll(".row")); }
-  function unanswered(rows){ return rows.filter(function(r){ return !r.dataset.v; }).map(function(r){ return r.dataset.n; }); }
-  function clearRows(rows){
-    rows.forEach(function(r){
-      delete r.dataset.v;
-      r.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
+  var GUIDE_NAMES = {
+    accountants: 'accountants guide',
+    legal: 'lawyers and conveyancers guide',
+    real_estate: 'real estate guide'
+  };
+
+  function $(selector) { return document.querySelector(selector); }
+  function $$(selector, root) { return Array.prototype.slice.call((root || document).querySelectorAll(selector)); }
+  function safe(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  /* Answer buttons: one answer per row, then re-render that part. */
-  function wire(box, render){
-    rowsIn(box).forEach(function(r){
-      r.querySelectorAll("button").forEach(function(bt){
-        bt.addEventListener("click", function(){
-          r.querySelectorAll("button").forEach(function(x){ x.setAttribute("aria-pressed", "false"); });
-          bt.setAttribute("aria-pressed", "true");
-          r.dataset.v = bt.dataset.v;
-          render();
-        });
-      });
-    });
+  var sectorSelect = document.getElementById('readiness-sector');
+  var dataEl = document.getElementById('readiness-data');
+  var partOne = document.getElementById('readiness-part-one');
+  var partTwo = document.getElementById('readiness-part-two');
+  var readinessSummary = document.getElementById('readiness-summary');
+  var scopeQuestions = document.getElementById('scope-questions');
+  var readinessQuestions = document.getElementById('readiness-questions');
+  var questionNav = document.getElementById('readiness-question-nav');
+  var stage = document.getElementById('readiness-stage');
+  var scopeError = document.getElementById('readiness-stage-error');
+  var scopeProgress = document.getElementById('scope-progress');
+  var scopeResult = document.getElementById('scope-result');
+  var readinessProgress = document.getElementById('readiness-progress');
+  var readinessResult = document.getElementById('readiness-result');
+  var prevButton = document.getElementById('readiness-prev');
+  var nextButton = document.getElementById('readiness-next');
+  var questionProgress = document.getElementById('readiness-question-progress');
+  var goPartTwo = document.getElementById('go-part-two');
+  var backButton = document.getElementById('readiness-back');
+  var resetButton = document.getElementById('reset-readiness');
+  var required = [sectorSelect, dataEl, partOne, partTwo, readinessSummary, scopeQuestions, readinessQuestions,
+    questionNav, stage, scopeError, scopeProgress, scopeResult, readinessProgress, readinessResult,
+    prevButton, nextButton, questionProgress, goPartTwo, backButton, resetButton];
+  if (required.some(function (el) { return !el; })) return;
+
+  var R;
+  try { R = JSON.parse(dataEl.textContent); } catch (e) { return; }
+  if (!R || !R.scope_rules || !R.result_rules) return;
+  R.questions = R.questions || [];
+  R.scope = R.scope || {};
+
+  var answerError = document.getElementById('readiness-answer-error');
+  if (!answerError) {
+    answerError = document.createElement('p');
+    answerError.id = 'readiness-answer-error';
+    answerError.className = 'form-error';
+    answerError.setAttribute('role', 'status');
+    answerError.hidden = true;
+    questionNav.before(answerError);
+  }
+  /* The link to the chosen sector's guide sits under the scope result. */
+  var guideLine = document.getElementById('scope-guide');
+  if (!guideLine) {
+    guideLine = document.createElement('p');
+    guideLine.id = 'scope-guide';
+    guideLine.hidden = true;
+    scopeResult.after(guideLine);
   }
 
-  /* ---------- Part 1: does the Act apply? ---------- */
-  function scopeRender(){
-    var rows = rowsIn(activeScope()), left = unanswered(rows);
-    scopeProg.textContent = "Answered " + (rows.length - left.length) + " of " + rows.length +
-      (left.length ? ". Unanswered: " + left.join(", ") : ".");
-    if(left.length){
-      scopeState = "unknown";
-      scopeRes.textContent = "Answer the remaining questions and the result appears here.";
+  var readinessStage = 1, readinessQuestion = 0, readinessComplete = false;
+
+  /* ---------- reading the pre-rendered markup ---------- */
+  function scopeSets() { return $$('.scope-set', scopeQuestions); }
+  function activeScopeSet() {
+    var sector = sectorSelect.value;
+    if (!sector) return null;
+    return scopeSets().filter(function (set) { return set.dataset.sector === sector; })[0] || null;
+  }
+  function scopeFieldsets() {
+    var set = activeScopeSet();
+    return set ? $$('.check-question', set) : [];
+  }
+  function readinessFieldsets() { return $$('.check-question', readinessQuestions); }
+  function answersOf(fieldsets) {
+    return fieldsets.map(function (fieldset) {
+      var checked = fieldset.querySelector('input[type="radio"]:checked');
+      return checked ? checked.value : '';
+    });
+  }
+  function legendText(fieldset) {
+    var legend = fieldset.querySelector('legend');
+    return legend ? legend.textContent.trim() : '';
+  }
+  function titleOf(fieldset, index) {
+    var q = R.questions[index];
+    return q && q.title ? q.title : legendText(fieldset);
+  }
+  function scopeQuestionOf(fieldset, index) {
+    var qs = R.scope[sectorSelect.value] || [], q = qs[index];
+    return q && q.question ? q.question : legendText(fieldset);
+  }
+
+  /* ---------- errors, focus and display ---------- */
+  function clearReadinessErrors() {
+    scopeError.textContent = ''; scopeError.hidden = true;
+    answerError.textContent = ''; answerError.hidden = true;
+  }
+  function focusReadinessElement(el) {
+    if (!el) return;
+    el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ behavior: 'auto', block: 'start' });
+  }
+  function renderGuide(sector) {
+    if (!GUIDES[sector]) { guideLine.hidden = true; guideLine.textContent = ''; return; }
+    var link = document.createElement('a');
+    link.href = GUIDES[sector];
+    link.textContent = 'Read the ' + GUIDE_NAMES[sector];
+    guideLine.textContent = '';
+    guideLine.appendChild(link);
+    guideLine.hidden = false;
+  }
+  function displayReadiness(focus) {
+    partOne.hidden = readinessStage !== 1;
+    partTwo.hidden = readinessStage !== 2;
+    readinessSummary.hidden = !readinessComplete;
+    var layout = $('[data-page="readiness"] .check-layout') || $('.check-layout');
+    if (layout) layout.classList.toggle('readiness-complete', readinessComplete);
+    stage.textContent = readinessComplete ? 'Your review priorities' : readinessStage === 1 ? 'Step 1 of 2 · Your services' : 'Step 2 of 2 · Your arrangements';
+    var fieldsets = readinessFieldsets();
+    fieldsets.forEach(function (fieldset, i) { fieldset.hidden = i !== readinessQuestion || readinessComplete; });
+    readinessQuestions.hidden = readinessComplete;
+    questionNav.hidden = readinessComplete;
+    prevButton.disabled = readinessQuestion === 0;
+    questionProgress.textContent = 'Question ' + (readinessQuestion + 1) + ' of ' + fieldsets.length;
+    nextButton.textContent = readinessQuestion === fieldsets.length - 1 ? 'Show my priorities' : 'Next question';
+    if (focus) {
+      var current = fieldsets[readinessQuestion];
+      focusReadinessElement(readinessComplete ? readinessSummary : readinessStage === 1 ? partOne.querySelector('h2') : current ? current.querySelector('legend') : null);
+    }
+  }
+  function renderScope() {
+    var sector = sectorSelect.value;
+    scopeSets().forEach(function (set) { set.hidden = !sector || set.dataset.sector !== sector; });
+    clearReadinessErrors();
+    updateResults();
+  }
+
+  /* ---------- results ---------- */
+  function updateResults() {
+    var sector = sectorSelect.value;
+    var fieldsets = scopeFieldsets(), answers = answersOf(fieldsets);
+    var answered = answers.filter(function (v) { return v; });
+    var complete = !!sector && answered.length === fieldsets.length;
+    scopeProgress.textContent = sector ? answered.length + ' of ' + fieldsets.length + ' service questions answered' : 'Choose an industry to begin.';
+    var scopeText = sector ? 'Complete the remaining questions to see the areas to check.' : 'Your services help determine which obligations may apply.';
+    if (complete) {
+      scopeText = answers.indexOf('yes') >= 0 ? R.scope_rules.any_yes
+        : answers.indexOf('unsure') >= 0 ? R.scope_rules.any_unsure_no_yes
+        : R.scope_rules.all_no;
+    }
+    var scopeHtml = '<p>' + safe(scopeText) + '</p>';
+    if (complete && answers.indexOf('yes') >= 0 && answers.indexOf('unsure') >= 0) {
+      scopeHtml += '<p><strong>Also clarify:</strong></p><ul>' + fieldsets.map(function (fieldset, i) {
+        return answers[i] === 'unsure' ? '<li>' + safe(scopeQuestionOf(fieldset, i)) + '</li>' : '';
+      }).join('') + '</ul>';
+    }
+    scopeResult.innerHTML = scopeHtml;
+    renderGuide(sector);
+
+    var rFieldsets = readinessFieldsets(), rAnswers = answersOf(rFieldsets);
+    var total = rFieldsets.length;
+    var done = rAnswers.filter(function (v) { return v; }).length;
+    var left = total - done;
+    readinessProgress.textContent = done + ' of ' + total + ' answered';
+    if (left > 0) {
+      readinessResult.innerHTML = '<p>Complete ' + left + ' remaining ' + (left === 1 ? 'question' : 'questions') + ' to see your review priorities.</p>';
       return;
     }
-    var yes = rows.filter(function(r){ return r.dataset.v === "y"; }).length;
-    var unsure = rows.filter(function(r){ return r.dataset.v === "u"; }).length;
-    scopeState = yes > 0 ? "yes" : (unsure > 0 ? "unsure" : "none");
-    if(readyBox.querySelector(".row[data-v]")) readyRender();
-    if(yes > 0){
-      scopeRes.innerHTML = "<strong>The Act may apply.</strong> You answered yes to " + yes + " of " + rows.length +
-        " designated services. One is enough if you provide it in the course of business, subject to the conditions noted under each question. Go on to Part 2, and confirm the position for your practice with AUSTRAC’s guidance or independent advice.";
-    } else if(unsure > 0){
-      scopeRes.innerHTML = "<strong>Applicability needs clarifying.</strong> No yes answers, but " + unsure +
-        " not sure. Open the note under each uncertain question, or read your sector guide, then answer again. If it stays unclear, a scoping call or independent advice can settle it.";
-    } else {
-      scopeRes.innerHTML = "<strong>No designated service identified from these answers.</strong> On what you have told us, the practice may not be a reporting entity. This short check is not a legal determination: confirm against AUSTRAC’s designated services guidance, and check again if your services change. You can stop here, or <a href=\"/how-nimbi-helps/\">read how Nimbi helps</a> if you expect to start such services.";
-    }
-  }
-
-  function showScope(){
-    scopeSets.forEach(function(s){ s.hidden = s.dataset.sector !== cs.value; clearRows(rowsIn(s)); });
-    scopeNotes.forEach(function(n){ n.hidden = n.dataset.sector !== cs.value; });
-    scopeState = "unknown";
-    scopeRes.textContent = "Answer the questions and the result appears here.";
-    scopeProg.textContent = "Answered 0 of " + rowsIn(activeScope()).length + ".";
-  }
-
-  /* ---------- Part 2: how ready are you? ---------- */
-  function hideBar(){ gapbar.hidden = true; document.body.classList.remove("has-gapbar"); }
-
-  function decide(rows){
-    var left = unanswered(rows);
-    var no = rows.filter(function(r){ return r.dataset.v === "n"; });
-    var unsure = rows.filter(function(r){ return r.dataset.v === "u"; });
-    var dom = function(set){
-      var d = {};
-      set.forEach(function(r){
-        var a = r.dataset.area;
-        d[(a === "setup" || a === "framework") ? "framework" : (a === "cdd" ? "cdd" : "firm")] = true;
-      });
-      return d;
-    };
-    var noD = dom(no), unD = dom(unsure), noCount = Object.keys(noD).length;
-    var label = function(set){ return set.map(function(r){ return r.dataset.n; }).join(", "); };
-    var out = { code: "", html: "", cta: "", href: "", sub: "" };
-    var guide = guideFor();
-    var scopeNote = scopeState === "unsure"
-      ? " Applicability is still unclear from Part 1, so treat this as preparation until that is settled."
-      : (scopeState === "none"
-          ? " Part 1 did not identify a designated service, so this is preparatory only unless your services change."
-          : "");
-
-    if(left.length){
-      out.code = "incomplete";
-      out.html = "Answer the remaining questions and your result appears here. Provisional so far: " + no.length +
-        " answered no, " + unsure.length + " not sure, " + left.length + " unanswered.";
-      out.cta = "Continue the check"; out.href = "#ready-check";
-      out.sub = no.length + " self-reported as needing attention, " + unsure.length + " needing clarification, " + left.length + " unanswered";
-      return out;
-    }
-    out.sub = no.length + " self-reported as needing attention, " + unsure.length + " needing clarification";
-    if(no.length === 0 && unsure.length === 0){
-      out.code = "allyes";
-      out.html = "<strong>No issues identified from these self-reported answers.</strong> That is not a compliance assurance: the test is whether the program works in daily practice and would hold up to an independent evaluation." +
-        scopeNote + " A <a href=\"/contact/\">scoping call</a> can pressure-test it.";
-      out.cta = "Talk it through"; out.href = "/contact/";
-      return out;
-    }
-    var head = "";
-    if(no.length) head += "<strong>Needs attention (you answered no):</strong> themes " + label(no) + ". ";
-    if(unsure.length) head += "<strong>Needs clarification (not sure):</strong> themes " + label(unsure) + ". ";
-    if(no.length === 0){
-      out.code = "unsure";
-      out.html = head + "Clarify these through your <a href=\"" + guide + "\">sector guide</a>, then answer again. If they stay unclear, a <a href=\"/contact/\">scoping call</a> can settle them." + scopeNote;
-      out.cta = "Clarify with your sector guide"; out.href = guide;
-      return out;
-    }
-    if(noCount === 1 && noD.framework){
-      out.code = "framework";
-      out.html = head + "The risk assessment, program, governance and compliance officer set-up are framework work. <a href=\"/how-nimbi-helps/\">Nimbi Foundations</a> builds those with you; your senior manager approves the result and the practice runs it." +
-        (unsure.length ? " Clarify the not-sure items through your <a href=\"" + guide + "\">sector guide</a> at the same time." : "") + scopeNote;
-      out.cta = "Foundations can support the framework work"; out.href = "/how-nimbi-helps/";
-      return out;
-    }
-    if(noCount === 1 && noD.cdd){
-      if(unD.framework){
-        out.code = "cdd-unsure-framework";
-        out.html = head + "Customer due diligence depends on the framework it runs under, and you are not sure the framework is in place. Clarify the framework first, through your <a href=\"" + guide + "\">sector guide</a> or a <a href=\"/contact/\">scoping conversation</a>, before choosing tooling." + scopeNote;
-        out.cta = "Clarify the framework first"; out.href = "/contact/";
-        return out;
-      }
-      out.code = "cdd";
-      out.html = head + "Your framework answers were yes, so the gap is the customer due diligence workflow and evidence. Your team can run that on <a href=\"/how-nimbi-helps/#how-lens\">Nimbi Lens</a>, with procedures from Foundations; the tooling supports the obligation, it does not fulfil it for you." +
-        (unsure.length ? " Clarify the other not-sure items through your <a href=\"" + guide + "\">sector guide</a>." : "") + scopeNote;
-      out.cta = "How Lens supports your team"; out.href = "/how-nimbi-helps/#how-lens";
-      return out;
-    }
-    if(noCount === 1 && noD.firm){
-      out.code = "firm";
-      out.html = head + "Reporting judgement and lodgement, personnel checks, training, firm-wide records and the independent evaluation are your firm’s own duties. Foundations can supply the procedures and training material, and your <a href=\"" + guide + "\">sector guide</a> explains each duty. A <a href=\"/contact/\">scoping call</a> is the place to work through how to close them." + scopeNote;
-      out.cta = "Talk it through"; out.href = "/contact/";
-      return out;
-    }
-    out.code = "mixed";
-    var parts = [];
-    if(noD.framework) parts.push("framework (risk assessment, program, governance, compliance officer)");
-    if(noD.cdd) parts.push("customer due diligence workflow and evidence");
-    if(noD.firm) parts.push("firm duties (reporting, records, training, evaluation)");
-    out.html = head + "The gaps span " + parts.join(" and ") + ". That combination needs sequencing: the framework comes first, the due diligence workflow runs under it, and the firm duties sit with your people. A <a href=\"/contact/\">scoping conversation</a> is the practical next step." + scopeNote;
-    out.cta = "Scoping conversation"; out.href = "/contact/";
-    return out;
-  }
-
-  function readyRender(){
-    var rows = rowsIn(readyBox), left = unanswered(rows);
-    readyProg.textContent = "Answered " + (rows.length - left.length) + " of " + rows.length +
-      (left.length ? ". Unanswered: " + left.join(", ") : ".");
-    var d = decide(rows);
-    if(rows.length - left.length > 0 && !dismissed){
-      var n = rows.filter(function(r){ return r.dataset.v && r.dataset.v !== "y"; }).length;
-      document.getElementById("gap-count").textContent = n;
-      document.getElementById("gap-title").textContent = n === 1 ? "item to review" : "items to review";
-      document.getElementById("gap-sub").textContent = d.sub;
-      var b = document.getElementById("gap-btn");
-      b.href = d.href; b.textContent = d.cta;
-      gapbar.hidden = false; document.body.classList.add("has-gapbar");
-    }
-    readyRes.innerHTML = d.html;
-  }
-
-  function resetReady(){
-    clearRows(rowsIn(readyBox));
-    dismissed = false; hideBar();
-    readyRes.textContent = "Answer the questions and your result appears here.";
-    readyProg.textContent = "Answered 0 of " + rowsIn(readyBox).length + ".";
+    var work = [], unsure = [];
+    rFieldsets.forEach(function (fieldset, i) {
+      if (rAnswers[i] === 'work') work.push(titleOf(fieldset, i));
+      else if (rAnswers[i] === 'unsure') unsure.push(titleOf(fieldset, i));
+    });
+    var output = '';
+    [['Needs attention', work], ['Clarify next', unsure]].forEach(function (group) {
+      var label = group[0], list = group[1];
+      if (list.length) output += '<p><strong>' + label + '</strong></p><ul>' + list.map(function (title) { return '<li>' + safe(title) + '</li>'; }).join('') + '</ul>';
+    });
+    if (!work.length && !unsure.length) output = '<p>' + safe(R.result_rules.all_in_place) + '</p>';
+    readinessResult.innerHTML = output + '<p>' + safe(R.result_note) + '</p>';
   }
 
   /* ---------- wiring ---------- */
-  scopeSets.forEach(function(s){ wire(s, scopeRender); });
-  wire(readyBox, readyRender);
-  showScope();
-  cs.addEventListener("change", function(){ showScope(); resetReady(); });
-  document.getElementById("gap-close").addEventListener("click", function(){ dismissed = true; hideBar(); });
-  document.getElementById("reset-all").addEventListener("click", function(){
-    showScope(); resetReady();
-    document.getElementById("readiness").scrollIntoView();
+  sectorSelect.addEventListener('change', function () {
+    readinessComplete = false;
+    renderScope();
+    displayReadiness();
   });
+  scopeQuestions.addEventListener('change', function (e) {
+    if (e.target.matches('input[type="radio"]')) { clearReadinessErrors(); updateResults(); }
+  });
+  readinessQuestions.addEventListener('change', function (e) {
+    if (e.target.matches('input[type="radio"]')) { clearReadinessErrors(); updateResults(); }
+  });
+  goPartTwo.addEventListener('click', function (e) {
+    e.preventDefault();
+    clearReadinessErrors();
+    var sector = sectorSelect.value, fieldsets = scopeFieldsets(), answers = answersOf(fieldsets);
+    var firstUnanswered = -1;
+    if (sector) {
+      for (var i = 0; i < fieldsets.length; i++) { if (!answers[i]) { firstUnanswered = i; break; } }
+    }
+    if (!sector || firstUnanswered >= 0) {
+      scopeError.textContent = !sector ? 'Choose your industry to continue.' : 'Answer each service question to continue. Choose “Not sure” if you need to check.';
+      scopeError.hidden = false;
+      var focusTarget = !sector ? sectorSelect : fieldsets[firstUnanswered].querySelector('input');
+      if (focusTarget) {
+        focusTarget.focus();
+        focusTarget.scrollIntoView({ behavior: 'auto', block: 'center' });
+      }
+      return;
+    }
+    readinessStage = 2; readinessQuestion = 0; readinessComplete = false;
+    displayReadiness(true);
+  });
+  backButton.addEventListener('click', function () {
+    clearReadinessErrors();
+    readinessStage = 1; readinessComplete = false;
+    displayReadiness(true);
+  });
+  prevButton.addEventListener('click', function () {
+    if (readinessQuestion > 0) { clearReadinessErrors(); readinessQuestion--; displayReadiness(true); }
+  });
+  nextButton.addEventListener('click', function () {
+    clearReadinessErrors();
+    var fieldsets = readinessFieldsets(), answers = answersOf(fieldsets);
+    if (!answers[readinessQuestion]) {
+      answerError.textContent = 'Choose an answer to continue. Select “Not sure” if you need to check.';
+      answerError.hidden = false;
+      var input = fieldsets[readinessQuestion] ? fieldsets[readinessQuestion].querySelector('input') : null;
+      if (input) input.focus();
+      return;
+    }
+    if (readinessQuestion < fieldsets.length - 1) readinessQuestion++;
+    else readinessComplete = true;
+    updateResults();
+    displayReadiness(true);
+  });
+  resetButton.addEventListener('click', function () {
+    $$('input[type="radio"]', scopeQuestions).concat($$('input[type="radio"]', readinessQuestions)).forEach(function (input) { input.checked = false; });
+    sectorSelect.value = '';
+    readinessStage = 1; readinessQuestion = 0; readinessComplete = false;
+    renderScope();
+    displayReadiness(true);
+  });
+
+  /* Browsers may restore the select and radios on reload, so start from the markup. */
+  renderScope();
+  displayReadiness();
 })();

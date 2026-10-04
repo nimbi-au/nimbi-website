@@ -1,62 +1,68 @@
 [
-  {
-    "n": 1,
-    "area": "setup",
-    "title": "Enrol with AUSTRAC.",
-    "question": "Is the practice enrolled, with the compliance officer notified?"
-  },
-  {
-    "n": 2,
-    "area": "framework",
-    "title": "Assess your risk.",
-    "question": "Is there a written, current assessment of the practice's ML/TF risks, with the reasoning recorded?"
-  },
-  {
-    "n": 3,
-    "area": "framework",
-    "title": "Keep a written program.",
-    "question": "Are there written AML/CTF policies and procedures that staff actually follow?"
-  },
-  {
-    "n": 4,
-    "area": "framework",
-    "title": "Approve and oversee it.",
-    "question": "Has a senior manager approved the program, and does a governing body oversee it?"
-  },
-  {
-    "n": 5,
-    "area": "framework",
-    "title": "Compliance officer.",
-    "question": "Is a fit and proper person at management level appointed and doing the role?"
-  },
-  {
-    "n": 6,
-    "area": "cdd",
-    "title": "Know your customer before you start.",
-    "question": "Before a designated service begins, do you establish who the customer is, who owns or controls an entity, and check for PEPs and sanctions, with the evidence recorded?"
-  },
-  {
-    "n": 7,
-    "area": "cdd",
-    "title": "Keep watching.",
-    "question": "Do you update customer information, re-check screening and act on activity that does not fit what you know?"
-  },
-  {
-    "n": 8,
-    "area": "firm",
-    "title": "Report when required.",
-    "question": "Could the practice recognise, assess and lodge a suspicious matter report inside the statutory time, and lodge the annual compliance report?"
-  },
-  {
-    "n": 9,
-    "area": "firm",
-    "title": "Records, personnel and training.",
-    "question": "Are due diligence and program records kept for the required periods, and are people in AML/CTF roles checked and trained as the program sets out?"
-  },
-  {
-    "n": 10,
-    "area": "prove",
-    "title": "Independent evaluation.",
-    "question": "Is an independent evaluation scheduled within the transitional deadline and at least every three years after?"
-  }
+ {
+  "n": 1,
+  "title": "Enrolment",
+  "question": "Is your business enrolled and its AUSTRAC information current?",
+  "note": ""
+ },
+ {
+  "n": 2,
+  "title": "Risk assessment",
+  "question": "Have you documented and reviewed the risks your business faces?",
+  "note": ""
+ },
+ {
+  "n": 3,
+  "title": "Written program",
+  "question": "Do staff follow documented policies and procedures?",
+  "note": ""
+ },
+ {
+  "n": 4,
+  "title": "Approval and oversight",
+  "question": "Is the program approved by a senior manager and overseen by your governing body?",
+  "note": ""
+ },
+ {
+  "n": 5,
+  "title": "Compliance officer",
+  "question": "Is an appropriate management-level officer appointed and carrying out the role?",
+  "note": ""
+ },
+ {
+  "n": 6,
+  "title": "Initial CDD",
+  "question": "Do you establish customer identity, ownership, purpose and risk before service, subject to permitted exceptions?",
+  "note": ""
+ },
+ {
+  "n": 7,
+  "title": "Ongoing CDD",
+  "question": "Do you review changes, update information and address unusual activity?",
+  "note": ""
+ },
+ {
+  "n": 8,
+  "title": "Existing customer reviews",
+  "question": "Have you recorded your existing customers’ risk ratings, where required, and set risk-based periodic CDD review dates?",
+  "note": "Use your program’s categories, such as low, medium or high. Apply the special rules for pre-commencement customers and review sooner when circumstances change."
+ },
+ {
+  "n": 9,
+  "title": "Reporting",
+  "question": "Can your team identify, assess and submit required reports within applicable deadlines?",
+  "note": ""
+ },
+ {
+  "n": 10,
+  "title": "Records and people",
+  "question": "Are records retained and relevant personnel checked and trained?",
+  "note": ""
+ },
+ {
+  "n": 11,
+  "title": "Independent evaluation",
+  "question": "Have you arranged evaluation within the applicable timetable?",
+  "note": ""
+ }
 ]

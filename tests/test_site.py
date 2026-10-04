@@ -187,8 +187,8 @@ class InternalLinks(unittest.TestCase):
                 self.assertIsNone(check_target(rel.as_posix(), img))
 
     def test_links_in_scripts_resolve(self):
-        """The readiness check and obligations page build links in JavaScript,
-        where the page checks above cannot see them."""
+        """The readiness check and the forms build links in JavaScript, where
+        the page checks above cannot see them."""
         broken = []
         for js in sorted((ROOT / "assets").glob("*.js")):
             for value in re.findall(r"""["'](/[a-z0-9\-/]*/(?:#[\w\-]+)?)(?=\\?["'])""",
@@ -276,27 +276,23 @@ class DataFiles(unittest.TestCase):
         self.assertEqual(len(keys), len(set(keys)), "duplicate sector key")
         for s in SECTORS:
             with self.subTest(sector=s.get("key")):
-                for field in ("key", "label", "guide", "guidename", "notesfor", "reportnote", "scopenote"):
+                for field in ("key", "label", "name", "guide", "guidename"):
                     self.assertTrue(s.get(field), "missing %s" % field)
                 self.assertTrue((ROOT / route_to_file(s["guide"])).is_file(), "guide page missing")
                 self.assertTrue(s["scope"], "no scope questions")
                 for q in s["scope"]:
-                    self.assertEqual(len(q), 2, "each scope entry is [question, why it matters]")
-                    self.assertTrue(q[0] and q[1])
+                    self.assertTrue(q.get("question"), "each scope entry needs a question")
 
-    def test_checklist_is_numbered_and_scored(self):
+    def test_checklist_is_numbered(self):
         self.assertEqual([r["n"] for r in CHECKLIST], list(range(1, len(CHECKLIST) + 1)))
-        # readiness.js groups answers by area; an unknown area would silently count as "firm".
-        known = {"setup", "framework", "cdd", "firm", "prove"}
         for r in CHECKLIST:
             with self.subTest(n=r["n"]):
-                self.assertIn(r["area"], known)
                 self.assertTrue(r["title"] and r["question"])
 
     def test_scripts_know_every_sector(self):
-        """obligations.js and readiness.js carry their own copy of the guide URLs."""
+        """readiness.js carries its own copy of the guide URLs."""
         expected = {s["key"]: s["guide"] for s in SECTORS}
-        for name in ("obligations.js", "readiness.js"):
+        for name in ("readiness.js",):
             src = (ROOT / "assets" / name).read_text(encoding="utf-8")
             block = re.search(r"var GUIDES = \{(.*?)\};", src, re.S).group(1)
             found = dict(re.findall(r'(\w+):\s*\[?"([^"]+)"', block))
@@ -304,11 +300,17 @@ class DataFiles(unittest.TestCase):
                 self.assertEqual(found, expected)
 
     def test_readiness_page_has_every_question(self):
+        """Every scope set and every arrangement question is in the HTML; the
+        script only reveals and scores them."""
         ids = ids_of("readiness-check/index.html")
         for s in SECTORS:
             self.assertIn("scope-check-" + s["key"], ids)
         page = (ROOT / "readiness-check/index.html").read_text(encoding="utf-8")
-        self.assertEqual(page.count('data-area="'), len(CHECKLIST))
+        self.assertEqual(page.count('<fieldset class="check-question" data-kind="readiness"'),
+                         len(CHECKLIST))
+        for s in SECTORS:
+            self.assertEqual(page.count('name="scope-%s-' % s["key"]), 3 * len(s["scope"]),
+                             "three answers for each of %s's scope questions" % s["key"])
 
 
 if __name__ == "__main__":

@@ -1,32 +1,5 @@
-<section id="readiness"><div class="wrap">
- <h1>Quick readiness check</h1>
- <p>Two parts. First, whether the AML/CTF Act may apply to your practice. Second, how ready you are. Your answers stay in this page in your browser; nothing is sent, stored or attached to an enquiry.</p>
- <h2>Part 1. Does the Act apply?</h2>
- <p>Choose your sector. Each question is a designated service in the Act, with its main conditions. Answer for work you do in the course of business, whether or not you charge for it.</p>
- <p><label for="check-sector" class="small">Your sector</label><br>
-  <select id="check-sector" class="sel">{{sectoroptions}}</select></p>
-{{scopesets}}
- <p class="progress" id="scope-progress" aria-live="polite">Answered 0 of {{scopecount}}.</p>
- <div class="result" id="scope-result" aria-live="polite">Answer the questions and the result appears here.</div>
-{{scopenotes}}
- <p class="small">This is a short self-check, not a legal determination. AUSTRAC's designated services guidance for <a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/professional-designated-services">professional services</a> and <a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/real-estate-designated-services">real estate</a> sets out the conditions in detail.</p>
-
- <h2 style="margin-top:40px">Part 2. How ready are you?</h2>
- <p>One question per theme. Yes, no, or not sure. The result separates what you have said needs attention from what needs clarifying.</p>
- <div class="check" id="ready-check">
-{{checkrows}}
- </div>
- <p class="progress" id="ready-progress" aria-live="polite">Answered 0 of {{checkcount}}.</p>
- <div class="result" id="ready-result" aria-live="polite">Answer the questions and your result appears here.</div>
- <p><button type="button" class="link-btn" id="reset-all">Start again</button></p>
- <p class="small">The ten themes are an editorial grouping of the Act and the AML/CTF Rules 2025 for usability, not a count of statutory obligations. <a href="/who-we-help/obligations-in-practice/">Your obligations in practice</a> explains each theme, with the notes for your sector.</p>
-</div></section>
-
-<div class="gapbar" id="gapbar" hidden>
- <div class="wrap">
-  <div class="count" id="gap-count" aria-hidden="true">0</div>
-  <div class="text"><strong id="gap-title">items to review</strong><br><span id="gap-sub"></span></div>
-  <a class="btn primary" id="gap-btn" href="/how-nimbi-helps/">See what could help</a>
-  <button type="button" class="gap-close" id="gap-close" aria-label="Hide the review tracker">&#215;</button>
- </div>
+<div class="site-page" data-page="readiness">
+<section class="sub-hero"><div class="wrap"><div class="breadcrumbs"><a href="/">Home</a><span aria-hidden="true">/</span><span>Readiness check</span></div><p class="eyebrow">Free readiness check</p><h1 tabindex="-1">Find your next practical step.</h1><p class="lead">Check your services, then review your AML/CTF arrangements one question at a time. No email required.</p><p class="small">Your answers stay in this open page. They are not saved or sent to Nimbi.</p></div></section>
+<section class="content-section"><div class="wrap"><div class="check-layout"><div><p class="readiness-stage" id="readiness-stage" aria-live="polite">Step 1 of 2 · Your services</p><div class="check-panel" id="readiness-part-one"><p class="part-label">Part 1 · Your services</p><h2>What work does your business do?</h2><p>Choose your sector and answer for work carried out in the course of business. These questions identify matters to check against the Act and Rules; they are not a legal determination. A geographical link to Australia and any relevant exclusions or exemptions must also be considered.</p><label class="select-field" for="readiness-sector">Your industry<select id="readiness-sector">{{sectoroptions}}</select></label><div id="scope-questions">{{scopesets}}</div><div class="check-next"><p id="readiness-stage-error" class="form-error" role="status"></p><button class="btn" id="go-part-two" type="button">Continue to your arrangements <span aria-hidden="true">→</span></button></div></div><div class="check-panel" id="readiness-part-two" hidden=""><button id="readiness-back" class="quiet-button" type="button">← Back to your services</button><p class="part-label">Part 2 · Your arrangements</p><h2>What is in place today?</h2><p>Answer for your business. Select “Not sure” where you need to check the evidence or clarify the requirement.</p><div id="readiness-questions">{{checkrows}}</div><div id="readiness-question-nav" class="question-navigation"><button id="readiness-prev" class="quiet-button" type="button">Previous</button><span id="readiness-question-progress" aria-live="polite">Question 1 of {{checkcount}}</span><button id="readiness-next" class="btn" type="button">Next <span aria-hidden="true">→</span></button></div><p class="readiness-note">These themes are an editorial grouping for usability. They are not a count of statutory obligations.</p></div></div><aside class="check-summary" id="readiness-summary" hidden=""><h3>Your review priorities</h3><p>Use your answers to prepare for a conversation with your team or a practitioner.</p><div class="summary-block"><p class="progress-copy" id="scope-progress">Choose an industry to begin.</p><div id="scope-result" aria-live="polite"></div></div><div class="summary-block"><p class="progress-copy" id="readiness-progress">0 of {{checkcount}} answered</p><div id="readiness-result" aria-live="polite"><p>Complete the questions to see your review priorities.</p></div></div><a class="btn" href="/contact/#call">Discuss your next step <span aria-hidden="true">↗</span></a><p class="readiness-note">This is a self-check, not a legal determination or compliance certification. Your answers are not attached to an enquiry.</p><button class="quiet-button" id="reset-readiness" type="button">Reset my answers</button></aside></div><p class="source-line">General information, not legal advice. Examples are not exhaustive. <a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/professional-designated-services" target="_blank" rel="noopener">AUSTRAC professional designated services guidance ↗</a></p><p class="source-line"><a href="https://www.austrac.gov.au/new-austrac/designated-services-newly-regulated-entities/real-estate-designated-services" target="_blank" rel="noopener">AUSTRAC real-estate designated services guidance ↗</a></p><p class="source-line">General information, not legal advice. Examples are not exhaustive. <a href="https://www.austrac.gov.au/industry-and-business/obligations-and-guidance/your-amlctf-program/develop-your-amlctf-programs/your-amlctf-program-overview" target="_blank" rel="noopener">AUSTRAC program guidance ↗</a></p></div></section>
+<script type="application/json" id="readiness-data">{{readinessdata}}</script>
 </div>

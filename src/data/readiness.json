@@ -1,0 +1,177 @@
+{
+ "readiness": {
+  "title": "Find your next practical step.",
+  "intro": "Review eleven parts of your AML/CTF arrangements. Mark what is in place, what needs work and what you need to clarify.",
+  "scope_note": "First, confirm which services bring your business into scope. Use the sector guides or discuss your services with us. This check does not determine whether the Act applies.",
+  "options": [
+   "In place",
+   "Needs work",
+   "Not sure"
+  ],
+  "questions": [
+   {
+    "title": "Enrolment",
+    "question": "Is your business enrolled and its AUSTRAC information current?"
+   },
+   {
+    "title": "Risk assessment",
+    "question": "Have you documented and reviewed the risks your business faces?"
+   },
+   {
+    "title": "Written program",
+    "question": "Do staff follow documented policies and procedures?"
+   },
+   {
+    "title": "Approval and oversight",
+    "question": "Is the program approved by a senior manager and overseen by your governing body?"
+   },
+   {
+    "title": "Compliance officer",
+    "question": "Is an appropriate management-level officer appointed and carrying out the role?"
+   },
+   {
+    "title": "Initial CDD",
+    "question": "Do you establish customer identity, ownership, purpose and risk before service, subject to permitted exceptions?"
+   },
+   {
+    "title": "Ongoing CDD",
+    "question": "Do you review changes, update information and address unusual activity?"
+   },
+   {
+    "title": "Existing customer reviews",
+    "question": "Have you recorded your existing customers’ risk ratings, where required, and set risk-based periodic CDD review dates?",
+    "note": "Use your program’s categories, such as low, medium or high. Apply the special rules for pre-commencement customers and review sooner when circumstances change."
+   },
+   {
+    "title": "Reporting",
+    "question": "Can your team identify, assess and submit required reports within applicable deadlines?"
+   },
+   {
+    "title": "Records and people",
+    "question": "Are records retained and relevant personnel checked and trained?"
+   },
+   {
+    "title": "Independent evaluation",
+    "question": "Have you arranged evaluation within the applicable timetable?"
+   }
+  ],
+  "result_heading": "Your review priorities",
+  "result_note": "These are your own responses, not an assessment or certification of compliance. A complete review must consider your services and circumstances.",
+  "privacy_note_if_true": "Answers stay in this page during your visit. They are not saved or sent to Nimbi.",
+  "result_rules": {
+   "unanswered": "Show remaining questions, not a result.",
+   "needs_work": "List those topics under Needs attention.",
+   "not_sure": "List those topics under Clarify next.",
+   "all_in_place": "You have marked these areas as in place. Keep the supporting evidence current and continue required reviews.",
+   "never": "No score, percentage, green compliant badge, pass/fail or automatic legal determination."
+  },
+  "source_url": "https://nimbi.com.au/readiness-check/",
+  "applicability": {
+   "title": "First, check the services you provide.",
+   "intro": "Choose your sector and answer for work carried out in the course of business. These questions identify matters to check against the Act and Rules; they are not a legal determination. A geographical link to Australia and any relevant exclusions or exemptions must also be considered.",
+   "options": [
+    "Yes",
+    "No",
+    "Not sure"
+   ],
+   "accountants": [
+    {
+     "id": "property",
+     "question": "Do you help a client plan or carry out a sale, purchase or transfer of real estate?",
+     "note": "Consider work that directly advances a transaction, rather than general advice alone. Services pursuant to or resulting from a court or tribunal order have an exclusion; earlier work needs its own assessment."
+    },
+    {
+     "id": "entity_transfer",
+     "question": "Do you help a client buy, sell or transfer a controlling interest in a legal entity or arrangement?",
+     "note": "Assess the transaction and the role you perform. A hypothetical sale or general tax advice alone is different from acting to progress a transaction."
+    },
+    {
+     "id": "client_property",
+     "question": "Do you receive, hold, control or manage client money or property to assist a transaction?",
+     "note": "Relevant exceptions include payment for your own services and specified court or government payments. Incidental handling for non-designated work is conditional and depends on the business providing no other designated services beyond this client-property service. Select Not sure if an exception may apply."
+    },
+    {
+     "id": "finance",
+     "question": "Do you help organise or carry out equity or debt financing for a legal entity or arrangement?",
+     "note": "Include proposed entities. The work must directly advance the financing, rather than only provide general information about options."
+    },
+    {
+     "id": "structures",
+     "question": "Do you help create or restructure legal entities or arrangements, including SMSF trusts?",
+     "note": "The scope includes relevant preparatory steps. Testamentary trusts are excluded. Whether detailed advice itself advances a structure depends on what it enables the client to do."
+    },
+    {
+     "id": "appointments",
+     "question": "Do you act as, or arrange someone to act as, an officeholder, trustee, partner or nominee shareholder for a client?",
+     "note": "Other specified positions, including attorneys of entities, may also be relevant. Court-ordered roles and an attorney for an individual require separate consideration under the precise service definition."
+    },
+    {
+     "id": "address_shelf",
+     "question": "Do you provide a registered office or principal business address for a client entity, or sell or transfer a shelf company?",
+     "note": "These are separate designated-service categories. Check the exact activities performed and any applicable exemptions."
+    }
+   ],
+   "legal": [
+    {
+     "id": "property",
+     "question": "Do you help a client plan or carry out a sale, purchase or transfer of real estate?",
+     "note": "Consider work that directly advances a transaction, rather than general advice alone. Services pursuant to or resulting from a court or tribunal order have an exclusion; earlier work needs its own assessment."
+    },
+    {
+     "id": "entity_transfer",
+     "question": "Do you help a client buy, sell or transfer a controlling interest in a legal entity or arrangement?",
+     "note": "Assess the transaction and the role you perform. A hypothetical sale or general tax advice alone is different from acting to progress a transaction."
+    },
+    {
+     "id": "client_property",
+     "question": "Do you receive, hold, control or manage client money or property to assist a transaction?",
+     "note": "Relevant exceptions include payment for your own services and specified court or government payments. Incidental handling for non-designated work is conditional and depends on the business providing no other designated services beyond this client-property service. Select Not sure if an exception may apply."
+    },
+    {
+     "id": "finance",
+     "question": "Do you help organise or carry out equity or debt financing for a legal entity or arrangement?",
+     "note": "Include proposed entities. The work must directly advance the financing, rather than only provide general information about options."
+    },
+    {
+     "id": "structures",
+     "question": "Do you help create or restructure legal entities or arrangements, including SMSF trusts?",
+     "note": "The scope includes relevant preparatory steps. Testamentary trusts are excluded. Whether detailed advice itself advances a structure depends on what it enables the client to do."
+    },
+    {
+     "id": "appointments",
+     "question": "Do you act as, or arrange someone to act as, an officeholder, trustee, partner or nominee shareholder for a client?",
+     "note": "Other specified positions, including attorneys of entities, may also be relevant. Court-ordered roles and an attorney for an individual require separate consideration under the precise service definition."
+    },
+    {
+     "id": "address_shelf",
+     "question": "Do you provide a registered office or principal business address for a client entity, or sell or transfer a shelf company?",
+     "note": "These are separate designated-service categories. Check the exact activities performed and any applicable exemptions."
+    }
+   ],
+   "real_estate": [
+    {
+     "id": "seller_agent",
+     "question": "Do you broker property sales or transfers for sellers, for commission or other consideration?",
+     "note": "Both buyer and seller are customers of the brokerage service. The definition covers specified interests in Australian land, including leases longer than 30 years; it excludes some other interests."
+    },
+    {
+     "id": "buyer_agent",
+     "question": "Do you act as a buyers’ agent to find, negotiate or buy real estate for a fee or commission?",
+     "note": "The buyer relationship starts when the agreement to find or identify a property is signed. The seller is also a customer when the transaction is reasonably expected to proceed."
+    },
+    {
+     "id": "developer",
+     "question": "Does your business sell or transfer real estate directly to buyers, without an independent agent brokering the sale, as a business of selling real estate?",
+     "note": "Include off-the-plan property, subdivisions and sales through in-house staff. Construction alone and a one-off sale of your own premises are different. Assess the selling entity; select Not sure if a related entity or agency arrangement makes the position unclear."
+    }
+   ],
+   "result_rules": {
+    "any_yes": "Your responses identify services that may bring your business into scope. Confirm the exact service definitions, geographical link and any exclusions or exemptions before deciding your obligations.",
+    "any_unsure_no_yes": "Some services need clarifying. A scope discussion can help establish which obligations apply.",
+    "all_no": "Your answers have not identified one of the services covered by this short check. This does not confirm that your business is outside the Act; other services or circumstances may be relevant.",
+    "incomplete": "Complete the remaining questions to see the areas to check.",
+    "priority": "If Yes and Not sure both occur, show possible designated services plus a separate list of uncertainties."
+   }
+  }
+ }
+}

@@ -6,14 +6,16 @@ tooling (Nimbi Lens) for accountants, lawyers and conveyancers, and real estate.
 
 Live site: <https://nimbi.com.au/> (GitHub Pages, also at <https://nimbi-au.github.io/nimbi-website/>)
 
-The site is twelve pages generated from the sources in [`src/`](src/). You edit a
+The site is eight pages generated from the sources in [`src/`](src/). You edit a
 file in `src/`, run `python build.py` to regenerate the pages, save your changes, and
 press deploy. Python 3 is the only thing you need installed, and nothing has to be
 downloaded from the internet.
 
-The page structure and wording follow the site draft `nimbi_site_draft_v0.35.html`
-(14 September 2026). The draft was a single review file; here each of its blocks
-is a real page at the route its comment proposed.
+The design, page structure and wording follow the site draft "Concept C"
+(`Nimbi_Website_Concept_C.html`, v0.45, 4 October 2026). The draft was a single
+review file; here each of its page blocks is a real page at its own route, and the
+review-only parts (the preview strip, the non-sending forms) are replaced by the
+production equivalents.
 
 **You do not need to know how to code to edit this site.** Everything below can be
 done by asking Claude in plain English. If you are a developer, skip to
@@ -219,12 +221,13 @@ The colours live in one place — the `:root` block at the top of `assets/site.c
 
 | Variable | Hex | Used for |
 |---|---|---|
-| `--primary` | #2E2A72 | Headings, footer, hero, table headers, featured price card |
-| `--accent` | #3D4DFF | Links, buttons, active nav, result boxes |
-| `--teal` | #4FBDB1 | Decorative fills only — too light behind text |
-| `--grad` | #4FBDB1 → #3D4DFF | The logo gradient: the rule under the header |
-| `--tint` | #F3F4F6 | The page background; white sections sit on it |
-| `--ink` | #222222 | Charcoal |
+| `--purple` | #2E2A72 | Headings, the hero, the dark plan card, the footer |
+| `--blue` | #3D4DFF | Buttons, links, selected answers |
+| `--teal` | #4FBDB1 | Decorative fills and rules only — too light behind text |
+| `--green` | #287F79 | Eyebrows, labels, the active nav marker |
+| `--paper` | #F3F4F6 | Tinted section backgrounds |
+| `--pale` | #EDEFFA | Soft highlights (selected answers, hover states) |
+| `--ink` / `--body` | #222222 / #4A4C55 | Charcoal headings and body text |
 
 ## For developers
 
@@ -233,18 +236,16 @@ no dependencies). Generated output is committed, so the deploy workflow just
 uploads the repo root.
 
 ```
-src/layout.html                 page shell: <head>, nav, footer
+src/layout.html                 page shell: <head>, icon sprite, header, footer
 src/pages/*.html                one fragment per page (the part inside <main>)
-src/pages/_obligations.html     the ten obligation themes, shared by the guides and the standalone page
-src/data/sectors.json           per-sector content: guide URL, Part 1 scope questions, sector notes
-src/data/checklist.json         the ten readiness questions (Part 2)
+src/data/readiness.json         the readiness check content from the draft (scope questions, the eleven questions, result wording)
+src/data/sectors.json           per-sector: key, labels, guide URL and the Part 1 scope questions
+src/data/checklist.json         the eleven readiness questions (Part 2)
 assets/site.css                 all styles
-assets/nav.js                   small-screen menu button
-assets/forms.js                 the proposal form (/pricing/) and booking form (/contact/); sends through the Cloudflare Worker in worker/
-assets/how.js                   closes the comparison table on small screens (/how-nimbi-helps/)
-assets/readiness.js             readiness check interactivity
-assets/obligations.js           sector selector on the standalone obligations page
-assets/hero.webp                the home page photo
+assets/nav.js                   header menu and dropdown, the "How it works" scroll marker on the home page
+assets/pricing.js               the monthly cost calculator (/pricing/)
+assets/readiness.js             readiness check interactivity (/readiness-check/)
+assets/forms.js                 the enquiry form (/contact/); sends through the Cloudflare Worker in worker/
 build.py                        renders everything, plus the redirects, sitemap.xml and robots.txt
 tests/test_site.py              checks on the built site (see Tests below)
 worker/test/                    tests for the contact-form Worker
@@ -255,23 +256,21 @@ Pages and where their content lives:
 | Route | Source |
 |---|---|
 | `/` | `src/pages/home.html` |
-| `/who-we-help/` | `src/pages/who-we-help.html` |
-| `/who-we-help/accountants/` | `src/pages/guide-accountants.html` + `_obligations.html` |
-| `/who-we-help/lawyers-and-conveyancers/` | `src/pages/guide-lawyers.html` + `_obligations.html` |
-| `/who-we-help/real-estate/` | `src/pages/guide-real-estate.html` + `_obligations.html` |
-| `/who-we-help/obligations-in-practice/` | `src/pages/obligations-in-practice.html` + `_obligations.html` |
-| `/readiness-check/` | `src/pages/readiness-check.html` + `data/sectors.json` + `data/checklist.json` |
-| `/how-nimbi-helps/` | `src/pages/how-nimbi-helps.html` |
 | `/pricing/` | `src/pages/pricing.html` |
-| `/about/` | `src/pages/about.html` |
+| `/who-we-help/accountants/` | `src/pages/guide-accountants.html` |
+| `/who-we-help/lawyers-and-conveyancers/` | `src/pages/guide-lawyers.html` |
+| `/who-we-help/real-estate/` | `src/pages/guide-real-estate.html` |
+| `/readiness-check/` | `src/pages/readiness-check.html` + `data/readiness.json`, `data/sectors.json`, `data/checklist.json` |
 | `/contact/` | `src/pages/contact.html` (Calendly link in `build.py`) |
 | `/privacy/` | `src/pages/privacy.html` |
 
 Titles and meta descriptions are set in `build.py`, next to each page.
 
-The old URLs from the first version of the site (`/obligations/...`, `/why-nimbi/`,
-`/designated-services/`, `/who-we-serve/`) are kept as small redirect pages so
-links and search results keep working. The list is `REDIRECTS` in `build.py`.
+The URLs from earlier versions of the site (`/obligations/...`, `/why-nimbi/`,
+`/designated-services/`, `/who-we-serve/`, `/how-nimbi-helps/`, `/about/`,
+`/who-we-help/` and `/who-we-help/obligations-in-practice/`) are kept as small
+redirect pages so links and search results keep working. The list is `REDIRECTS`
+in `build.py`.
 
 Rebuild after any change under `src/` or you will publish stale pages:
 
@@ -283,9 +282,10 @@ python build.py
 description over 160 characters.
 
 Content that a search engine needs to see is rendered into the HTML at build
-time — the obligation themes, every sector's readiness questions and the
-sector notes. JavaScript only enhances what is already there (showing the chosen
-sector, scoring answers); do not move that content back into JS.
+time — every sector's scope questions and all eleven readiness questions come
+from `src/data/` and are written into the readiness page. JavaScript only
+enhances what is already there (showing the chosen sector, one question at a
+time, scoring answers); do not move that content back into JS.
 
 ### Tests
 

@@ -1,52 +1,114 @@
 [
-  {
-    "key": "accountants",
-    "label": "Accountants",
-    "guide": "/who-we-help/accountants/",
-    "guidename": "accountants guide",
-    "notesfor": "accounting practices",
-    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions.",
-    "scopenote": "Tax returns, financial statements, BAS and bookkeeping are not designated services on their own.",
-    "scope": [
-      ["Do you help clients plan or carry out buying, selling or transferring real estate, other than under a court or tribunal order?", "Table 6 item 1. Advice that only influences a decision is not a designated service; acting in the transaction is."],
-      ["Do you help clients plan or carry out the sale, purchase or transfer of a controlling interest in a company, trust or other legal arrangement, other than under a court or tribunal order?", "Table 6 item 2. Tax advice on a possible sale is not captured until you are instructed to act in a transaction with a buyer in view."],
-      ["Does client money or property pass through your accounts, including a trust account, or do you deal with it on the client's instructions, as part of a transaction?", "Table 6 item 3. Excludes money held only as payment for your services, incidental holdings for non-designated work, and receipts or payments under a court order."],
-      ["Do you help organise or carry out equity or debt financing for a company or legal arrangement?", "Table 6 item 4."],
-      ["Do you help create or restructure companies, trusts, SMSFs or other legal arrangements, including drafting the deed or constitution or registering with ASIC?", "Table 6 item 6. Testamentary trusts are excluded."],
-      ["Do you act as, or arrange for someone to act as, a director, secretary, trustee, partner or nominee shareholder for a client?", "Table 6 items 7 and 8. Court-ordered fiduciary roles and attorneys for natural persons are excluded."],
-      ["Do you provide a registered office or principal place of business address for a client entity, or sell shelf companies?", "Table 6 items 5 and 9."]
-    ]
-  },
-  {
-    "key": "lawyers",
-    "label": "Lawyers and conveyancers",
-    "guide": "/who-we-help/lawyers-and-conveyancers/",
-    "guidename": "lawyers and conveyancers guide",
-    "notesfor": "legal and conveyancing practices",
-    "reportnote": "A threshold transaction report applies only if your practice receives or pays physical currency of $10,000 or more in a designated service; ordinary electronic payments are not threshold transactions. Where information is subject to legal professional privilege, the reporting rules and timing differ: see <a href=\"/who-we-help/lawyers-and-conveyancers/#privilege\">privilege and reporting</a> in the lawyers and conveyancers guide. Privilege arises only from communications with a lawyer, so a licensed conveyancer is affected only where it holds a lawyer's privileged advice.",
-    "scopenote": "Legal advice, litigation and dispute resolution on their own are generally not designated services.",
-    "scope": [
-      ["Do you act for clients in transactions to buy, sell or transfer real estate, including conveyancing, other than under a court or tribunal order?", "Table 6 item 1. Litigation and advice on completed transactions are not captured."],
-      ["Do you act for clients in the sale, purchase or transfer of a controlling interest in a company, trust or other legal arrangement, other than under a court or tribunal order?", "Table 6 item 2."],
-      ["Do you receive, hold, control or pay out client money or property as part of a transaction, including through your trust account?", "Table 6 item 3. Excludes money held only as payment for your services, incidental holdings where you provide no other designated service, and receipts or payments under a court order."],
-      ["Do you help organise or carry out equity or debt financing for a company or legal arrangement?", "Table 6 item 4."],
-      ["Do you help create or restructure companies, trusts or other legal arrangements?", "Table 6 item 6. Wills and testamentary trusts are excluded."],
-      ["Do you act as, or arrange, a director, secretary, trustee, partner, attorney of an entity or nominee shareholder for a client?", "Table 6 items 7 and 8."],
-      ["Do you provide a registered office or principal place of business address for a client entity, or sell shelf companies?", "Table 6 items 5 and 9."]
-    ]
-  },
-  {
-    "key": "realestate",
-    "label": "Real estate",
-    "guide": "/who-we-help/real-estate/",
-    "guidename": "real estate guide",
-    "notesfor": "real estate businesses",
-    "reportnote": "A threshold transaction report applies if your business receives or pays physical currency of $10,000 or more in a designated service, for example a deposit paid in notes; ordinary electronic payments are not threshold transactions.",
-    "scopenote": "Managing rentals, collecting rent and valuations are not designated services on their own.",
-    "scope": [
-      ["Do you act for sellers to sell or transfer real estate, for a commission or other consideration?", "Table 5 item 1, seller's agent. Real estate includes freehold and leases of more than 30 years; leases of 30 years or less are excluded."],
-      ["Do you act for buyers to find, negotiate or buy real estate, for a fee or commission?", "Table 5 item 1, buyer's agent. The service starts when the agreement to find a property is signed."],
-      ["Does your business sell or transfer real estate it develops or owns directly to buyers, without an independent real estate agent brokering the sale, as a business of selling real estate: for example off-the-plan apartments, house-and-land packages or subdivided lots, including through in-house sales staff?", "Table 5 item 2. Answer for the entity that actually sells. If an independent agent brokers the sale, that agent provides the brokerage service (item 1) and item 2 does not apply to your business for that sale. Construction alone, or a one-off sale of your own premises, is not a business of selling real estate. If a related entity does the selling or the arrangement is unclear, answer Not sure."]
-    ]
-  }
+ {
+  "key": "accountants",
+  "label": "Accounting",
+  "name": "Accountants",
+  "guide": "/who-we-help/accountants/",
+  "guidename": "accountants guide",
+  "scope": [
+   {
+    "id": "property",
+    "question": "Do you help a client plan or carry out a sale, purchase or transfer of real estate?",
+    "note": "Consider work that directly advances a transaction, rather than general advice alone. Services pursuant to or resulting from a court or tribunal order have an exclusion; earlier work needs its own assessment."
+   },
+   {
+    "id": "entity_transfer",
+    "question": "Do you help a client buy, sell or transfer a controlling interest in a legal entity or arrangement?",
+    "note": "Assess the transaction and the role you perform. A hypothetical sale or general tax advice alone is different from acting to progress a transaction."
+   },
+   {
+    "id": "client_property",
+    "question": "Do you receive, hold, control or manage client money or property to assist a transaction?",
+    "note": "Relevant exceptions include payment for your own services and specified court or government payments. Incidental handling for non-designated work is conditional and depends on the business providing no other designated services beyond this client-property service. Select Not sure if an exception may apply."
+   },
+   {
+    "id": "finance",
+    "question": "Do you help organise or carry out equity or debt financing for a legal entity or arrangement?",
+    "note": "Include proposed entities. The work must directly advance the financing, rather than only provide general information about options."
+   },
+   {
+    "id": "structures",
+    "question": "Do you help create or restructure legal entities or arrangements, including SMSF trusts?",
+    "note": "The scope includes relevant preparatory steps. Testamentary trusts are excluded. Whether detailed advice itself advances a structure depends on what it enables the client to do."
+   },
+   {
+    "id": "appointments",
+    "question": "Do you act as, or arrange someone to act as, an officeholder, trustee, partner or nominee shareholder for a client?",
+    "note": "Other specified positions, including attorneys of entities, may also be relevant. Court-ordered roles and an attorney for an individual require separate consideration under the precise service definition."
+   },
+   {
+    "id": "address_shelf",
+    "question": "Do you provide a registered office or principal business address for a client entity, or sell or transfer a shelf company?",
+    "note": "These are separate designated-service categories. Check the exact activities performed and any applicable exemptions."
+   }
+  ]
+ },
+ {
+  "key": "legal",
+  "label": "Legal & conveyancing",
+  "name": "Lawyers & conveyancers",
+  "guide": "/who-we-help/lawyers-and-conveyancers/",
+  "guidename": "lawyers and conveyancers guide",
+  "scope": [
+   {
+    "id": "property",
+    "question": "Do you help a client plan or carry out a sale, purchase or transfer of real estate?",
+    "note": "Consider work that directly advances a transaction, rather than general advice alone. Services pursuant to or resulting from a court or tribunal order have an exclusion; earlier work needs its own assessment."
+   },
+   {
+    "id": "entity_transfer",
+    "question": "Do you help a client buy, sell or transfer a controlling interest in a legal entity or arrangement?",
+    "note": "Assess the transaction and the role you perform. A hypothetical sale or general tax advice alone is different from acting to progress a transaction."
+   },
+   {
+    "id": "client_property",
+    "question": "Do you receive, hold, control or manage client money or property to assist a transaction?",
+    "note": "Relevant exceptions include payment for your own services and specified court or government payments. Incidental handling for non-designated work is conditional and depends on the business providing no other designated services beyond this client-property service. Select Not sure if an exception may apply."
+   },
+   {
+    "id": "finance",
+    "question": "Do you help organise or carry out equity or debt financing for a legal entity or arrangement?",
+    "note": "Include proposed entities. The work must directly advance the financing, rather than only provide general information about options."
+   },
+   {
+    "id": "structures",
+    "question": "Do you help create or restructure legal entities or arrangements, including SMSF trusts?",
+    "note": "The scope includes relevant preparatory steps. Testamentary trusts are excluded. Whether detailed advice itself advances a structure depends on what it enables the client to do."
+   },
+   {
+    "id": "appointments",
+    "question": "Do you act as, or arrange someone to act as, an officeholder, trustee, partner or nominee shareholder for a client?",
+    "note": "Other specified positions, including attorneys of entities, may also be relevant. Court-ordered roles and an attorney for an individual require separate consideration under the precise service definition."
+   },
+   {
+    "id": "address_shelf",
+    "question": "Do you provide a registered office or principal business address for a client entity, or sell or transfer a shelf company?",
+    "note": "These are separate designated-service categories. Check the exact activities performed and any applicable exemptions."
+   }
+  ]
+ },
+ {
+  "key": "real_estate",
+  "label": "Real estate",
+  "name": "Real estate",
+  "guide": "/who-we-help/real-estate/",
+  "guidename": "real estate guide",
+  "scope": [
+   {
+    "id": "seller_agent",
+    "question": "Do you broker property sales or transfers for sellers, for commission or other consideration?",
+    "note": "Both buyer and seller are customers of the brokerage service. The definition covers specified interests in Australian land, including leases longer than 30 years; it excludes some other interests."
+   },
+   {
+    "id": "buyer_agent",
+    "question": "Do you act as a buyers’ agent to find, negotiate or buy real estate for a fee or commission?",
+    "note": "The buyer relationship starts when the agreement to find or identify a property is signed. The seller is also a customer when the transaction is reasonably expected to proceed."
+   },
+   {
+    "id": "developer",
+    "question": "Does your business sell or transfer real estate directly to buyers, without an independent agent brokering the sale, as a business of selling real estate?",
+    "note": "Include off-the-plan property, subdivisions and sales through in-house staff. Construction alone and a one-off sale of your own premises are different. Assess the selling entity; select Not sure if a related entity or agency arrangement makes the position unclear."
+   }
+  ]
+ }
 ]
