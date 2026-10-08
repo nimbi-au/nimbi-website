@@ -3,9 +3,11 @@
 /* Nimbi v0.41. Existing secure live enquiry contract; no credentials in this file. */
 (function () {
  'use strict';
- var endpoint = 'https://nimbi-contact.nimbi-website.workers.dev';
+ // Staging is served by the Worker itself, so it posts to its own origin; production is still on GitHub Pages.
+ var staging = /^staging\.nimbi\.com\.au$/i.test(window.location.hostname);
+ var endpoint = staging ? '/api/contact' : 'https://nimbi-contact.nimbi-website.workers.dev';
  var sitekey = '0x4AAAAAAEoZ_xYFhf2xFw1I';
- var live = window.location.protocol === 'https:' && /^(www\.)?nimbi\.com\.au$/i.test(window.location.hostname);
+ var live = window.location.protocol === 'https:' && (staging || /^(www\.)?nimbi\.com\.au$/i.test(window.location.hostname));
  var forms = Array.prototype.slice.call(document.querySelectorAll('form[data-enquiry-kind]'));
  var widgets = new Map();
  var widgetLoading;

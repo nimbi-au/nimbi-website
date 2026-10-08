@@ -113,6 +113,15 @@ version.
 tab → **Deploy to GitHub Pages** in the left sidebar → the grey **Run workflow**
 button → **Run workflow**.
 
+**Want to check it first?** Put it on the staging site, a test copy at
+<https://staging.nimbi.com.au>. Anyone with the link can see it, but search
+engines are told to ignore it:
+
+> Please deploy my changes to staging.
+
+The contact form works there too, but enquiries go to `test@nimbi.com.au`, not
+to the team.
+
 ---
 
 ## If something goes wrong
@@ -138,6 +147,7 @@ are unsure, ask Claude "what did I change?" before you deploy.
 | **push** | Upload your saved changes to GitHub. |
 | **main** | The main version of the site that everyone shares. |
 | **deploy** | Publish to the live public website. |
+| **staging** | A test copy of the site at staging.nimbi.com.au, for checking changes before they go live. |
 | **GitHub** | Where the shared copy of the site lives online. |
 | **GitHub Pages** | The service that hosts the live website. |
 

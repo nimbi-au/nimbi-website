@@ -1,10 +1,14 @@
 /**
  * Nimbi contact-form Worker.
  *
- * Receives an enquiry from the static site on GitHub Pages and sends it to the
- * firm through the Microsoft Graph API, using the firm's own Microsoft 365
- * tenant. Nothing is stored: the request is validated, turned into an email,
- * and forgotten.
+ * Receives an enquiry from the static site and sends it to the firm through the
+ * Microsoft Graph API, using the firm's own Microsoft 365 tenant. Nothing is
+ * stored: the request is validated, turned into an email, and forgotten.
+ *
+ * In production the site is on GitHub Pages and this Worker answers the form on
+ * every path. In staging (`--env staging`) it also serves the site itself, from
+ * the ASSETS binding, with the form at /api/contact - the shape production takes
+ * once it moves off GitHub Pages.
  *
  * Vars are declared in wrangler.jsonc. Two secrets are set with
  * `wrangler secret put`: GRAPH_CLIENT_SECRET (required - the Entra app's client
@@ -180,108 +184,133 @@ async function verifyTurnstile(token, ip, secret, expectedAction, hostnames) {
   return true;
 }
 
+async function handleContact(request, env) {
+  const origin = request.headers.get("Origin") || "";
+  const permitted = allowedOrigins(env);
+  const originOk = permitted.length === 0 || permitted.includes(origin);
+  const corsOrigin = originOk ? origin : "";
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: originOk ? 204 : 403, headers: cors(corsOrigin) });
+  }
+  if (request.method !== "POST") {
+    return json(405, { ok: false, error: "Method not allowed." }, corsOrigin);
+  }
+  if (!originOk) {
+    return json(403, { ok: false, error: "Origin not allowed." }, corsOrigin);
+  }
+
+  const declared = Number(request.headers.get("content-length") || 0);
+  if (declared > MAX_BODY_BYTES) {
+    return json(413, { ok: false, error: "Submission too large." }, corsOrigin);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json(400, { ok: false, error: "Malformed request." }, corsOrigin);
+  }
+
+  /* Own keys only, so "constructor" or "__proto__" is an unknown form, not a crash. */
+  const cfg = body && Object.hasOwn(FORMS, body.form) ? FORMS[body.form] : null;
+  if (!cfg) {
+    return json(400, { ok: false, error: "Unknown form." }, corsOrigin);
+  }
+
+  /* Honeypot: a real visitor never sees this field, so anything in it is a bot.
+     Answer 200 so the bot believes it succeeded and does not retry. */
+  if (typeof body.website === "string" && body.website.trim() !== "") {
+    return json(200, { ok: true }, corsOrigin);
+  }
+
+  if (env.TURNSTILE_SECRET) {
+    const token = typeof body.turnstile === "string" ? body.turnstile : "";
+    if (!token) {
+      return json(400, { ok: false, error: "Please complete the verification check." }, corsOrigin);
+    }
+    const ip = request.headers.get("CF-Connecting-IP");
+    const hostnames = (env.TURNSTILE_HOSTNAMES || "")
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!(await verifyTurnstile(token, ip, env.TURNSTILE_SECRET, cfg.action, hostnames))) {
+      return json(403, { ok: false, error: "Verification failed. Please try again." }, corsOrigin);
+    }
+  }
+
+  const values = [];
+  for (const [key, label, max] of cfg.fields) {
+    const raw = body[key];
+    const val = typeof raw === "string" ? raw.trim() : "";
+    if (!val) {
+      return json(400, { ok: false, error: "Please complete every field." }, corsOrigin);
+    }
+    if (val.length > max) {
+      return json(400, { ok: false, error: `${label} is too long.` }, corsOrigin);
+    }
+    if (key === "email" && !EMAIL_RE.test(val)) {
+      return json(400, { ok: false, error: "Please enter a valid email address." }, corsOrigin);
+    }
+    values.push([label, val]);
+  }
+
+  const replyTo = values.find(([l]) => l === "Email")[1];
+  const meta = [
+    ["Received", new Date().toISOString()],
+    ["From page", oneLine(body.page || "").slice(0, 200) || "unknown"],
+    ["Country", request.cf && request.cf.country ? request.cf.country : "unknown"],
+  ];
+
+  const row = ([l, v]) =>
+    `<tr><td style="padding:6px 14px 6px 0;vertical-align:top;color:#6b7280;white-space:nowrap">${escapeHtml(l)}</td>` +
+    `<td style="padding:6px 0;vertical-align:top;color:#111827;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`;
+
+  const html =
+    `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.5">` +
+    `<table style="border-collapse:collapse">${values.map(row).join("")}</table>` +
+    `<hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0">` +
+    `<table style="border-collapse:collapse;font-size:13px;color:#6b7280">${meta.map(row).join("")}</table>` +
+    `</div>`;
+
+  try {
+    await sendViaGraph(env, {
+      replyTo,
+      subject: `${cfg.subject} - ${oneLine(values[0][1]).slice(0, 80)}`,
+      html,
+    });
+  } catch (err) {
+    /* Logged for `wrangler tail`; the visitor gets a generic message. */
+    console.error("email send failed", err && err.message);
+    return json(502, { ok: false, error: "We could not send your enquiry just now." }, corsOrigin);
+  }
+
+  return json(200, { ok: true }, corsOrigin);
+}
+
+const STAGING_ROBOTS = "User-agent: *\nDisallow: /\n";
+
 export default {
   async fetch(request, env) {
-    const origin = request.headers.get("Origin") || "";
-    const permitted = allowedOrigins(env);
-    const originOk = permitted.length === 0 || permitted.includes(origin);
-    const corsOrigin = originOk ? origin : "";
+    /* Production has no ASSETS binding yet: GitHub Pages serves the site and
+       every request here is an enquiry, exactly as before. */
+    if (!env.ASSETS) return handleContact(request, env);
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: originOk ? 204 : 403, headers: cors(corsOrigin) });
+    const { pathname } = new URL(request.url);
+    /* Pages built for the old workers.dev address post to its root, so a
+       non-GET there is still an enquiry. */
+    const legacyPost = pathname === "/" && request.method !== "GET" && request.method !== "HEAD";
+    if (pathname === "/api/contact" || legacyPost) return handleContact(request, env);
+
+    /* Staging is public but must stay out of search results. */
+    const noindex = env.NOINDEX === "true";
+    if (noindex && pathname === "/robots.txt") {
+      return new Response(STAGING_ROBOTS, { headers: { "content-type": "text/plain; charset=utf-8" } });
     }
-    if (request.method !== "POST") {
-      return json(405, { ok: false, error: "Method not allowed." }, corsOrigin);
-    }
-    if (!originOk) {
-      return json(403, { ok: false, error: "Origin not allowed." }, corsOrigin);
-    }
-
-    const declared = Number(request.headers.get("content-length") || 0);
-    if (declared > MAX_BODY_BYTES) {
-      return json(413, { ok: false, error: "Submission too large." }, corsOrigin);
-    }
-
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json(400, { ok: false, error: "Malformed request." }, corsOrigin);
-    }
-
-    /* Own keys only, so "constructor" or "__proto__" is an unknown form, not a crash. */
-    const cfg = body && Object.hasOwn(FORMS, body.form) ? FORMS[body.form] : null;
-    if (!cfg) {
-      return json(400, { ok: false, error: "Unknown form." }, corsOrigin);
-    }
-
-    /* Honeypot: a real visitor never sees this field, so anything in it is a bot.
-       Answer 200 so the bot believes it succeeded and does not retry. */
-    if (typeof body.website === "string" && body.website.trim() !== "") {
-      return json(200, { ok: true }, corsOrigin);
-    }
-
-    if (env.TURNSTILE_SECRET) {
-      const token = typeof body.turnstile === "string" ? body.turnstile : "";
-      if (!token) {
-        return json(400, { ok: false, error: "Please complete the verification check." }, corsOrigin);
-      }
-      const ip = request.headers.get("CF-Connecting-IP");
-      const hostnames = (env.TURNSTILE_HOSTNAMES || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      if (!(await verifyTurnstile(token, ip, env.TURNSTILE_SECRET, cfg.action, hostnames))) {
-        return json(403, { ok: false, error: "Verification failed. Please try again." }, corsOrigin);
-      }
-    }
-
-    const values = [];
-    for (const [key, label, max] of cfg.fields) {
-      const raw = body[key];
-      const val = typeof raw === "string" ? raw.trim() : "";
-      if (!val) {
-        return json(400, { ok: false, error: "Please complete every field." }, corsOrigin);
-      }
-      if (val.length > max) {
-        return json(400, { ok: false, error: `${label} is too long.` }, corsOrigin);
-      }
-      if (key === "email" && !EMAIL_RE.test(val)) {
-        return json(400, { ok: false, error: "Please enter a valid email address." }, corsOrigin);
-      }
-      values.push([label, val]);
-    }
-
-    const replyTo = values.find(([l]) => l === "Email")[1];
-    const meta = [
-      ["Received", new Date().toISOString()],
-      ["From page", oneLine(body.page || "").slice(0, 200) || "unknown"],
-      ["Country", request.cf && request.cf.country ? request.cf.country : "unknown"],
-    ];
-
-    const row = ([l, v]) =>
-      `<tr><td style="padding:6px 14px 6px 0;vertical-align:top;color:#6b7280;white-space:nowrap">${escapeHtml(l)}</td>` +
-      `<td style="padding:6px 0;vertical-align:top;color:#111827;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`;
-
-    const html =
-      `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:15px;line-height:1.5">` +
-      `<table style="border-collapse:collapse">${values.map(row).join("")}</table>` +
-      `<hr style="border:none;border-top:1px solid #e5e7eb;margin:18px 0">` +
-      `<table style="border-collapse:collapse;font-size:13px;color:#6b7280">${meta.map(row).join("")}</table>` +
-      `</div>`;
-
-    try {
-      await sendViaGraph(env, {
-        replyTo,
-        subject: `${cfg.subject} - ${oneLine(values[0][1]).slice(0, 80)}`,
-        html,
-      });
-    } catch (err) {
-      /* Logged for `wrangler tail`; the visitor gets a generic message. */
-      console.error("email send failed", err && err.message);
-      return json(502, { ok: false, error: "We could not send your enquiry just now." }, corsOrigin);
-    }
-
-    return json(200, { ok: true }, corsOrigin);
+    const res = await env.ASSETS.fetch(request);
+    if (!noindex) return res;
+    const out = new Response(res.body, res);
+    out.headers.set("x-robots-tag", "noindex");
+    return out;
   },
 };
