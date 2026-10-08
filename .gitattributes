@@ -1,2 +1,5 @@
 # Shell hooks must keep LF line endings or sh cannot run them on Windows checkouts.
 .githooks/pre-commit text eol=lf
+
+# wrangler splits .assetsignore on LF only; a CR would stop every pattern matching.
+.assetsignore text eol=lf
