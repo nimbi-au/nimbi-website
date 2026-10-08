@@ -5,10 +5,12 @@
    No credentials in this file: the Turnstile sitekey is public. */
 (function () {
   'use strict';
-  var endpoint = 'https://nimbi-contact.nimbi-website.workers.dev';
+  // Staging is served by the Worker itself, so it posts to its own origin; production is still on GitHub Pages.
+  var staging = /^staging\.nimbi\.com\.au$/i.test(window.location.hostname);
+  var endpoint = staging ? '/api/contact' : 'https://nimbi-contact.nimbi-website.workers.dev';
   var sitekey = '0x4AAAAAAEoZ_xYFhf2xFw1I';
   var KEY_INTEREST = 'nimbi.interest', KEY_ESTIMATE = 'nimbi.estimate';
-  var live = window.location.protocol === 'https:' && /^(www\.)?nimbi\.com\.au$/i.test(window.location.hostname);
+  var live = window.location.protocol === 'https:' && (staging || /^(www\.)?nimbi\.com\.au$/i.test(window.location.hostname));
 
   var form = document.getElementById('connected-enquiry');
   if (!form) return;

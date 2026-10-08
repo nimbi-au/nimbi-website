@@ -2,6 +2,8 @@ name: Deploy contact Worker
 
 # Manual only, matching the Pages workflow. Press "Run workflow" in the Actions
 # tab (or `gh workflow run deploy-worker.yml`) to publish the Worker.
+# Staging (`-f environment=staging`) is the Worker plus the whole site, at
+# https://staging.nimbi.com.au - one run publishes both.
 on:
   workflow_dispatch:
     inputs:
@@ -9,12 +11,17 @@ on:
         description: "Branch, tag or SHA to deploy"
         required: false
         default: main
+      environment:
+        description: "Production, or staging.nimbi.com.au"
+        type: choice
+        options: [production, staging]
+        default: production
 
 permissions:
   contents: read
 
 concurrency:
-  group: worker
+  group: worker-${{ inputs.environment }}
   cancel-in-progress: false
 
 jobs:
@@ -40,3 +47,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: worker
+          command: deploy ${{ inputs.environment == 'staging' && '--env staging' || '' }}

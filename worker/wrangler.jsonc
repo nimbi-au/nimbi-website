@@ -22,5 +22,34 @@
     // Hostnames a Turnstile token may have been solved on. No localhost here:
     // this is the production value and the check fails closed if it is empty.
     "TURNSTILE_HOSTNAMES": "nimbi.com.au,www.nimbi.com.au,nimbi-au.github.io"
+  },
+
+  // `wrangler deploy --env staging` deploys nimbi-contact-staging, which serves
+  // the whole site as well as the form - the shape production takes once it
+  // moves off GitHub Pages. Vars are not inherited, so every one is repeated.
+  // Secrets are per environment too: `wrangler secret put <NAME> --env staging`.
+  "env": {
+    "staging": {
+      "routes": [{ "pattern": "staging.nimbi.com.au", "custom_domain": true }],
+      "assets": {
+        // The repo root. .assetsignore there keeps sources and tooling out.
+        "directory": "..",
+        "binding": "ASSETS",
+        // Every request goes through the Worker, so staging can add noindex.
+        "run_worker_first": true,
+        "not_found_handling": "404-page",
+        "html_handling": "auto-trailing-slash"
+      },
+      "vars": {
+        "TO_ADDRESS": "test@nimbi.com.au",
+        "SENDER_MAILBOX": "dean@nimbi.com.au",
+        "GRAPH_TENANT_ID": "f4d2b8a6-c24e-4b66-90c0-caa8564ec319",
+        "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",
+        "ALLOWED_ORIGINS": "https://staging.nimbi.com.au",
+        "TURNSTILE_HOSTNAMES": "staging.nimbi.com.au",
+        // Staging is public; this keeps it out of search results.
+        "NOINDEX": "true"
+      }
+    }
   }
 }

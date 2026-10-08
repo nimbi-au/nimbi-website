@@ -328,3 +328,61 @@ test("a Graph error other than 401 is not retried", async () => {
   assert.equal(status, 502);
   assert.equal(graphCalls().length, 1);
 });
+
+/* ---------- serving the site (staging) ---------- */
+
+/* Stand-in for the ASSETS binding: echoes the path it was asked for. */
+const ASSETS = {
+  fetch: async (req) => new Response("asset " + new URL(req.url).pathname, { headers: { "content-type": "text/html" } }),
+};
+const SITE_ENV = { ...BASE_ENV, ASSETS };
+const STAGING_ENV = { ...SITE_ENV, NOINDEX: "true" };
+
+const get = (path) => new Request("https://site.example" + path);
+
+test("with ASSETS bound, pages are served from it", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/about/"), SITE_ENV);
+  assert.equal(await res.text(), "asset /about/");
+  assert.equal(res.headers.get("x-robots-tag"), null);
+  assert.equal(calls.length, 0);
+});
+
+test("with ASSETS bound, the home page is a page and not the form", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/"), SITE_ENV);
+  assert.equal(await res.text(), "asset /");
+});
+
+test("with ASSETS bound, enquiries are taken at /api/contact", async () => {
+  const req = new Request("https://site.example/api/contact", post(CONTACT));
+  const { status, body } = await send(req, SITE_ENV);
+  assert.equal(status, 200);
+  assert.deepEqual(body, { ok: true });
+  assert.equal(graphCalls().length, 1);
+});
+
+test("with ASSETS bound, a post to the root still sends, for pages built for the old address", async () => {
+  const { status } = await send(post(CONTACT), SITE_ENV);
+  assert.equal(status, 200);
+  assert.equal(graphCalls().length, 1);
+});
+
+test("with ASSETS bound, a GET to /api/contact is rejected", async () => {
+  const { status } = await send(new Request("https://site.example/api/contact", { headers: { Origin: ORIGIN } }), SITE_ENV);
+  assert.equal(status, 405);
+});
+
+test("staging marks every page noindex", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/pricing/"), STAGING_ENV);
+  assert.equal(await res.text(), "asset /pricing/");
+  assert.equal(res.headers.get("x-robots-tag"), "noindex");
+  assert.equal(res.headers.get("content-type"), "text/html");
+});
+
+test("staging robots.txt disallows everything", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/robots.txt"), STAGING_ENV);
+  assert.equal(await res.text(), "User-agent: *\nDisallow: /\n");
+});

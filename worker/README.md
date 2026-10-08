@@ -170,6 +170,37 @@ Then run the **Deploy to GitHub Pages** workflow to publish.
 
 ---
 
+## Staging
+
+`https://staging.nimbi.com.au` is a public copy of the site for checking changes
+before they go live. It is a second Worker, `nimbi-contact-staging`, defined
+under `env.staging` in `wrangler.jsonc`. Unlike production, it serves the site
+itself (the repo root, minus what `.assetsignore` lists) and takes the form at
+`/api/contact`. This is the shape production takes once it moves off GitHub Pages.
+
+- Enquiries go to `test@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
+- Every response carries `X-Robots-Tag: noindex`, and `robots.txt` disallows
+  everything, so search engines leave it alone.
+- One deploy publishes the pages and the form together. There is no Pages step.
+
+Deploy any branch to it:
+
+```sh
+gh workflow run deploy-worker.yml --ref main -f ref=<branch> -f environment=staging
+# or locally, from worker/:
+npx wrangler deploy --env staging
+```
+
+Secrets are per environment. Set them once for staging:
+
+```sh
+npx wrangler secret put GRAPH_CLIENT_SECRET --env staging
+npx wrangler secret put TURNSTILE_SECRET --env staging
+```
+
+`staging.nimbi.com.au` must also be listed on the Turnstile widget's hostnames,
+or the bot check will not load there.
+
 ## Configuration
 
 `wrangler.jsonc` holds the non-secret settings:
