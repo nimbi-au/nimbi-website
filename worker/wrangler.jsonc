@@ -14,6 +14,9 @@
     { "pattern": "nimbi.com.au", "custom_domain": true },
     { "pattern": "www.nimbi.com.au", "custom_domain": true }
   ],
+  // Must stay on: with routes defined, wrangler otherwise turns workers.dev off,
+  // and pages served before the move post their enquiries there.
+  "workers_dev": true,
 
   // Shared by staging, which inherits it.
   "assets": {
