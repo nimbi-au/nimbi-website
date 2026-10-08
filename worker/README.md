@@ -178,7 +178,7 @@ under `env.staging` in `wrangler.jsonc`. Unlike production, it serves the site
 itself (the repo root, minus what `.assetsignore` lists) and takes the form at
 `/api/contact`. This is the shape production takes once it moves off GitHub Pages.
 
-- Enquiries go to `test@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
+- Enquiries go to `ops@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
 - Every response carries `X-Robots-Tag: noindex`, and `robots.txt` disallows
   everything, so search engines leave it alone.
 - One deploy publishes the pages and the form together. There is no Pages step.
