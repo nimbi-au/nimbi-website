@@ -108,7 +108,12 @@
     try {
       var res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal });
       var out = await res.json().catch(function () { return {}; });
-      if (!res.ok || !out.ok) throw new Error('Submission not confirmed');
+      if (!res.ok || !out.ok) {
+        var err = new Error('Submission not confirmed');
+        // A 4xx carries a reason the visitor can act on ("Please enter a valid email address.").
+        if (res.status < 500 && typeof out.error === 'string') err.reason = out.error;
+        throw err;
+      }
     } finally { clearTimeout(timeout); }
   }
   /* Kind, interest, estimate and state travel in msg to preserve the Worker's schema. */
@@ -127,6 +132,11 @@
   if (liveHelp) liveHelp.hidden = live;
   Array.prototype.forEach.call(form.querySelectorAll('input[type="text"]'), function (input) {
     if (input.name !== 'website') input.setAttribute('pattern', '.*\\S.*');
+  });
+  // The browser accepts "name@host"; the Worker also wants a dot in the domain, so check that here first.
+  Array.prototype.forEach.call(form.querySelectorAll('input[type="email"]'), function (input) {
+    input.setAttribute('pattern', '[^\\s@]+@[^\\s@]+\\.[^\\s@]+');
+    input.setAttribute('title', 'An email address like name@example.com.');
   });
   if (live) form.addEventListener('focusin', function () { prepareBotCheck(); });
 
@@ -164,7 +174,8 @@
       status('Thank you. Your request has been submitted. The Nimbi team will contact you.', 'success');
     } catch (e) {
       resetBot();
-      status('We could not confirm submission. Your details are still here. Please email info@nimbi.com.au or call 1300 823 016 for help.', 'error');
+      if (e.reason) status(e.reason + ' Your details are still here.', 'error');
+      else status('We could not confirm submission. Your details are still here. Please email info@nimbi.com.au or call 1300 823 016 for help.', 'error');
     } finally {
       button.disabled = false;
     }
