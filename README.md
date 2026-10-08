@@ -121,7 +121,7 @@ engines are told to ignore it:
 
 > Please deploy my changes to staging.
 
-The contact form works there too, but enquiries go to `test@nimbi.com.au`, not
+The contact form works there too, but enquiries go to `ops@nimbi.com.au`, not
 to the team.
 
 ---

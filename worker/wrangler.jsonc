@@ -54,7 +54,7 @@
     "staging": {
       "routes": [{ "pattern": "staging.nimbi.com.au", "custom_domain": true }],
       "vars": {
-        "TO_ADDRESS": "test@nimbi.com.au",
+        "TO_ADDRESS": "ops@nimbi.com.au",
         "SENDER_MAILBOX": "dean@nimbi.com.au",
         "GRAPH_TENANT_ID": "f4d2b8a6-c24e-4b66-90c0-caa8564ec319",
         "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",

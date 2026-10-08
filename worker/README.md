@@ -174,7 +174,7 @@ before they go live. It is a second Worker, `nimbi-contact-staging`, defined
 under `env.staging` in `wrangler.jsonc`, and identical to production apart from
 its vars.
 
-- Enquiries go to `test@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
+- Enquiries go to `ops@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
 - Every response carries `X-Robots-Tag: noindex`, and `robots.txt` disallows
   everything, so search engines leave it alone.
 
