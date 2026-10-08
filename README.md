@@ -121,8 +121,8 @@ engines are told to ignore it:
 
 > Please deploy my changes to staging.
 
-The contact form works there too, but enquiries go to `ops@nimbi.com.au`, not
-to the team.
+The contact form works there too. Enquiries go to the same `ops@nimbi.com.au`
+inbox as the live site, with `[STAGING]` at the start of the subject.
 
 ---
 

@@ -403,3 +403,8 @@ test("staging robots.txt disallows everything", async () => {
   const res = await worker.fetch(get("/robots.txt", "staging.nimbi.com.au"), STAGING_ENV);
   assert.equal(await res.text(), "User-agent: *\nDisallow: /\n");
 });
+
+test("a subject prefix marks the email, for staging", async () => {
+  await send(post(CONTACT), { ...BASE_ENV, SUBJECT_PREFIX: "[STAGING] " });
+  assert.equal(sentMessage().subject, "[STAGING] Call back request - Nimbi website - Jane Citizen");
+});

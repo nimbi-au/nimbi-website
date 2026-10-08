@@ -272,7 +272,7 @@ async function handleContact(request, env) {
   try {
     await sendViaGraph(env, {
       replyTo,
-      subject: `${cfg.subject} - ${oneLine(values[0][1]).slice(0, 80)}`,
+      subject: `${env.SUBJECT_PREFIX || ""}${cfg.subject} - ${oneLine(values[0][1]).slice(0, 80)}`,
       html,
     });
   } catch (err) {

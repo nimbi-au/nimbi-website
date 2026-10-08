@@ -5,12 +5,12 @@ root, and the contact form at `/api/contact`. It started as the form's backend
 alone, while the pages were on GitHub Pages; see [Moving off GitHub Pages](#moving-off-github-pages).
 
 For the form, the Worker receives the enquiry, checks it, and sends it to
-`dean@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
+`ops@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
 365 tenant. Nothing is stored — the Worker validates the request, sends the mail,
 and forgets it. No third-party form service ever holds the enquiry.
 
 ```
-Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  dean@nimbi.com.au
+Visitor's browser  →  Worker (Cloudflare)  →  Microsoft Graph  →  ops@nimbi.com.au
                                                 (sends as dean@nimbi.com.au)
 ```
 
@@ -127,11 +127,12 @@ the tenant.
 
 `SENDER_MAILBOX` must be a real, licensed mailbox in the tenant — not an alias —
 because the RBAC scope filter matches on `PrimarySmtpAddress`. It is
-`dean@nimbi.com.au`, and `TO_ADDRESS` is the same mailbox — the Worker sends as
-dean@ to dean@. The visitor's own address goes in `replyTo`, so replying from
-Outlook reaches them rather than looping back. Note that `info@nimbi.com.au`,
-the address published on the site, is an alias on this same mailbox, so both
-routes land in the same inbox.
+`dean@nimbi.com.au`. `TO_ADDRESS` is `ops@nimbi.com.au`, a shared mailbox; the
+recipient is not limited by the RBAC scope, so it can be any address the tenant
+accepts. The visitor's own address goes in `replyTo`, so replying from Outlook
+reaches them. Note that `info@nimbi.com.au`, the address published on the site,
+is an alias on dean@'s mailbox, so direct emails and form enquiries now land in
+different inboxes.
 
 ## Step 3 — Turnstile
 
@@ -174,7 +175,7 @@ before they go live. It is a second Worker, `nimbi-contact-staging`, defined
 under `env.staging` in `wrangler.jsonc`, and identical to production apart from
 its vars.
 
-- Enquiries go to `ops@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
+- Enquiries go to `ops@nimbi.com.au`, sent as `dean@nimbi.com.au`, as in production.
 - Every response carries `X-Robots-Tag: noindex`, and `robots.txt` disallows
   everything, so search engines leave it alone.
 

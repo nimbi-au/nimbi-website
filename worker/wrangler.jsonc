@@ -30,8 +30,8 @@
   // `wrangler secret put`, never committed here. Tenant and client IDs are
   // identifiers, not credentials, so they live in the open.
   "vars": {
-    // Where enquiries land.
-    "TO_ADDRESS": "dean@nimbi.com.au",
+    // Where enquiries land: the ops shared mailbox.
+    "TO_ADDRESS": "ops@nimbi.com.au",
     // The mailbox Graph sends as. Must be a real mailbox in the tenant, and
     // must match the Application Access Policy that scopes this app.
     "SENDER_MAILBOX": "dean@nimbi.com.au",
@@ -62,7 +62,9 @@
         "TURNSTILE_HOSTNAMES": "staging.nimbi.com.au",
         "CANONICAL_HOST": "staging.nimbi.com.au",
         // Staging is public; this keeps it out of search results.
-        "NOINDEX": "true"
+        "NOINDEX": "true",
+        // Staging and production share the ops@ inbox; this marks test enquiries.
+        "SUBJECT_PREFIX": "[STAGING] "
       }
     }
   }
