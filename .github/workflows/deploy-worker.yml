@@ -1,9 +1,9 @@
-name: Deploy contact Worker
+name: Deploy site
 
-# Manual only, matching the Pages workflow. Press "Run workflow" in the Actions
-# tab (or `gh workflow run deploy-worker.yml`) to publish the Worker.
-# Staging (`-f environment=staging`) is the Worker plus the whole site, at
-# https://staging.nimbi.com.au - one run publishes both.
+# Manual only. Merging to main does NOT publish - press "Run workflow" in the
+# Actions tab (or `gh workflow run deploy-worker.yml`) to deploy. One run
+# publishes the pages and the contact form together, to https://nimbi.com.au or,
+# with `-f environment=staging`, to https://staging.nimbi.com.au.
 on:
   workflow_dispatch:
     inputs:

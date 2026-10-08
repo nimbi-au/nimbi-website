@@ -1,7 +1,10 @@
-# Nimbi contact-form Worker
+# Nimbi website Worker
 
-The website is static and hosted on GitHub Pages, so it cannot send email by
-itself. This Cloudflare Worker receives the enquiry, checks it, and sends it to
+This Cloudflare Worker serves the whole website: the static pages from the repo
+root, and the contact form at `/api/contact`. It started as the form's backend
+alone, while the pages were on GitHub Pages; see [Moving off GitHub Pages](#moving-off-github-pages).
+
+For the form, the Worker receives the enquiry, checks it, and sends it to
 `dean@nimbi.com.au` through the Microsoft Graph API, using Nimbi's own Microsoft
 365 tenant. Nothing is stored — the Worker validates the request, sends the mail,
 and forgets it. No third-party form service ever holds the enquiry.
@@ -23,11 +26,9 @@ avoids the question entirely: no new vendor, no DNS changes, no extra cost.
 2. Register an Entra app, then grant it scoped `Mail.Send` in Exchange Online
 3. Create Turnstile keys
 4. Deploy the Worker
-5. Paste the Worker URL and Turnstile site key into `assets/site.js`
+5. Point `assets/forms.js` at the Worker
 
-Until step 5 the site keeps working as it does today: with `ENQUIRY_ENDPOINT`
-empty, the form falls back to opening the visitor's email app. Nothing breaks
-halfway through.
+All five are done. They are kept here as the record of how it was set up.
 
 ---
 
@@ -53,9 +54,11 @@ The zone as verified after cutover:
 | CNAME | `enterpriseregistration` | `enterpriseregistration.windows.net`                          |
 | CNAME | `enterpriseenrollment`   | `enterpriseenrollment-s.manage.microsoft.com`                 |
 
-**Every A and CNAME above must stay *DNS only* (grey cloud).** Proxying the apex
-or `www` breaks GitHub Pages certificate renewal; proxying the Microsoft records
-breaks Outlook autodiscover and device enrolment.
+This was the zone while GitHub Pages served the site. Once the Worker serves
+`nimbi.com.au` and `www`, their A and CNAME records are replaced by the Worker's
+Custom Domain records, which Cloudflare manages. **The Microsoft records must stay
+*DNS only* (grey cloud)** — proxying them breaks Outlook autodiscover and device
+enrolment.
 
 Outstanding: the DMARC `rua` still points at `dmarc_rua@onsecureserver.net`,
 GoDaddy's aggregate collector. Those reports no longer reach anyone here. Repoint
@@ -135,7 +138,7 @@ routes land in the same inbox.
 Cloudflare dashboard → **Turnstile** → add a widget for `nimbi.com.au`. Add
 `www.nimbi.com.au` and `nimbi-au.github.io` too, so the hostnames match
 `ALLOWED_ORIGINS`. Keep both keys — the **site key** is public and goes in
-`assets/site.js`, the **secret key** goes into the Worker.
+`assets/forms.js`, the **secret key** goes into the Worker.
 
 ## Step 4 — Deploy
 
@@ -151,7 +154,7 @@ npx wrangler deploy
 ```
 
 Or via GitHub Actions: add repository secrets `CLOUDFLARE_API_TOKEN` and
-`CLOUDFLARE_ACCOUNT_ID`, then run the **Deploy contact Worker** workflow from the
+`CLOUDFLARE_ACCOUNT_ID`, then run the **Deploy site** workflow from the
 Actions tab. The two Worker secrets above still have to be set once with
 `wrangler secret put`, or in the dashboard under the Worker's Settings → Variables.
 
@@ -159,14 +162,8 @@ Deploying prints a URL like `https://nimbi-contact.<your-subdomain>.workers.dev`
 
 ## Step 5 — Point the site at the Worker
 
-In `assets/site.js`, near the top:
-
-```js
-const ENQUIRY_ENDPOINT = "https://nimbi-contact.<your-subdomain>.workers.dev";
-const TURNSTILE_SITEKEY = "0x4AAAAAAA...";
-```
-
-Then run the **Deploy to GitHub Pages** workflow to publish.
+`assets/forms.js` posts to `/api/contact` on whichever host served the page, and
+holds the public Turnstile site key.
 
 ---
 
@@ -174,14 +171,12 @@ Then run the **Deploy to GitHub Pages** workflow to publish.
 
 `https://staging.nimbi.com.au` is a public copy of the site for checking changes
 before they go live. It is a second Worker, `nimbi-contact-staging`, defined
-under `env.staging` in `wrangler.jsonc`. Unlike production, it serves the site
-itself (the repo root, minus what `.assetsignore` lists) and takes the form at
-`/api/contact`. This is the shape production takes once it moves off GitHub Pages.
+under `env.staging` in `wrangler.jsonc`, and identical to production apart from
+its vars.
 
 - Enquiries go to `test@nimbi.com.au`, sent as `dean@nimbi.com.au` as in production.
 - Every response carries `X-Robots-Tag: noindex`, and `robots.txt` disallows
   everything, so search engines leave it alone.
-- One deploy publishes the pages and the form together. There is no Pages step.
 
 Deploy any branch to it:
 
@@ -200,6 +195,24 @@ npx wrangler secret put TURNSTILE_SECRET --env staging
 
 `staging.nimbi.com.au` must also be listed on the Turnstile widget's hostnames,
 or the bot check will not load there.
+
+## Moving off GitHub Pages
+
+Until October 2026 GitHub Pages served the pages and this Worker only took the
+form, at the root of `nimbi-contact.nimbi-website.workers.dev`. The first
+production deploy with the `routes` in `wrangler.jsonc` is the cutover: run from
+CI, wrangler replaces the GitHub Pages A records on `nimbi.com.au` and the
+`www` CNAME with the Worker's Custom Domains, and the site is served from here
+from then on. A non-GET to `/` is still treated as an enquiry, so pages served
+from GitHub before the move keep submitting.
+
+**Rollback:** in the dashboard, Workers → `nimbi-contact` → Settings → Domains &
+Routes, remove `nimbi.com.au` and `www.nimbi.com.au`. Then in DNS add back, all
+*DNS only*: four A records on `@` for `185.199.108.153`, `.109`, `.110`, `.111`,
+and a CNAME `www` → `nimbi-au.github.io`. GitHub Pages keeps serving its last
+deploy until it is disabled in the repo settings, so leave it enabled for a
+couple of weeks after the move. Note that the last Pages deploy posts its form
+to the Worker's old address, which still works.
 
 ## Configuration
 
@@ -251,5 +264,5 @@ later see abuse, add Cloudflare's rate-limiting binding.
 | `sendMail failed: 403` | The Exchange RBAC role assignment is missing or its scope excludes `SENDER_MAILBOX`. Check `Test-ServicePrincipalAuthorization`. |
 | `sendMail failed: 404` | `SENDER_MAILBOX` is not a real mailbox in the tenant (an alias or distribution list will 404). |
 | Browser console CORS error | The site's origin is missing from `ALLOWED_ORIGINS`. |
-| "Please complete the verification check" | Site key missing/wrong in `assets/site.js`, or the widget did not load. |
-| Form opens the email app instead of sending | `ENQUIRY_ENDPOINT` is still empty. |
+| "Please complete the verification check" | Site key missing/wrong in `assets/forms.js`, or the widget did not load. |
+| Form says to use the secure live form | The page is on a host `forms.js` does not treat as live (only `nimbi.com.au`, `www.` and `staging.`). |

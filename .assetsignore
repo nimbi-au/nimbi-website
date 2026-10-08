@@ -1,4 +1,4 @@
-# The staging Worker uploads the repo root as the site (worker/wrangler.jsonc,
+# The Worker uploads the repo root as the site (worker/wrangler.jsonc,
 # "assets"). Everything listed here is sources or tooling, not pages.
 .*
 __pycache__/
@@ -7,4 +7,3 @@ worker/
 tests/
 build.py
 README.md
-CNAME

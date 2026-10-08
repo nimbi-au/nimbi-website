@@ -1,14 +1,10 @@
 /**
- * Nimbi contact-form Worker.
+ * Nimbi website Worker.
  *
- * Receives an enquiry from the static site and sends it to the firm through the
- * Microsoft Graph API, using the firm's own Microsoft 365 tenant. Nothing is
- * stored: the request is validated, turned into an email, and forgotten.
- *
- * In production the site is on GitHub Pages and this Worker answers the form on
- * every path. In staging (`--env staging`) it also serves the site itself, from
- * the ASSETS binding, with the form at /api/contact - the shape production takes
- * once it moves off GitHub Pages.
+ * Serves the static site from the ASSETS binding and takes enquiries at
+ * /api/contact, sending each to the firm through the Microsoft Graph API, using
+ * the firm's own Microsoft 365 tenant. Nothing is stored: the request is
+ * validated, turned into an email, and forgotten.
  *
  * Vars are declared in wrangler.jsonc. Two secrets are set with
  * `wrangler secret put`: GRAPH_CLIENT_SECRET (required - the Entra app's client
@@ -292,13 +288,17 @@ const STAGING_ROBOTS = "User-agent: *\nDisallow: /\n";
 
 export default {
   async fetch(request, env) {
-    /* Production has no ASSETS binding yet: GitHub Pages serves the site and
-       every request here is an enquiry, exactly as before. */
-    if (!env.ASSETS) return handleContact(request, env);
+    const url = new URL(request.url);
+    const { pathname } = url;
 
-    const { pathname } = new URL(request.url);
-    /* Pages built for the old workers.dev address post to its root, so a
-       non-GET there is still an enquiry. */
+    /* One address for the site: www redirects to the bare domain, as it did on
+       GitHub Pages. */
+    if (env.CANONICAL_HOST && url.hostname === "www." + env.CANONICAL_HOST) {
+      return Response.redirect(`https://${env.CANONICAL_HOST}${pathname}${url.search}`, 301);
+    }
+
+    /* Pages served before the move posted to the root of the old workers.dev
+       address, so a non-GET there is still an enquiry. */
     const legacyPost = pathname === "/" && request.method !== "GET" && request.method !== "HEAD";
     if (pathname === "/api/contact" || legacyPost) return handleContact(request, env);
 

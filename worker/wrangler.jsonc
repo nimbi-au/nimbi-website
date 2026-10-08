@@ -1,9 +1,30 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+  // The name predates the Worker serving the whole site. Kept, because renaming
+  // creates a new Worker without its secrets, and pages served before the move
+  // still post to nimbi-contact.nimbi-website.workers.dev.
   "name": "nimbi-contact",
   "main": "src/index.js",
   "compatibility_date": "2026-08-01",
   "observability": { "enabled": true },
+
+  // Deploying attaches these as Custom Domains. Run from CI, wrangler replaces
+  // any DNS records already on them without asking.
+  "routes": [
+    { "pattern": "nimbi.com.au", "custom_domain": true },
+    { "pattern": "www.nimbi.com.au", "custom_domain": true }
+  ],
+
+  // Shared by staging, which inherits it.
+  "assets": {
+    // The repo root. .assetsignore there keeps sources and tooling out.
+    "directory": "..",
+    "binding": "ASSETS",
+    // Every request goes through the Worker, for the www redirect and staging's noindex.
+    "run_worker_first": true,
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
 
   // Public config. The client secret (GRAPH_CLIENT_SECRET) is set with
   // `wrangler secret put`, never committed here. Tenant and client IDs are
@@ -14,32 +35,24 @@
     // The mailbox Graph sends as. Must be a real mailbox in the tenant, and
     // must match the Application Access Policy that scopes this app.
     "SENDER_MAILBOX": "dean@nimbi.com.au",
-    // Entra app registration. Fill both in after creating the app.
+    // Entra app registration.
     "GRAPH_TENANT_ID": "f4d2b8a6-c24e-4b66-90c0-caa8564ec319",
     "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",
     // Browsers may post from these origins and no others.
-    "ALLOWED_ORIGINS": "https://nimbi.com.au,https://www.nimbi.com.au,https://nimbi-au.github.io",
+    "ALLOWED_ORIGINS": "https://nimbi.com.au,https://www.nimbi.com.au",
     // Hostnames a Turnstile token may have been solved on. No localhost here:
     // this is the production value and the check fails closed if it is empty.
-    "TURNSTILE_HOSTNAMES": "nimbi.com.au,www.nimbi.com.au,nimbi-au.github.io"
+    "TURNSTILE_HOSTNAMES": "nimbi.com.au,www.nimbi.com.au",
+    // www.<this> redirects here.
+    "CANONICAL_HOST": "nimbi.com.au"
   },
 
-  // `wrangler deploy --env staging` deploys nimbi-contact-staging, which serves
-  // the whole site as well as the form - the shape production takes once it
-  // moves off GitHub Pages. Vars are not inherited, so every one is repeated.
+  // `wrangler deploy --env staging` deploys nimbi-contact-staging to
+  // staging.nimbi.com.au. Vars are not inherited, so every one is repeated.
   // Secrets are per environment too: `wrangler secret put <NAME> --env staging`.
   "env": {
     "staging": {
       "routes": [{ "pattern": "staging.nimbi.com.au", "custom_domain": true }],
-      "assets": {
-        // The repo root. .assetsignore there keeps sources and tooling out.
-        "directory": "..",
-        "binding": "ASSETS",
-        // Every request goes through the Worker, so staging can add noindex.
-        "run_worker_first": true,
-        "not_found_handling": "404-page",
-        "html_handling": "auto-trailing-slash"
-      },
       "vars": {
         "TO_ADDRESS": "test@nimbi.com.au",
         "SENDER_MAILBOX": "dean@nimbi.com.au",
@@ -47,6 +60,7 @@
         "GRAPH_CLIENT_ID": "0884fd1e-2eff-4531-b461-68b908f137e0",
         "ALLOWED_ORIGINS": "https://staging.nimbi.com.au",
         "TURNSTILE_HOSTNAMES": "staging.nimbi.com.au",
+        "CANONICAL_HOST": "staging.nimbi.com.au",
         // Staging is public; this keeps it out of search results.
         "NOINDEX": "true"
       }

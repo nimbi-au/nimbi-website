@@ -11,14 +11,21 @@ import assert from "node:assert/strict";
 
 const ORIGIN = "https://nimbi.com.au";
 
+/* Stand-in for the ASSETS binding: echoes the path it was asked for. */
+const ASSETS = {
+  fetch: async (req) => new Response("asset " + new URL(req.url).pathname, { headers: { "content-type": "text/html" } }),
+};
+
 const BASE_ENV = {
+  ASSETS,
   TO_ADDRESS: "to@example.com",
   SENDER_MAILBOX: "sender@example.com",
   GRAPH_TENANT_ID: "tenant",
   GRAPH_CLIENT_ID: "client",
   GRAPH_CLIENT_SECRET: "secret",
-  ALLOWED_ORIGINS: "https://nimbi.com.au,https://nimbi-au.github.io",
-  TURNSTILE_HOSTNAMES: "nimbi.com.au,nimbi-au.github.io",
+  ALLOWED_ORIGINS: "https://nimbi.com.au,https://www.nimbi.com.au",
+  TURNSTILE_HOSTNAMES: "nimbi.com.au,www.nimbi.com.au",
+  CANONICAL_HOST: "nimbi.com.au",
 };
 
 const CONTACT = {
@@ -70,7 +77,7 @@ afterEach(() => {
 function post(body, { origin = ORIGIN, headers = {} } = {}) {
   const h = { "content-type": "application/json", ...headers };
   if (origin) h.Origin = origin;
-  return new Request("https://worker.example/", {
+  return new Request("https://worker.example/api/contact", {
     method: "POST",
     headers: h,
     body: typeof body === "string" ? body : JSON.stringify(body),
@@ -141,7 +148,7 @@ test("line breaks cannot reach the subject", async () => {
 /* ---------- origin and method ---------- */
 
 test("preflight from an allowed origin is answered with CORS headers", async () => {
-  const req = new Request("https://worker.example/", { method: "OPTIONS", headers: { Origin: ORIGIN } });
+  const req = new Request("https://worker.example/api/contact", { method: "OPTIONS", headers: { Origin: ORIGIN } });
   const { res } = await send(req);
   assert.equal(res.status, 204);
   assert.equal(res.headers.get("access-control-allow-origin"), ORIGIN);
@@ -149,7 +156,7 @@ test("preflight from an allowed origin is answered with CORS headers", async () 
 });
 
 test("preflight from another origin is refused without CORS headers", async () => {
-  const req = new Request("https://worker.example/", { method: "OPTIONS", headers: { Origin: "https://evil.example" } });
+  const req = new Request("https://worker.example/api/contact", { method: "OPTIONS", headers: { Origin: "https://evil.example" } });
   const { res } = await send(req);
   assert.equal(res.status, 403);
   assert.equal(res.headers.get("access-control-allow-origin"), null);
@@ -168,7 +175,7 @@ test("with no allowlist configured any origin may post", async () => {
 });
 
 test("methods other than POST are rejected", async () => {
-  const req = new Request("https://worker.example/", { method: "GET", headers: { Origin: ORIGIN } });
+  const req = new Request("https://worker.example/api/contact", { method: "GET", headers: { Origin: ORIGIN } });
   const { status } = await send(req);
   assert.equal(status, 405);
 });
@@ -329,53 +336,63 @@ test("a Graph error other than 401 is not retried", async () => {
   assert.equal(graphCalls().length, 1);
 });
 
-/* ---------- serving the site (staging) ---------- */
+/* ---------- serving the site ---------- */
 
-/* Stand-in for the ASSETS binding: echoes the path it was asked for. */
-const ASSETS = {
-  fetch: async (req) => new Response("asset " + new URL(req.url).pathname, { headers: { "content-type": "text/html" } }),
-};
-const SITE_ENV = { ...BASE_ENV, ASSETS };
-const STAGING_ENV = { ...SITE_ENV, NOINDEX: "true" };
+const STAGING_ENV = { ...BASE_ENV, CANONICAL_HOST: undefined, NOINDEX: "true" };
 
-const get = (path) => new Request("https://site.example" + path);
+const get = (path, host = "nimbi.com.au") => new Request(`https://${host}${path}`);
 
-test("with ASSETS bound, pages are served from it", async () => {
+test("pages are served from ASSETS", async () => {
   const worker = await loadWorker();
-  const res = await worker.fetch(get("/about/"), SITE_ENV);
+  const res = await worker.fetch(get("/about/"), BASE_ENV);
   assert.equal(await res.text(), "asset /about/");
   assert.equal(res.headers.get("x-robots-tag"), null);
   assert.equal(calls.length, 0);
 });
 
-test("with ASSETS bound, the home page is a page and not the form", async () => {
+test("the home page is a page and not the form", async () => {
   const worker = await loadWorker();
-  const res = await worker.fetch(get("/"), SITE_ENV);
+  const res = await worker.fetch(get("/"), BASE_ENV);
   assert.equal(await res.text(), "asset /");
 });
 
-test("with ASSETS bound, enquiries are taken at /api/contact", async () => {
-  const req = new Request("https://site.example/api/contact", post(CONTACT));
-  const { status, body } = await send(req, SITE_ENV);
-  assert.equal(status, 200);
-  assert.deepEqual(body, { ok: true });
-  assert.equal(graphCalls().length, 1);
-});
-
-test("with ASSETS bound, a post to the root still sends, for pages built for the old address", async () => {
-  const { status } = await send(post(CONTACT), SITE_ENV);
+test("a post to the root still sends, for pages served before the move", async () => {
+  const req = new Request("https://nimbi-contact.nimbi-website.workers.dev/", post(CONTACT));
+  const { status } = await send(req);
   assert.equal(status, 200);
   assert.equal(graphCalls().length, 1);
 });
 
-test("with ASSETS bound, a GET to /api/contact is rejected", async () => {
-  const { status } = await send(new Request("https://site.example/api/contact", { headers: { Origin: ORIGIN } }), SITE_ENV);
-  assert.equal(status, 405);
+test("www redirects to the bare domain, keeping the path and query", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/pricing/?plan=lens", "www.nimbi.com.au"), BASE_ENV);
+  assert.equal(res.status, 301);
+  assert.equal(res.headers.get("location"), "https://nimbi.com.au/pricing/?plan=lens");
+});
+
+test("an enquiry posted to www is redirected, not sent", async () => {
+  const req = new Request("https://www.nimbi.com.au/api/contact", post(CONTACT));
+  const res = await (await loadWorker()).fetch(req, BASE_ENV);
+  assert.equal(res.status, 301);
+  assert.equal(graphCalls().length, 0);
+});
+
+test("other hosts are served, not redirected", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/about/", "nimbi-contact.nimbi-website.workers.dev"), BASE_ENV);
+  assert.equal(await res.text(), "asset /about/");
+});
+
+test("production pages are not marked noindex", async () => {
+  const worker = await loadWorker();
+  const res = await worker.fetch(get("/robots.txt"), BASE_ENV);
+  assert.equal(await res.text(), "asset /robots.txt");
+  assert.equal(res.headers.get("x-robots-tag"), null);
 });
 
 test("staging marks every page noindex", async () => {
   const worker = await loadWorker();
-  const res = await worker.fetch(get("/pricing/"), STAGING_ENV);
+  const res = await worker.fetch(get("/pricing/", "staging.nimbi.com.au"), STAGING_ENV);
   assert.equal(await res.text(), "asset /pricing/");
   assert.equal(res.headers.get("x-robots-tag"), "noindex");
   assert.equal(res.headers.get("content-type"), "text/html");
@@ -383,6 +400,6 @@ test("staging marks every page noindex", async () => {
 
 test("staging robots.txt disallows everything", async () => {
   const worker = await loadWorker();
-  const res = await worker.fetch(get("/robots.txt"), STAGING_ENV);
+  const res = await worker.fetch(get("/robots.txt", "staging.nimbi.com.au"), STAGING_ENV);
   assert.equal(await res.text(), "User-agent: *\nDisallow: /\n");
 });
