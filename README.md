@@ -11,11 +11,12 @@ file in `src/`, run `python build.py` to regenerate the pages, save your changes
 press deploy. Python 3 is the only thing you need installed, and nothing has to be
 downloaded from the internet.
 
-The design, page structure and wording follow the site draft "Concept C"
-(`Nimbi_Website_Concept_C.html`, v0.45, 4 October 2026). The draft was a single
-review file; here each of its page blocks is a real page at its own route, and the
-review-only parts (the preview strip, the non-sending forms) are replaced by the
-production equivalents.
+The design, page structure and wording follow the final site draft, "Streamlined
+Concept C" (`19_Concept_C_Final.html`, October 2026), which names the three plans
+Nimbi Lite, Nimbi Pro and Nimbi Comprehensive. The draft was a single review file;
+here each of its page blocks is a real page at its own route, and the review-only
+parts (the preview strip, the non-sending forms) are replaced by the production
+equivalents.
 
 **You do not need to know how to code to edit this site.** Everything below can be
 done by asking Claude in plain English. If you are a developer, skip to
@@ -93,7 +94,7 @@ computer.
 
 **When you're happy, save it to GitHub:**
 
-> That looks good. Commit this to main and push it.
+> That looks good. Commit this and push it.
 
 Claude will write a short description of the change, save it, and upload it to
 GitHub. The live site still hasn't changed at this point.
@@ -194,10 +195,15 @@ sentence before doing it. Run the commands yourself.
 
 **Ongoing rules for this repo:**
 
-- Commit directly to `main` — no branches or pull requests unless the user asks.
+- Work on a branch and push it. Deploy that branch to **staging**
+  (<https://staging.nimbi.com.au>, the **Deploy site** workflow with
+  `environment=staging`) so the change can be checked there first.
+- **NEVER deploy to production** (nimbi.com.au) unless the user explicitly asks for a
+  production deploy in that conversation — and even then, confirm with them first
+  before running it.
 - Always show the user the change (open the page in a browser) before committing.
 - Push after committing unless told otherwise.
-- **Re-run the tests after every commit to `main`** (see [Tests](#tests)) and
+- **Re-run the tests after every commit** (see [Tests](#tests)) and
   report the result. If anything fails, tell the user in plain words what broke
   and fix it before deploying. The same tests also run on GitHub after each push
   (Actions → **Tests**); check that run too.
@@ -269,7 +275,7 @@ Pages and where their content lives:
 | Route | Source |
 |---|---|
 | `/` | `src/pages/home.html` |
-| `/pricing/` | `src/pages/pricing.html` |
+| `/pricing/` | `src/pages/pricing.html` (the Nimbi Lite, Pro and Comprehensive plans; the cost estimator is `assets/pricing.js`) |
 | `/who-we-help/accountants/` | `src/pages/guide-accountants.html` |
 | `/who-we-help/lawyers-and-conveyancers/` | `src/pages/guide-lawyers.html` |
 | `/who-we-help/real-estate/` | `src/pages/guide-real-estate.html` |

@@ -3,7 +3,8 @@
    an outside click, on Escape, or when the window grows past 780px. On the home
    page the "How it works" link is marked while that section is in view. Links
    that carry data-interest remember the visitor's interest for the contact
-   form, and a URL hash that points inside a collapsed <details> opens it. */
+   form (other links to /contact/ forget a remembered estimate), and a URL hash
+   that points inside a collapsed <details> opens it. */
 (function () {
   'use strict';
   function $(selector) { return document.querySelector(selector); }
@@ -93,9 +94,17 @@
   }
 
   /* ---------- remember the interest a link expresses ---------- */
+  /* A link to /contact/ that is not the pricing calculator's or a plan card's
+     also drops any estimate remembered earlier, so the contact form only shows
+     an estimate the visitor just chose (pricing.js stores those). */
   document.addEventListener('click', function (e) {
-    var link = e.target && e.target.closest ? e.target.closest('a[data-interest]') : null;
+    var closest = e.target && e.target.closest ? function (s) { return e.target.closest(s); } : function () { return null; };
+    var link = closest('a[data-interest]');
     if (link) remember('nimbi.interest', link.getAttribute('data-interest'));
+    var contact = closest('a[href]');
+    if (contact && /^\/contact\//.test(contact.getAttribute('href') || '') && !closest('#cost-calculator') && !closest('.pg-card')) {
+      try { window.sessionStorage.removeItem('nimbi.estimate'); } catch (err) { /* storage unavailable: nothing to forget */ }
+    }
   });
 
   /* ---------- deep links into collapsed content ---------- */

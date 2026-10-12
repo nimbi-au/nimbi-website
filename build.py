@@ -9,6 +9,7 @@ Page structure follows the site draft: v0.35 (14 September 2026), v0.44
 (23 September 2026), and Concept C / v0.45 (4 October 2026), which reduced the
 site to eight pages: home, pricing, three industry guides, the readiness check,
 contact and the privacy policy.
+Final draft: 19_Concept_C_Final.html (October 2026), the Streamlined Concept C.
 """
 import html
 import json
@@ -52,7 +53,7 @@ REDIRECTS = [
     ("obligations/dealers-in-precious-metals-and-stones/index.html", "/#industries"),
     ("why-nimbi/index.html", "/#why-nimbi-summary"),
     ("how-nimbi-helps/index.html", "/#how-it-works"),
-    ("about/index.html", "/#why-nimbi-summary"),
+    ("about/index.html", "/#about-us"),
 ]
 
 
@@ -74,7 +75,11 @@ def render_nav(active):
     out.append('<a class="nav-link" href="/#how-it-works">How it works</a>')
     out.append('<div class="nav-group"><button class="nav-toggle" aria-expanded="false" '
                'aria-controls="industry-menu" data-nav-group="industry" data-active="%s">'
-               'Who we help <span class="chevron" aria-hidden="true">⌄</span></button>'
+               'Who we help <svg class="chevron" viewBox="0 0 16 16" width="16" height="16" '
+               'aria-hidden="true" focusable="false" fill="none" stroke="currentColor" '
+               'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'
+               '<path class="chevron-down" d="M3 6l5 5 5-5"></path>'
+               '<path class="chevron-up" d="M3 10l5-5 5 5"></path></svg></button>'
                '<div class="nav-menu" id="industry-menu" hidden>'
                % ("true" if active in industry else "false"))
     for s in SECTORS:
@@ -261,9 +266,9 @@ urls.append(render_page(
 urls.append(render_page(
     out_path="pricing/index.html",
     nav_active="pricing",
-    title="Pricing: Foundations + Lens, or Nimbi Comprehensive",
-    description=("Foundations + Lens at $159 a month plus $19 per KYC and $45 per standard KYB check, "
-                 "Nimbi Comprehensive on application, and optional outsourced checks."),
+    title="Pricing: Nimbi Lite, Pro and Comprehensive",
+    description=("Nimbi Lite pay-as-you-go checks with no subscription. Nimbi Pro $159 a month. "
+                 "Nimbi Comprehensive $399 a month with checks included. Plus a cost estimator."),
     body=page_src("pricing"),
     scripts='<script src="/assets/pricing.js" defer></script>\n',
 ))

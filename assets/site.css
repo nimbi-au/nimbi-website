@@ -49,7 +49,7 @@
 .nav-toggle{font:600 15px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;border:0;background:transparent;color:var(--purple);padding:13px 0;min-height:50px;display:flex;align-items:center;gap:8px;position:relative}
 .nav-toggle:after{content:'';position:absolute;left:0;right:0;bottom:4px;height:3px;background:transparent}
 .nav-toggle[data-active="true"]:after{background:var(--green)}
-.nav-toggle .chevron{font-size:14px;transition:transform .15s}.nav-toggle[aria-expanded="true"] .chevron{transform:rotate(180deg)}
+.nav-toggle .chevron{width:16px;height:16px;flex:none;vertical-align:middle;transform:none;transition:none}.nav-toggle .chevron-up{display:none}.nav-toggle[aria-expanded="true"] .chevron-down{display:none}.nav-toggle[aria-expanded="true"] .chevron-up{display:inline}
 .nav-menu{position:absolute;top:calc(100% + 9px);left:-18px;min-width:270px;padding:10px;background:white;border:1px solid var(--line);border-radius:13px;box-shadow:0 15px 40px #2e2a721a}
 .nav-menu a{display:flex;align-items:center;min-height:46px;padding:10px 13px;color:var(--purple);font-size:15px;text-decoration:none;border-radius:7px}
 .nav-menu a:hover,.nav-menu a[aria-current="page"]{background:var(--pale)}
@@ -243,6 +243,140 @@
 .privacy-prose .smallprint{font-size:14px;line-height:1.75;border-top:1px solid var(--line);padding-top:24px;color:#526076}
 .privacy-prose [id]{scroll-margin-top:115px}
 @media(max-width:570px){.privacy-jump{display:grid;grid-template-columns:1fr;gap:4px;padding:14px 18px;margin-bottom:28px}.privacy-jump a{font-size:14px}.privacy-prose{font-size:16px;line-height:1.8}.privacy-prose h3{font-size:23px}.privacy-notice{padding:22px 20px}.privacy-prose .privacy-part{margin-top:36px}.privacy-prose [id]{scroll-margin-top:100px}}
+
+/* Concept C subscription grid. All visual rules are scoped to Pricing. */
+[data-page="pricing"] .pg-pricing{background:linear-gradient(180deg,#f7f8ff 0,#f3f4f6 740px);padding-top:32px;padding-bottom:40px}
+[data-page="pricing"] .pg-pricing>.wrap{max-width:1192px}
+[data-page="pricing"] .pg-intro{text-align:center;max-width:800px;margin:26px auto 25px}
+[data-page="pricing"] .pg-intro .eyebrow{justify-content:center;margin-bottom:15px}
+[data-page="pricing"] .pg-intro h1{font-size:clamp(34px,4vw,49px);line-height:1.15;letter-spacing:-.025em;margin-bottom:16px}
+[data-page="pricing"] .pg-intro>p:not(.eyebrow){max-width:715px;margin:0 auto 12px;line-height:1.65;font-size:18px}
+[data-page="pricing"] .pg-intro .pg-product-note{font-size:14px!important;color:#5a6478}
+[data-page="pricing"] .pg-billing-wrap{text-align:center;margin:25px auto 29px}
+[data-page="pricing"] .pg-billing{display:inline-flex;padding:5px;gap:5px;border:1px solid #cdd4e8;border-radius:14px;background:#fff;max-width:100%}
+[data-page="pricing"] .pg-billing button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:12px 20px;background:transparent;border:0;border-radius:9px;color:var(--purple);font:inherit;font-size:15px;line-height:1.4;font-weight:700;cursor:pointer}
+[data-page="pricing"] .pg-billing button[aria-pressed="true"]{background:var(--purple);color:#fff;box-shadow:0 2px 5px #2e2a7217}
+[data-page="pricing"] .pg-billing button span{font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px;color:#21675f;background:#e6f4ef}
+[data-page="pricing"] .pg-billing button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+[data-page="pricing"] .pg-billing-wrap>p{font-size:13px;color:#596378;margin:11px 0 0}
+[data-page="pricing"] .pg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:20px;row-gap:0;align-items:stretch}
+[data-page="pricing"] .pg-card{display:flex;flex-direction:column;min-width:0;border:1px solid #cdd4e8;border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 7px 25px #20214e05}
+[data-page="pricing"] .pg-card>*,[data-page="pricing"] .pg-feature-list li>span{min-width:0}
+[data-page="pricing"] .pg-ribbon{display:flex;align-items:center;gap:10px;min-height:65px;padding:12px 23px;background:#e9edff;color:var(--purple);border-bottom:1px solid #d8def4;font-size:13px;font-weight:700;line-height:1.5}
+[data-page="pricing"] .pg-ribbon .icon{width:19px;height:19px;flex:none}
+[data-page="pricing"] .pg-comprehensive{border-color:#847fae}
+[data-page="pricing"] .pg-comprehensive .pg-ribbon{background:var(--purple);border-color:var(--purple);color:#fff}
+[data-page="pricing"] .pg-heading{padding:25px 23px 0;min-height:217px}
+[data-page="pricing"] .pg-heading h2{font-size:27px;line-height:1.22;letter-spacing:-.025em;margin:0 0 13px;overflow-wrap:anywhere}
+[data-page="pricing"] .pg-heading p{font-size:16px;line-height:1.65;margin:0;color:#515b70}
+[data-page="pricing"] .pg-commercial{display:grid;grid-template-rows:auto 1fr auto auto;padding:20px 23px 24px;min-height:246px}
+[data-page="pricing"] .pg-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;color:var(--purple);min-height:63px}
+[data-page="pricing"] .pg-price strong{font-family:Bitter,Georgia,serif;font-size:45px;line-height:1.2;letter-spacing:-.035em;min-width:0;overflow-wrap:anywhere}
+[data-page="pricing"] .pg-price>span{font-size:16px;line-height:1.5}
+[data-page="pricing"] .pg-billing-note{font-size:14px;line-height:1.6;color:#566077;min-height:45px;margin:9px 0 5px}
+[data-page="pricing"] .pg-saving{font-size:13px;font-weight:650;line-height:1.65;color:#28766d;min-height:43px;margin:0 0 18px}
+[data-page="pricing"] .pg-cta{display:flex;width:100%;min-height:50px;padding-inline:14px;gap:8px;text-align:center;font-size:15px;overflow-wrap:anywhere}
+[data-page="pricing"] .pg-comprehensive .pg-cta{background:var(--purple)}
+[data-page="pricing"] .pg-comprehensive .pg-cta:hover{background:#211e59}
+[data-page="pricing"] .pg-usage{margin:0 23px;padding:18px 17px;min-height:238px;background:#f3f5ff;border:1px solid #dce1f1;border-radius:11px}
+[data-page="pricing"] .pg-comprehensive .pg-usage{background:#edf7f4;border-color:#cce4de}
+[data-page="pricing"] .pg-usage h3{font-size:13px;font-weight:750;line-height:1.5;color:var(--purple);margin:0 0 12px}
+[data-page="pricing"] .pg-check-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:12px}
+[data-page="pricing"] .pg-check-pair>div+div{border-left:1px solid #cdd7e3;padding-left:12px}
+[data-page="pricing"] .pg-check-pair strong{display:block;font-size:27px;line-height:1.3;letter-spacing:-.03em;color:var(--purple);white-space:nowrap}
+[data-page="pricing"] .pg-check-pair span{display:block;font-size:13px;line-height:1.5;margin-top:2px}
+[data-page="pricing"] .pg-note-link{vertical-align:super;font-size:15px;line-height:0;text-decoration:none;padding:4px;color:inherit}
+[data-page="pricing"] .pg-usage>p{font-size:12px;line-height:1.6;margin:13px 0 0;color:#536376}
+[data-page="pricing"] .pg-inclusions{padding:25px 23px 29px}
+[data-page="pricing"] .pg-inclusions>h3{font-size:14px;line-height:1.5;margin:0 0 20px;letter-spacing:0}
+[data-page="pricing"] .pg-feature-list{list-style:none;margin:0;padding:0;display:grid;gap:19px}
+[data-page="pricing"] .pg-feature-list li{display:flex;align-items:flex-start;gap:12px;margin:0;font-size:14px;line-height:1.6;min-height:72px}
+[data-page="pricing"] .pg-feature-list .icon{flex:none;width:18px;height:18px;color:var(--green);margin-top:3px}
+[data-page="pricing"] .pg-feature-list strong{display:block;color:var(--purple);font-size:15px;line-height:1.5;margin-bottom:3px}
+[data-page="pricing"] .pg-notes{max-width:1050px;margin:22px auto 29px;font-size:13px;line-height:1.7;color:#59657a}
+[data-page="pricing"] .pg-notes p{margin:0 0 7px}
+[data-page="pricing"] #kyb-pricing-note{scroll-margin-top:110px}
+[data-page="pricing"] .pg-lite-plan .pg-ribbon{background:#eef1f6;color:#515b70}
+[data-page="pricing"] .pg-lite-plan .pg-usage{background:#f6f7fa}
+[data-page="pricing"] .pg-lite-note{color:#59657a;font-weight:400}
+[data-page="pricing"] .pg-lite-cta{background:#fff;color:var(--purple);border:1px solid #918db2}
+[data-page="pricing"] .pg-lite-cta:hover{color:var(--purple);background:#f0eff8}
+/* Shared grid rows keep each plan's heading, price, button and usage panel aligned. */
+@supports(grid-template-rows:subgrid){[data-page="pricing"] .pg-card{display:grid;grid-template-rows:subgrid;grid-row:span 5}[data-page="pricing"] .pg-heading,[data-page="pricing"] .pg-commercial,[data-page="pricing"] .pg-usage{min-height:0}}
+[data-page="pricing"] .pg-outsource{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;background:#eaf5f3;border:1px solid #c5e1dc;border-left:4px solid var(--green);border-radius:14px;padding:26px 29px;scroll-margin-top:110px}
+[data-page="pricing"] .pg-outsource .eyebrow{font-size:11px;margin-bottom:9px}
+[data-page="pricing"] .pg-outsource h2{font-size:25px;line-height:1.25;margin:0 0 10px}
+[data-page="pricing"] .pg-outsource-copy>p:last-child{font-size:14px;line-height:1.7;margin:0;max-width:670px}
+[data-page="pricing"] .pg-outsource-action>strong{display:flex;align-items:baseline;gap:12px;font-size:27px;line-height:1.4;color:var(--purple)}
+[data-page="pricing"] .pg-outsource-action>strong>span{font-size:13px;font-weight:400;color:#58667a}
+[data-page="pricing"] .pg-outsource-action .text-link{font-size:14px;min-height:44px}
+@media(min-width:1051px) and (max-width:1200px){[data-page="pricing"] .pg-grid{column-gap:16px}[data-page="pricing"] .pg-heading,[data-page="pricing"] .pg-commercial,[data-page="pricing"] .pg-inclusions{padding-left:19px;padding-right:19px}[data-page="pricing"] .pg-heading h2{font-size:25px}[data-page="pricing"] .pg-ribbon{padding-left:19px;padding-right:19px;font-size:12px}[data-page="pricing"] .pg-usage{margin-left:19px;margin-right:19px;padding:17px 14px}[data-page="pricing"] .pg-price strong{font-size:42px}[data-page="pricing"] .pg-check-pair strong{font-size:25px}}
+@media(max-width:1050px){[data-page="pricing"] .pg-grid{grid-template-columns:minmax(0,1fr);gap:23px;max-width:620px;margin-inline:auto}[data-page="pricing"] .pg-card{display:flex;grid-row:auto}[data-page="pricing"] .pg-heading{min-height:0;padding-top:25px}[data-page="pricing"] .pg-heading h2{font-size:29px}[data-page="pricing"] .pg-commercial{display:block;padding-top:21px;min-height:0}[data-page="pricing"] .pg-price,[data-page="pricing"] .pg-billing-note,[data-page="pricing"] .pg-saving,[data-page="pricing"] .pg-usage,[data-page="pricing"] .pg-feature-list li{min-height:0}[data-page="pricing"] .pg-ribbon{min-height:48px}[data-page="pricing"] .pg-saving{margin-bottom:20px}[data-page="pricing"] .pg-feature-list li{font-size:15px}[data-page="pricing"] .pg-notes{max-width:620px}[data-page="pricing"] .pg-outsource{grid-template-columns:1fr;gap:18px;max-width:620px;margin-inline:auto}[data-page="pricing"] .pg-check-pair span{font-size:14px}}
+@media(max-width:780px){[data-page="pricing"] .pg-pricing{padding-top:26px}[data-page="pricing"] .pg-intro{text-align:left;margin-top:23px}[data-page="pricing"] .pg-intro .eyebrow{justify-content:flex-start}[data-page="pricing"] .pg-intro>p:not(.eyebrow){font-size:17px}[data-page="pricing"] .pg-billing-wrap{text-align:left}}
+@media(max-width:420px){[data-page="pricing"] .pg-intro h1{font-size:34px}[data-page="pricing"] .pg-billing{display:flex;width:100%;gap:3px;padding:4px}[data-page="pricing"] .pg-billing button{flex:1;flex-direction:column;gap:3px;padding:10px 8px;font-size:14px;min-height:63px}[data-page="pricing"] .pg-billing button span{font-size:10px;padding:1px 6px}[data-page="pricing"] .pg-heading,[data-page="pricing"] .pg-commercial,[data-page="pricing"] .pg-inclusions{padding-left:20px;padding-right:20px}[data-page="pricing"] .pg-heading h2{font-size:25px}[data-page="pricing"] .pg-ribbon{padding-left:20px;padding-right:20px;gap:8px;font-size:12px}[data-page="pricing"] .pg-price strong{font-size:44px}[data-page="pricing"] .pg-price>span{font-size:14px}[data-page="pricing"] .pg-usage{margin-left:20px;margin-right:20px;padding:17px}[data-page="pricing"] .pg-check-pair{gap:12px}[data-page="pricing"] .pg-check-pair>div+div{padding-left:12px}[data-page="pricing"] .pg-check-pair strong{font-size:25px}[data-page="pricing"] .pg-check-pair span{font-size:12px}[data-page="pricing"] .pg-usage>p{font-size:12px}[data-page="pricing"] .pg-outsource{padding:24px 20px}[data-page="pricing"] .pg-outsource h2{font-size:24px}}
+
+[data-page="pricing"] .pg-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+[data-page="pricing"] #billing-choice{scroll-margin-top:110px}
+[data-page="pricing"] .pg-inclusions>.pg-optional-heading{margin-top:24px;padding-top:22px;border-top:1px solid #dce1eb}
+[data-page="pricing"] .pg-check-pair{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+[data-page="pricing"] .pg-check-pair>div{min-width:0}
+[data-page="pricing"] .pg-check-pair strong{white-space:normal}
+
+/* Pro stays recommended on every visit; emphasis never changes plan selection. */
+[data-page="pricing"] .pg-pro{border-color:#7b76d9;box-shadow:0 0 0 3px #4944ff16,0 10px 28px #2e2a7221}
+[data-page="pricing"] .pg-pro .pg-ribbon{background:#e8e7ff;color:var(--purple);border-bottom-color:#cfcbf7;font-size:14px}
+[data-page="pricing"] .pg-pro .pg-ribbon .icon{color:var(--blue)}
+[data-page="pricing"] .pg-card .pg-cta{transition:box-shadow .18s ease,background-color .18s ease,border-color .18s ease}
+@media(hover:hover){[data-page="pricing"] .pg-card .pg-cta:hover{box-shadow:0 0 0 3px #4944ff24,0 5px 16px #2e2a7233}[data-page="pricing"] .pg-pro .pg-cta:hover{background:#3334db}[data-page="pricing"] .pg-lite-plan .pg-cta:hover{background:#eae8ff;border-color:#6c65bc}}
+[data-page="pricing"] .pg-card .pg-cta:focus-visible{outline:3px solid var(--green);outline-offset:3px;box-shadow:0 0 0 6px #ffffff,0 5px 16px #2e2a7233}
+[data-page="pricing"] .pg-card .pg-cta:active{box-shadow:0 0 0 3px #4944ff30}
+@media(prefers-reduced-motion:reduce){[data-page="pricing"] .pg-card .pg-cta{transition:none}}
+
+[data-page="pricing"] .pg-estimate-plan{margin:20px 0}
+[data-page="pricing"] .pg-change-billing{font-size:14px}
+[data-page="pricing"] .estimate-inputs select{width:100%;min-height:48px;font:inherit;color:var(--purple);padding:10px 12px;border:1px solid #aab6ce;border-radius:8px;background:white}
+[data-page="pricing"] .estimate{padding-top:35px}
+
+/* Homepage plan introduction, without a featured price. */
+[data-page="home"] #start-with-nimbi .start-grid{grid-template-columns:minmax(0,1fr);gap:0}
+[data-page="home"] #start-with-nimbi .start-grid>div{max-width:820px}
+[data-page="home"] #start-with-nimbi .start-grid p{max-width:720px}
+
+/* Compact practitioner and About cues: preserve the existing product hierarchy. */
+.workflow-support{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:12px 14px;border:1px solid #ffffff35;border-radius:9px;background:#ffffff0b;color:#fff}
+.workflow-support .icon{width:20px;height:20px;flex:0 0 20px;margin-top:2px;color:#afe9e0}
+.workflow-support p{margin:0;font-size:14px;line-height:1.5;color:#f3f3fc}
+.workflow-support strong{display:block;font-size:15px;color:#fff;margin-bottom:2px}
+.founder-about{display:grid;grid-template-columns:minmax(145px,.55fr) minmax(0,2fr);gap:28px;align-items:start;margin-top:32px;padding-top:27px;border-top:1px solid var(--line);scroll-margin-top:110px}
+.founder-about h3{font-size:20px;margin:0;color:var(--purple)}
+.founder-about p{font-size:16px;line-height:1.65;margin:0;max-width:790px}
+/* Allow enlarged text to wrap inside the existing grid and flex layouts. */
+[data-page="home"] .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(0,1fr)}
+[data-page="home"] .hero-grid>*,[data-page="home"] .workflow,[data-page="home"] .workflow-inputs>*,[data-page="home"] .workflow-support>p{min-width:0}
+[data-page="home"] .hero-grid>*,[data-page="home"] .decision>div{min-width:0;overflow-wrap:anywhere}
+[data-page="home"] .hero h1,[data-page="home"] .workflow,[data-page="home"] .hero .text-link{overflow-wrap:anywhere}
+[data-page="home"] .hero .actions>*,[data-page="home"] .hero .text-link{max-width:100%;min-width:0}
+[data-page="home"] .hero .text-link{flex-wrap:wrap}
+[data-page="pricing"] .pg-feature-list{grid-template-columns:minmax(0,1fr);min-width:0}
+[data-page="pricing"] .pg-feature-list li{min-width:0}
+[data-page="pricing"] .pg-feature-list li>span{overflow-wrap:anywhere}
+[data-page="pricing"] .pg-billing button{min-width:0;overflow-wrap:anywhere}
+[data-page="pricing"] .pg-outsource>*{min-width:0;overflow-wrap:anywhere}
+[data-page="pricing"] .pg-outsource-action>strong,[data-page="pricing"] .pg-outsource-action .text-link{flex-wrap:wrap;max-width:100%}
+@media(max-width:780px){[data-page="home"] .hero-grid{grid-template-columns:minmax(0,1fr)}}
+@media(min-width:381px){[data-page="home"] .workflow-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:570px){.workflow-support{padding:11px 12px}.founder-about{grid-template-columns:1fr;gap:10px;margin-top:26px;padding-top:23px}.founder-about p{font-size:16px}}
+
+[data-page="pricing"] .pg-outsource-boundary{margin-top:14px;font-size:1rem;line-height:1.6}
+
+/* All three support components form one group, connected to the client's team. */
+[data-page="home"] .workflow-components{min-width:0;padding:12px;border:1px solid #9de2d7;border-radius:16px;background:#ffffff06}
+[data-page="home"] .workflow-components .workflow-support{margin-top:12px}
+[data-page="home"] .workflow .group-connector{display:block;position:relative;height:32px;margin:0}
+[data-page="home"] .workflow .group-connector::before{content:"";position:absolute;inset:0 auto 5px 50%;width:0;border:0;border-left:1px solid #9de2d7;border-radius:0}
+[data-page="home"] .workflow .group-connector::after{content:"";position:absolute;left:50%;bottom:3px;width:0;height:0;border:0;border-top:6px solid #9de2d7;border-left:4px solid transparent;border-right:4px solid transparent;transform:translateX(-50%)}
+[data-page="home"] .workflow .decision{margin-top:0}
+@media(max-width:570px){[data-page="home"] .workflow-components{padding:10px;border-radius:14px}[data-page="home"] .workflow-components .workflow-inputs{grid-template-columns:minmax(0,1fr)}}
 
 /* Production additions: booking embed and the live enquiry form. */
 .calbox{margin-top:24px;border:1px solid var(--line);border-radius:17px;overflow:hidden;background:white;height:700px}
