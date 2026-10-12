@@ -86,8 +86,7 @@ def render_nav(active):
         out.append('<a href="%s"%s>%s</a>' % (s["guide"], current(s["key"]), esc(s["name"])))
     out.append("</div></div>")
     out.append('<a class="nav-link" href="/pricing/"%s>Pricing</a>' % current("pricing"))
-    out.append('<a class="btn mobile-proposal" href="/contact/#proposal">Get a proposal '
-               '<span aria-hidden="true">↗</span></a>')
+    out.append('<a class="btn mobile-proposal" href="/contact/#proposal">Get a proposal</a>')
     out.append("</nav>")
     return "".join(out)
 
@@ -355,7 +354,7 @@ render_page(
  <p class="eyebrow">Page not found</p>
  <h1>We couldn't find that page.</h1>
  <p class="lead">The link may be out of date. Start from the home page, or check your readiness and we'll point you to the right place.</p>
- <div class="actions"><a class="btn" href="/">Go to the home page</a><a class="text-link" href="/readiness-check/">Check your readiness <span aria-hidden="true">↗</span></a></div>
+ <div class="actions"><a class="btn" href="/">Go to the home page</a><a class="text-link" href="/readiness-check/">Check your readiness</a></div>
 </div></section></div>""",
 )
 

@@ -91,7 +91,7 @@
     setText('pro-saving', annual ? 'Save over 25%' : 'Pay annually and save over 25%');
     setText('comprehensive-price', annual ? '$3,349' : '$399');
     setText('comprehensive-period', annual ? '/ year' : '/ month');
-    setText('comprehensive-billing-note', annual ? 'Paid upfront · equivalent to $279.08/month' : 'Billed monthly');
+    setText('comprehensive-billing-note', annual ? 'Paid upfront · equivalent to $279.08/month' : '12-month term, billed monthly');
     setText('comprehensive-saving', annual ? 'Save 30%' : 'Pay annually and save 30%');
     var allowance = $('comprehensive-allowance');
     if (allowance) allowance.setAttribute('aria-label', 'Nimbi Comprehensive ' + (annual ? 'annual' : 'monthly') + ' check allowance');
